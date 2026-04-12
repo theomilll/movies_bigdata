@@ -1,0 +1,13 @@
+.DS_Store
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+.benchmarks/
+tmp/
+
+dados/processed/*.csv
+dados/raw/credits.csv
+dados/raw/ratings.csv
