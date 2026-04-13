@@ -1,6 +1,6 @@
 # movies_bigdata
 
-Projeto de engenharia e analise de dados para processamento de filmes a partir de arquivos CSV brutos, com consolidacao de um dataset final, geracao de tabelas analiticas e exportacao de visualizacoes.
+A partir de arquivos CSV brutos, com consolidacao de um dataset final, gerando tabelas analiticas e exportacao de visualizacao, surgiu o projeto de engenharia e analise de dados para processamento de filmes. 
 
 O repositorio esta organizado em torno de uma pipeline em Python que:
 
