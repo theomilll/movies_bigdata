@@ -153,7 +153,7 @@ O notebook localiza automaticamente a raiz do projeto, adiciona `codigo/` ao `sy
 
 ## Etapas da pipeline
 
-### 1. Ingestao e validacao
+### 1. Ingestão e validação
 
 - localiza a pasta `dados/raw`
 - verifica a existencia dos arquivos obrigatorios
@@ -189,7 +189,7 @@ O dataset consolidado inclui, entre outros, os campos:
 - contexto temporal: `release_date`, `release_year`, `decade`
 - atributos complementares: `runtime`, `original_language`, `has_collection`, `overview`, `status`
 
-### 5. Agregacoes analiticas
+### 5. Agregacões analíticas
 
 O script gera tabelas como:
 
@@ -205,7 +205,7 @@ O script gera tabelas como:
 - `resumo_sucesso_por_decada`
 - `resumo_sucesso_por_palavra_chave`
 
-### 6. Exportacao
+### 6. Exportação
 
 Sao produzidos os seguintes artefatos em `dados/processed`:
 
@@ -230,7 +230,7 @@ Tambem sao gerados os graficos:
 - `visualizacoes/orcamento_vs_receita.png`
 - `visualizacoes/correlacoes_sucesso.png`
 
-## Observacoes tecnicas
+## Observacões tecnicas
 
 - a exportacao em Parquet depende explicitamente de `pyarrow`
 - o codigo emite avisos quando encontra conteudo malformado em campos serializados como listas/dicionarios
@@ -238,7 +238,7 @@ Tambem sao gerados os graficos:
 - `links_small.csv` existe no repositorio, mas nao participa da execucao principal
 - o script foi escrito para ser executado da raiz do projeto ou com `data_root` informado
 
-## Possiveis melhorias
+## Possíveis melhorias
 
 - adicionar um `requirements.txt` ou `pyproject.toml`
 - versionar um arquivo de exemplo para `credits.csv` ou documentar sua origem esperada
