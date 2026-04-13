@@ -52,7 +52,6 @@ MIN_KEYWORD_FILMS = 10
 MIN_GENRE_FILMS = 20
 MIN_DECADE_FILMS = 20
 
-
 def resolve_data_root(data_root=None):
     if data_root is not None:
         candidate_dirs = [Path(data_root).expanduser().resolve()]
@@ -143,7 +142,6 @@ def _apply_parser(series, parser, *, field_name, empty_value):
         )
 
     return pd.Series(parsed_values, index=series.index)
-
 
 def _round_columns(df, columns, digits=2):
     result = df.copy()
