@@ -309,7 +309,7 @@ def build_story():
         ["menex100",
          "Upload dos arquivos de dados brutos e artefatos processados para o repositório",
          "Add files via upload (dados/raw, Parquet, PNGs)"],
-        ["Aimlock\n(jpbs@cesar.school)",
+        ["João Batista",
          "Refatoração do notebook para execução passo a passo com importações individuais "
          "das funções do pipeline; validação no Google Colab",
          "Refatora notebook para execucao passo a passo"],
