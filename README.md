@@ -10,6 +10,13 @@ O repositorio esta organizado em torno de uma pipeline em Python que:
 - calcula indicadores de sucesso comercial e analitico
 - salva artefatos em CSV, Parquet e PNG
 
+## Fonte dos dados
+
+Os arquivos brutos utilizados neste projeto sao provenientes do **The Movies Dataset**, disponivel publicamente no Kaggle, originado do TMDB (The Movie Database), combinado com o dataset **MovieLens Small** do GroupLens:
+
+- Kaggle: https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset
+- MovieLens: https://grouplens.org/datasets/movielens/latest/
+
 ## Objetivo
 
 Construir uma base consolidada de filmes para analise exploratoria, permitindo responder perguntas como:
