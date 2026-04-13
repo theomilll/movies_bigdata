@@ -313,6 +313,11 @@ def build_story():
          "Refatoração do notebook para execução passo a passo com importações individuais "
          "das funções do pipeline; validação no Google Colab",
          "Refatora notebook para execucao passo a passo"],
+        ["Mathews Ivo Tavares",
+         "Ajustes no nootebook para execucao otimizada, bem como melhorias para qualidade de vida e melhor compreensao do codigo "
+         "das funções do pipeline; validação no Google Colab",
+         "Ajustes Notebook, auxilio em testes, ajustes na base de dados"],
+        
     ]
     story.append(team_table(team_rows))
 
