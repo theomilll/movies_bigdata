@@ -3,9 +3,28 @@ import shutil
 import warnings
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
+DEPENDENCY_INSTALL_HINT = (
+    "Dependencias Python ausentes. A partir da raiz do projeto, execute: "
+    "python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
+)
+
+try:
+    import pandas as pd
+except ModuleNotFoundError as exc:
+    raise RuntimeError(f"{DEPENDENCY_INSTALL_HINT} (pacote faltando: pandas)") from exc
+
+try:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError as exc:
+    raise RuntimeError(f"{DEPENDENCY_INSTALL_HINT} (pacote faltando: matplotlib)") from exc
+
+try:
+    import seaborn as sns
+except ModuleNotFoundError as exc:
+    raise RuntimeError(f"{DEPENDENCY_INSTALL_HINT} (pacote faltando: seaborn)") from exc
 
 
 sns.set_theme(style="whitegrid")
@@ -18,6 +37,12 @@ REQUIRED_RAW_FILES = {
     "links": "links.csv",
     "ratings": "ratings_small.csv",
 }
+
+DATASET_DOWNLOAD_INSTRUCTIONS = (
+    "Baixe o The Movies Dataset em https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset, "
+    "extraia o ZIP e coloque os CSVs obrigatorios em dados/raw/. "
+    "O arquivo credits.csv e obrigatorio para extrair diretores e nao deve ser substituido por fallback."
+)
 
 REQUIRED_COLUMNS = {
     "movies": {
@@ -74,7 +99,8 @@ def resolve_data_root(data_root=None):
 
     raise FileNotFoundError(
         "Nao foi possivel localizar a pasta 'dados/raw'. "
-        "Coloque os arquivos obrigatorios em dados/raw antes de executar o pipeline."
+        "Coloque os arquivos obrigatorios em dados/raw antes de executar o pipeline. "
+        + DATASET_DOWNLOAD_INSTRUCTIONS
     )
 
 
@@ -189,7 +215,7 @@ def _ensure_parquet_dependency():
     except ModuleNotFoundError as exc:
         raise RuntimeError(
             "A exportacao para Parquet requer a dependencia 'pyarrow'. "
-            "Instale com: pip install pyarrow"
+            "Instale com: pip install -r requirements.txt"
         ) from exc
 
 
@@ -201,7 +227,10 @@ def load_raw_datasets(data_root=None):
     ]
     if missing_files:
         raise FileNotFoundError(
-            "Arquivos obrigatorios ausentes em dados/raw: " + ", ".join(sorted(missing_files))
+            "Arquivos obrigatorios ausentes em dados/raw: "
+            + ", ".join(sorted(missing_files))
+            + ". "
+            + DATASET_DOWNLOAD_INSTRUCTIONS
         )
 
     tables = {

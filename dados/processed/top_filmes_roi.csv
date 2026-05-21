@@ -1,0 +1,21 @@
+title,release_year,primary_genre,director,revenue,budget,profit,roi,vote_average,user_rating_avg,vote_count,user_rating_count
+Alice in Wonderland,1951,Animation,Hamilton Luske,572000000.0,3000000.0,569000000.0,18966.67,7.0,3.61,1557.0,49.0
+Snow White and the Seven Dwarfs,1937,Fantasy,David Hand,184925486.0,1488423.0,183437063.0,12324.26,6.9,3.66,1973.0,71.0
+Rocky,1976,Drama,John G. Avildsen,117235147.0,1000000.0,116235147.0,11623.51,7.5,3.79,1843.0,69.0
+The Devil Inside,2012,Thriller,William Brent Bell,101758490.0,1000000.0,100758490.0,10075.85,4.6,,263.0,
+Gone with the Wind,1939,Drama,Victor Fleming,400176459.0,4000000.0,396176459.0,9904.41,7.7,4.04,995.0,68.0
+The Rocky Horror Picture Show,1975,Comedy,Jim Sharman,112892319.0,1200000.0,111692319.0,9307.69,7.4,3.17,703.0,63.0
+Cinderella,1950,Family,Clyde Geronimi,263591415.0,2900000.0,260691415.0,8989.36,6.8,3.56,1760.0,55.0
+Saw,2004,Horror,James Wan,103911669.0,1200000.0,102711669.0,8559.31,7.2,3.27,2255.0,33.0
+E.T. the Extra-Terrestrial,1982,Science Fiction,Steven Spielberg,792965326.0,10500000.0,782465326.0,7452.05,7.3,3.77,3359.0,160.0
+My Big Fat Greek Wedding,2002,Comedy,Joel Zwick,368744044.0,5000000.0,363744044.0,7274.88,6.2,3.36,686.0,51.0
+The Full Monty,1997,Comedy,Peter Cattaneo,257850122.0,3500000.0,254350122.0,7267.15,6.9,3.77,372.0,64.0
+Star Wars,1977,Adventure,George Lucas,775398007.0,11000000.0,764398007.0,6949.07,8.1,4.22,6778.0,291.0
+Saturday Night Fever,1977,Drama,John Badham,237113184.0,3500000.0,233613184.0,6674.66,6.5,3.14,383.0,11.0
+Jaws,1975,Horror,Steven Spielberg,470654000.0,7000000.0,463654000.0,6623.63,7.5,3.78,2628.0,108.0
+Crocodile Dundee,1986,Adventure,Peter Faiman,328203506.0,5000000.0,323203506.0,6464.07,6.3,3.23,512.0,60.0
+Insidious,2010,Horror,James Wan,97009150.0,1500000.0,95509150.0,6367.28,6.8,3.5,1775.0,4.0
+Unfriended,2015,Horror,Levan Gabriadze,62882090.0,1000000.0,61882090.0,6188.21,5.5,,1092.0,
+Love Story,1970,Drama,Arthur Hiller,136400000.0,2200000.0,134200000.0,6100.0,6.6,2.75,123.0,4.0
+The Rescuers,1977,Fantasy,John Lounsbery,71215869.0,1200000.0,70015869.0,5834.66,6.7,3.68,609.0,14.0
+Paranormal Activity 2,2010,Horror,Tod Williams,177512032.0,3000000.0,174512032.0,5817.07,5.7,3.5,734.0,1.0

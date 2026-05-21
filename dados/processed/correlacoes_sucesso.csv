@@ -1,0 +1,13 @@
+target,feature,correlation,sample_size
+revenue,vote_count,0.7816,7371
+revenue,budget,0.7301,5363
+revenue,popularity,0.4576,7371
+revenue,runtime,0.2043,7371
+revenue,vote_average,0.1489,7371
+revenue,user_rating_avg,0.0011,4737
+roi,vote_average,0.0156,5363
+roi,user_rating_avg,0.0062,3830
+roi,popularity,-0.0087,5363
+roi,vote_count,-0.0087,5363
+roi,runtime,-0.0144,5363
+roi,budget,-0.0199,5363
