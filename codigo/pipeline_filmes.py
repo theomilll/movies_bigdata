@@ -4,7 +4,7 @@ import warnings
 from pathlib import Path
 
 DEPENDENCY_INSTALL_HINT = (
-    "Dependencias Python ausentes. A partir da raiz do projeto, execute: "
+    "Dependências Python ausentes. A partir da raiz do projeto, execute: "
     "python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
 )
 
@@ -40,8 +40,8 @@ REQUIRED_RAW_FILES = {
 
 DATASET_DOWNLOAD_INSTRUCTIONS = (
     "Baixe o The Movies Dataset em https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset, "
-    "extraia o ZIP e coloque os CSVs obrigatorios em dados/raw/. "
-    "O arquivo credits.csv e obrigatorio para extrair diretores e nao deve ser substituido por fallback."
+    "extraia o ZIP e coloque os CSVs obrigatórios em dados/raw/. "
+    "O arquivo credits.csv é obrigatório para extrair diretores e não deve ser substituído por fallback."
 )
 
 REQUIRED_COLUMNS = {
@@ -98,8 +98,8 @@ def resolve_data_root(data_root=None):
             return base_dir, raw_dir, processed_dir
 
     raise FileNotFoundError(
-        "Nao foi possivel localizar a pasta 'dados/raw'. "
-        "Coloque os arquivos obrigatorios em dados/raw antes de executar o pipeline. "
+        "Não foi possível localizar a pasta 'dados/raw'. "
+        "Coloque os arquivos obrigatórios em dados/raw antes de executar o pipeline. "
         + DATASET_DOWNLOAD_INSTRUCTIONS
     )
 
@@ -108,7 +108,7 @@ def _validate_columns(df, dataset_name):
     missing_columns = sorted(REQUIRED_COLUMNS[dataset_name] - set(df.columns))
     if missing_columns:
         raise ValueError(
-            f"O dataset '{dataset_name}' nao possui as colunas obrigatorias: {', '.join(missing_columns)}"
+            f"O dataset '{dataset_name}' não possui as colunas obrigatórias: {', '.join(missing_columns)}"
         )
 
 
@@ -163,7 +163,7 @@ def _apply_parser(series, parser, *, field_name, empty_value):
 
     if malformed_rows:
         warnings.warn(
-            f"{field_name}: {malformed_rows} linhas com conteudo malformado foram ignoradas.",
+            f"{field_name}: {malformed_rows} linhas com conteúdo malformado foram ignoradas.",
             RuntimeWarning,
         )
 
@@ -214,7 +214,7 @@ def _ensure_parquet_dependency():
         import pyarrow
     except ModuleNotFoundError as exc:
         raise RuntimeError(
-            "A exportacao para Parquet requer a dependencia 'pyarrow'. "
+            "A exportação para Parquet requer a dependência 'pyarrow'. "
             "Instale com: pip install -r requirements.txt"
         ) from exc
 
@@ -227,7 +227,7 @@ def load_raw_datasets(data_root=None):
     ]
     if missing_files:
         raise FileNotFoundError(
-            "Arquivos obrigatorios ausentes em dados/raw: "
+            "Arquivos obrigatórios ausentes em dados/raw: "
             + ", ".join(sorted(missing_files))
             + ". "
             + DATASET_DOWNLOAD_INSTRUCTIONS
@@ -244,7 +244,7 @@ def load_raw_datasets(data_root=None):
     for dataset_name, dataset in tables.items():
         _validate_columns(dataset, dataset_name)
 
-    print("Ingestao concluida!")
+    print("Ingestão concluída!")
     for dataset_name, dataset in tables.items():
         print(f"  {dataset_name:8s} {len(dataset):6d} linhas, {len(dataset.columns)} colunas")
 
@@ -284,9 +284,9 @@ def clean_movies(movies_df):
     df_clean = df_clean[df_clean["title"].notna()]
     df_clean = df_clean[df_clean["runtime"].notna() & (df_clean["runtime"] > 0)]
 
-    print(f"Linhas removidas por ID invalido: {invalid_id_count}")
+    print(f"Linhas removidas por ID inválido: {invalid_id_count}")
     print(f"Linhas removidas por ID duplicado: {duplicate_id_count}")
-    print(f"Linhas apos limpeza principal: {len(df_clean)}")
+    print(f"Linhas após limpeza principal: {len(df_clean)}")
     return df_clean.reset_index(drop=True)
 
 
@@ -629,8 +629,8 @@ def plot_results(processed_dir, gold_df, tables):
         revenue_by_genre["receita_total_bi"][::-1],
         color=sns.color_palette("viridis", len(revenue_by_genre)),
     )
-    ax.set_xlabel("Receita Total (Bilhoes USD)")
-    ax.set_title("Receita Total por Genero")
+    ax.set_xlabel("Receita Total (Bilhões USD)")
+    ax.set_title("Receita Total por Gênero")
     ax.bar_label(bars, fmt="%.1f B", padding=5)
     plt.tight_layout()
     output_path = charts_dir / "receita_por_genero.png"
@@ -646,7 +646,7 @@ def plot_results(processed_dir, gold_df, tables):
         color="#2196F3",
         alpha=0.7,
     )
-    ax1.set_xlabel("Decada")
+    ax1.set_xlabel("Década")
     ax1.set_ylabel("Quantidade de Filmes", color="#2196F3")
     ax1.tick_params(axis="y", labelcolor="#2196F3")
 
@@ -658,9 +658,9 @@ def plot_results(processed_dir, gold_df, tables):
         marker="o",
         linewidth=2,
     )
-    ax2.set_ylabel("Nota Media dos Usuarios", color="#FF5722")
+    ax2.set_ylabel("Nota Média dos Usuários", color="#FF5722")
     ax2.tick_params(axis="y", labelcolor="#FF5722")
-    ax1.set_title("Producao de Filmes e Nota Media dos Usuarios por Decada")
+    ax1.set_title("Produção de Filmes e Nota Média dos Usuários por Década")
     plt.tight_layout()
     output_path = charts_dir / "filmes_por_decada.png"
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
@@ -685,10 +685,10 @@ def plot_results(processed_dir, gold_df, tables):
     )
     max_val = max(financial_df["budget"].max(), financial_df["revenue"].max()) / 1e6
     ax.plot([0, max_val], [0, max_val], "k--", alpha=0.3, label="Cost = Revenue")
-    ax.set_xlabel("Orcamento (Milhoes USD)")
-    ax.set_ylabel("Receita (Milhoes USD)")
-    ax.set_title("Orcamento vs Receita (cor = nota do metadata)")
-    plt.colorbar(scatter, label="Nota Media")
+    ax.set_xlabel("Orçamento (Milhões USD)")
+    ax.set_ylabel("Receita (Milhões USD)")
+    ax.set_title("Orçamento vs Receita (cor = nota do metadata)")
+    plt.colorbar(scatter, label="Nota Média")
     ax.legend()
     plt.tight_layout()
     output_path = charts_dir / "orcamento_vs_receita.png"
@@ -699,14 +699,14 @@ def plot_results(processed_dir, gold_df, tables):
     correlations = tables["correlacoes_sucesso"].pivot(index="feature", columns="target", values="correlation")
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.heatmap(correlations, annot=True, cmap="coolwarm", center=0, vmin=-1, vmax=1, ax=ax)
-    ax.set_title("Correlacoes com Receita e ROI")
+    ax.set_title("Correlações com Receita e ROI")
     plt.tight_layout()
     output_path = charts_dir / "correlacoes_sucesso.png"
     fig.savefig(output_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
     plot_paths["correlacoes_sucesso"] = output_path
 
-    print(f"Graficos salvos em: {charts_dir}")
+    print(f"Gráficos salvos em: {charts_dir}")
     return plot_paths
 
 
@@ -763,7 +763,7 @@ def _build_output_summary(processed_dir, output_paths, plot_paths):
 
 def main(data_root=None):
     loaded = load_raw_datasets(data_root)
-    print(f"Diretorio base: {loaded['base_dir']}")
+    print(f"Diretório base: {loaded['base_dir']}")
     print(f"Dados brutos: {loaded['raw_dir']}")
     print(f"Dados processados: {loaded['processed_dir']}")
 

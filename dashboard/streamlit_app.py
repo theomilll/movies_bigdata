@@ -51,9 +51,9 @@ decades = sorted(gold_df["decade_numeric"].dropna().astype(int).unique())
 
 with st.sidebar:
     st.header("Filtros")
-    selected_genres = st.multiselect("Generos", genres)
+    selected_genres = st.multiselect("Gêneros", genres)
     selected_decades = st.slider(
-        "Decadas",
+        "Décadas",
         min_value=int(min(decades)),
         max_value=int(max(decades)),
         value=(int(min(decades)), int(max(decades))),
@@ -87,8 +87,8 @@ with left:
             x="receita_total_bi",
             y="primary_genre",
             orientation="h",
-            labels={"receita_total_bi": "Receita total (US$ bi)", "primary_genre": "Genero"},
-            title="Receita total por genero",
+            labels={"receita_total_bi": "Receita total (US$ bi)", "primary_genre": "Gênero"},
+            title="Receita total por gênero",
         ),
         use_container_width=True,
     )
@@ -106,11 +106,11 @@ with left:
             color="vote_average",
             hover_data=["title", "release_year", "primary_genre", "director"],
             labels={
-                "budget_mi": "Orcamento (US$ mi)",
+                "budget_mi": "Orçamento (US$ mi)",
                 "revenue_mi": "Receita (US$ mi)",
                 "vote_average": "Nota TMDB",
             },
-            title="Orcamento vs receita",
+            title="Orçamento vs receita",
         ),
         use_container_width=True,
     )
@@ -123,7 +123,7 @@ with right:
             x="decade",
             y=["qtd_filmes", "nota_usuarios_media"],
             markers=True,
-            title="Volume de filmes e nota media por decada",
+            title="Volume de filmes e nota média por década",
         ),
         use_container_width=True,
     )
@@ -138,7 +138,7 @@ with right:
             zmin=-1,
             zmax=1,
             color_continuous_scale="RdBu_r",
-            title="Correlacoes com receita e ROI",
+            title="Correlações com receita e ROI",
         ),
         use_container_width=True,
     )
@@ -150,14 +150,4 @@ st.dataframe(
     ].head(15),
     use_container_width=True,
     hide_index=True,
-)
-
-st.subheader("Leitura para apresentacao")
-st.markdown(
-    """
-- A receita total se concentra em poucos generos de grande escala comercial.
-- Orcamento ajuda a explicar receita, mas ROI e um indicador diferente: filmes menores podem ter retorno proporcional maior.
-- As notas de usuarios cobrem apenas filmes que cruzam corretamente MovieLens e TMDB.
-- Popularidade e contagem de votos carregam vieses de visibilidade, entao nao devem ser lidas como qualidade pura.
-"""
 )

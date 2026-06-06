@@ -12,5 +12,4 @@ __pycache__/
 tmp/
 
 dados/processed/filmes_processados.csv
-dados/raw/credits.csv
-dados/raw/ratings.csv
+dados/raw/*.csv
