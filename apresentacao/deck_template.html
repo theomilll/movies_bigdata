@@ -622,8 +622,8 @@ h2 .am{color:var(--amber);}
         <div>
           <div class="kicker reveal d1">Back-test · <span id="bt-n">13</span> lançamentos, <span id="bt-gen">7</span> gêneros</div>
           <h2 class="reveal d2" style="font-size:54px;margin-top:14px;">Calibrado no meio,<br>cego nas <span class="em">caudas</span></h2>
-          <p class="lead reveal d3" style="font-size:25px;margin-top:16px;">No mainstream ele acerta o porte — Dune 2: previsto <span id="bt-dune">~US$ 751 mi</span> vs real US$ 715 mi. Mas <b>superestima os flops caros</b> (Furiosa, The Crow) e <b style="color:var(--blood-bright)">subestima as surpresas baratas</b> — Obsessão e Anora, os virais que nenhum dado pré-estreia anuncia.</p>
-          <p class="takeaway reveal d4" style="margin-top:12px;">Nesses <span id="bt-n2">13</span> extremos: <span id="bt-score">7/13</span> acertos de hit/flop · subestimação mediana <span id="bt-med">~6,3×</span>. Na validação geral (5-fold): <b><span id="bt-acc">68%</span> · AUC <span id="bt-auc2">0,64</span></b>.</p>
+          <p class="lead reveal d3" style="font-size:25px;margin-top:16px;">No mainstream ele acerta o porte — Dune 2: previsto <span id="bt-dune">~US$ 560 mi</span> vs real US$ 715 mi. Mas <b>superestima os flops caros</b> (Furiosa, The Crow) e <b style="color:var(--blood-bright)">subestima as surpresas baratas</b> — Obsessão e Anora, os virais que nenhum dado pré-estreia anuncia.</p>
+          <p class="takeaway reveal d4" style="margin-top:12px;">Nesses <span id="bt-n2">13</span> extremos: <span id="bt-score">7/13</span> acertos de hit/flop · subestimação mediana <span id="bt-med">~4,0×</span>. Na validação geral (5-fold): <b><span id="bt-acc">68%</span> · AUC <span id="bt-auc2">0,68</span></b>.</p>
         </div>
         <div class="chart-wrap reveal d3"><div id="chart-backtest" class="chart" style="height:780px;"></div></div>
       </div>
@@ -639,7 +639,7 @@ h2 .am{color:var(--amber);}
     <div class="chrome-top"><span>A lição</span><span class="acc">05 — Em cartaz</span></div>
     <div class="body">
       <div class="kicker reveal d1">Obsessão · US$ 750 mil → US$ 171 mi · 228×</div>
-      <div class="huge reveal-blur d2" style="margin-top:22px;font-size:118px;">O modelo previu<br><span class="am" id="les-pred">US$ 1,4 mi.</span><br>A realidade: <span class="em">US$ 171 mi.</span></div>
+      <div class="huge reveal-blur d2" style="margin-top:22px;font-size:118px;">O modelo previu<br><span class="am" id="les-pred">US$ 1,1 mi.</span><br>A realidade: <span class="em">US$ 171 mi.</span></div>
       <div class="sub reveal d4">O modelo enxerga orçamento, gênero e diretor — mas <b>não</b> enxerga o que faz um filme barato <em>viralizar</em>. Esse empurrão vem do <b style="color:var(--amber)">buzz antecipado</b>: visualizações de trailer e menções em redes sociais <em>antes</em> do lançamento, em <b>qualquer gênero</b>. É esse sinal que falta — a fronteira que o Tema 14 aponta.</div>
     </div>
     <div class="chrome-foot"><span>O que o modelo não consegue ver</span><span>movies_bigdata</span></div>
@@ -657,7 +657,7 @@ h2 .am{color:var(--amber);}
         <ul class="bullets reveal d2" style="font-size:27px;">
           <li><b>Pipeline completo</b> entregue e testado (Bronze→Gold, 11 tabelas, 2/2 testes).</li>
           <li><b>Análise:</b> orçamento é o que mais prevê receita; ROI é imprevisível.</li>
-          <li><b>Modelo pré-estreia</b> (qualquer gênero) acerta o miolo (AUC <span id="c-auc">0,64</span>), mas erra as caudas virais.</li>
+          <li><b>Modelo pré-estreia</b> (qualquer gênero) acerta o miolo (AUC <span id="c-auc">0,68</span>), mas erra as caudas virais.</li>
         </ul>
         <ul class="bullets reveal d3" style="font-size:27px;">
           <li><b>Limitação:</b> métricas valem só para filmes com bilheteria reportada (viés de sobrevivência).</li>
@@ -722,7 +722,7 @@ h2 .am{color:var(--amber);}
 
 <!-- chrome fora do palco -->
 <div class="progress" id="progress"></div>
-<div class="counter" id="counter">01 / 24</div>
+<div class="counter" id="counter">01 / 25</div>
 <div class="hint">← → espaço · E editar</div>
 <div class="edit-hotzone"></div>
 <button class="edit-toggle" id="editToggle" title="Modo edição (E)">✏️</button>
@@ -873,19 +873,13 @@ function fillMetrics(){
   set('c-auc', m.classificacao_hit.roc_auc.toFixed(2).replace('.', ','));
   // back-test: fatores das duas caudas + placar honesto (dinâmicos)
   const fx = v => '~' + (v >= 10 ? Math.round(v) : v.toFixed(1).replace('.', ',')) + '×';
-  const preds = DADOS.predicoes.filter(d => d.actual_box_office_usd && d.receita_prevista_usd > 0);
-  if (preds.length) {
-    const under = Math.max(...preds.map(d => d.actual_box_office_usd / d.receita_prevista_usd));
-    const over = Math.max(...preds.map(d => d.receita_prevista_usd / d.actual_box_office_usd));
-    set('bt-under', fx(under)); set('bt-over', fx(over));
-  }
   const bs = DADOS.backtest_stats;
   if (bs) { set('bt-score', bs.acertos_classificacao + '/' + bs.n_filmes); set('bt-med', fx(bs.mediana_subestimacao_x)); }
   // contagem dinâmica de lançamentos e gêneros do back-test + métricas do holdout
   const withActual = DADOS.predicoes.filter(d => d.actual_box_office_usd);
   const ng = new Set(withActual.map(d => d.genero)).size;
   set('bt-n', withActual.length); set('bt-n2', withActual.length);
-  set('bt-gen', ng); set('bt-gen2', ng);
+  set('bt-gen', ng);
   set('bt-acc', Math.round(m.classificacao_hit.acuracia * 100) + '%');
   set('bt-auc2', m.classificacao_hit.roc_auc.toFixed(2).replace('.', ','));
   const dune = DADOS.predicoes.find(d => d.title === 'Dune: Parte Dois');
