@@ -1,0 +1,81 @@
+{
+  "n_filmes": 5363,
+  "taxa_hits": 0.5131,
+  "features": {
+    "numericas": [
+      "budget",
+      "runtime",
+      "vote_average",
+      "vote_count",
+      "popularity",
+      "user_rating_avg",
+      "user_rating_count",
+      "keyword_count",
+      "release_year",
+      "has_collection"
+    ],
+    "categoricas": [
+      "primary_genre",
+      "original_language"
+    ],
+    "excluidas_por_leakage": [
+      "revenue",
+      "profit",
+      "roi"
+    ]
+  },
+  "aviso_leakage": "vote_count, popularity, vote_average e user_rating_* só existem após o lançamento; o modelo estima a bilheteria com buzz pós-lançamento, não é previsão pura pré-lançamento.",
+  "modelo_receita": {
+    "holdout": {
+      "r2_log": 0.7178,
+      "mae_usd": 38467791.21,
+      "rmse_usd": 84770321.24
+    },
+    "cv_r2_log": {
+      "media": 0.6496,
+      "desvio": 0.0479
+    },
+    "baseline_ridge_holdout": {
+      "r2_log": 0.3664,
+      "mae_usd": 603871676.9,
+      "rmse_usd": 10773765396.63
+    }
+  },
+  "modelo_hit": {
+    "holdout": {
+      "accuracy": 0.7605,
+      "precision": 0.7644,
+      "recall": 0.7713,
+      "f1": 0.7678,
+      "roc_auc": 0.846
+    },
+    "cv_roc_auc": {
+      "media": 0.8028,
+      "desvio": 0.0321
+    },
+    "baseline_logreg_holdout": {
+      "accuracy": 0.7521,
+      "precision": 0.7856,
+      "recall": 0.7114,
+      "f1": 0.7467,
+      "roc_auc": 0.8306
+    }
+  },
+  "split_temporal": {
+    "corte_ano": 2010,
+    "n_treino": 3732,
+    "n_teste": 1631,
+    "receita": {
+      "r2_log": 0.6158,
+      "mae_usd": 57167078.69,
+      "rmse_usd": 123175642.66
+    },
+    "hit": {
+      "accuracy": 0.7032,
+      "precision": 0.7024,
+      "recall": 0.7342,
+      "f1": 0.7179,
+      "roc_auc": 0.7771
+    }
+  }
+}
