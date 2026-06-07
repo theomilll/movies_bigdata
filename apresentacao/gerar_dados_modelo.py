@@ -3,13 +3,11 @@ Atualiza os blocos do MODELO em apresentacao/dados_slides.json a partir dos
 artefatos oficiais do repositório (nada de número digitado à mão):
 
   - dados/processed/modelos/metricas_modelo.json   -> métricas (holdout, CV, baseline, split temporal)
-  - codigo/modelo_preditivo.py                     -> re-treina em memória para importância + back-test
+  - codigo/modelo_preditivo.py                     -> re-treina em memória para importância + previsões
   - apresentacao/filmes_lancamentos.json           -> lançamentos recentes (metadata pública + bilheteria pesquisada)
 
-O modelo do grupo usa sinais de engajamento (vote_count, popularidade, notas) que só
-amadurecem APÓS a estreia. Para uma previsão pré-estreia, esses campos são preenchidos
-com a MEDIANA da base — exatamente como a aba "Previsão" do dashboard do grupo faz.
-O back-test abaixo é, portanto, ilustrativo (buzz mediano), não uma medição de produção.
+O modelo é PRÉ-ESTREIA: usa só o que se sabe antes do lançamento, então prevê
+qualquer filme (inclusive os que ainda nem saíram) sem precisar de sinais pós-estreia.
 
 Uso: python apresentacao/gerar_dados_modelo.py   (precisa do gold em dados/processed/)
 """
@@ -34,14 +32,12 @@ DADOS_JSON = ROOT / "apresentacao" / "dados_slides.json"
 METRICAS_JSON = ROOT / "dados" / "processed" / "modelos" / "metricas_modelo.json"
 FILMES_JSON = ROOT / "apresentacao" / "filmes_lancamentos.json"
 
-# Sinais de engajamento que só existem após a estreia (preenchidos com mediana na previsão).
-BUZZ_FEATURES = ["vote_average", "vote_count", "popularity", "user_rating_avg", "user_rating_count"]
-
 
 def construir_bloco_modelo(metricas, importancias):
     r = metricas["modelo_receita"]
     h = metricas["modelo_hit"]
     st = metricas["split_temporal"]
+    feats = metricas["features"]
     return {
         "metricas": {
             "n_total_treinaveis": metricas["n_filmes"],
@@ -49,19 +45,18 @@ def construir_bloco_modelo(metricas, importancias):
             "definicao_hit": "bilheteria >= 2x orçamento",
             "validacao": "holdout 80/20 + 5-fold CV + split temporal (treino <2010 / teste >=2010)",
             "aviso_leakage": metricas["aviso_leakage"],
-            "features_usadas": metricas["features"]["numericas"] + metricas["features"]["categoricas"],
-            "features_engajamento_pos_estreia": BUZZ_FEATURES,
-            "features_excluidas_por_vazamento": metricas["features"]["excluidas_por_leakage"],
-            # --- campos lidos diretamente pelo template (headline) ---
+            "features_usadas": feats["numericas"] + feats["categoricas"] + feats.get("target_encoded", []),
+            "features_excluidas_por_vazamento": feats["excluidas_por_leakage"],
+            # --- campos lidos diretamente pelo template (headline) = CV (estimativa robusta) ---
             "regressao_log_receita": {
-                "r2": r["cv_r2_log"]["media"],            # CV como estimativa robusta
+                "r2": r["cv_r2_log"]["media"],
                 "r2_std": r["cv_r2_log"]["desvio"],
                 "mae_usd_milhoes": round(r["holdout"]["mae_usd"] / 1e6, 1),
             },
             "classificacao_hit": {
-                "roc_auc": h["cv_roc_auc"]["media"],       # CV
+                "roc_auc": h["cv_roc_auc"]["media"],
                 "roc_auc_std": h["cv_roc_auc"]["desvio"],
-                "acuracia": h["holdout"]["accuracy"],      # holdout
+                "acuracia": h["holdout"]["accuracy"],
             },
             # --- detalhamento por método de validação (slides de rigor) ---
             "receita": {
@@ -102,21 +97,26 @@ def construir_bloco_modelo(metricas, importancias):
     }
 
 
-def prever_lancamentos(rev_model, hit_model, medianas, filmes):
+def _feature_row(f):
+    kws = [str(k).lower() for k in (f.get("keywords") or [])]
+    return {
+        "log_budget": float(np.log1p(f["budget"])),
+        "runtime": float(f.get("runtime") or 100),
+        "release_year": float(f["release_year"]),
+        "has_collection": int(f.get("has_collection", 0)),
+        "keyword_count": float(len(kws)),
+        "is_sequel": int(f.get("is_sequel", int("sequel" in kws or f.get("has_collection", 0)))),
+        "based_on_novel": int(f.get("based_on_novel", int("based on novel" in kws))),
+        "primary_genre": f["primary_genre"],
+        "original_language": f.get("original_language", "en"),
+        "director": f.get("director", "desconhecido"),
+    }
+
+
+def prever_lancamentos(rev_model, hit_model, filmes):
     linhas = []
     for f in filmes:
-        row = {
-            "budget": float(f["budget"]),
-            "runtime": float(f.get("runtime") or medianas["runtime"]),
-            "keyword_count": float(len(f.get("keywords") or [])) or medianas["keyword_count"],
-            "release_year": float(f["release_year"]),
-            "has_collection": int(f.get("has_collection", 0)),
-            "primary_genre": f["primary_genre"],
-            "original_language": f.get("original_language", "en"),
-        }
-        for b in BUZZ_FEATURES:  # buzz pós-estreia -> mediana da base
-            row[b] = medianas[b]
-        X = pd.DataFrame([row])[M.FEATURE_COLUMNS]
+        X = pd.DataFrame([_feature_row(f)])[M.FEATURE_COLUMNS]
         receita = float(np.expm1(rev_model.predict(X)[0]))
         prob = float(hit_model.predict_proba(X)[0, 1])
         actual = f.get("actual_box_office_usd")
@@ -145,21 +145,17 @@ def main():
     filmes = json.loads(FILMES_JSON.read_text(encoding="utf-8"))
     dados = json.loads(DADOS_JSON.read_text(encoding="utf-8"))
 
-    medianas = {c: float(np.nanmedian(pd.to_numeric(gold[c], errors="coerce")))
-                for c in BUZZ_FEATURES + ["runtime", "keyword_count"]}
-
-    # re-treina o modelo do grupo (determinístico) p/ importância e back-test — sem tocar nos .joblib commitados
     X, yr, yh = M.build_model_table(gold)
+    # re-treina (determinístico) p/ importância (holdout) e back-test (dados completos)
     Xtr, Xte, ytr, yte, _, _ = train_test_split(X, yr, yh, test_size=0.2, random_state=M.RANDOM_STATE, stratify=yh)
     rev_holdout = M.build_revenue_model().fit(Xtr, ytr)
     imp = permutation_importance(rev_holdout, Xte, yte, n_repeats=10, random_state=M.RANDOM_STATE, scoring="r2")
     importancias = [{"feature": c, "importancia": float(v)}
                     for c, v in sorted(zip(X.columns, imp.importances_mean), key=lambda kv: -kv[1])]
 
-    # modelos em dados completos p/ prever os lançamentos
     rev_full = M.build_revenue_model().fit(X, yr)
     hit_full = M.build_hit_model().fit(X, yh)
-    predicoes = prever_lancamentos(rev_full, hit_full, medianas, filmes)
+    predicoes = prever_lancamentos(rev_full, hit_full, filmes)
 
     com_real = [p for p in predicoes if p["actual_box_office_usd"]]
     acertos = sum(1 for p in com_real
@@ -171,7 +167,6 @@ def main():
         "acertos_classificacao": acertos,
         "n_sucessos_reais": sum(1 for p in com_real if p["actual_box_office_usd"] >= 2 * p["budget_usd"]),
         "mediana_subestimacao_x": round(float(np.median(sub)), 1) if sub else None,
-        "buzz_preenchido_com": "mediana da base (sinais pós-estreia)",
     }
 
     dados["modelo"] = construir_bloco_modelo(metricas, importancias)
@@ -182,13 +177,12 @@ def main():
     print(f"OK -> {DADOS_JSON}")
     print(f"  modelo: CV R2(log)={metricas['modelo_receita']['cv_r2_log']['media']} | "
           f"CV AUC={metricas['modelo_hit']['cv_roc_auc']['media']} | holdout acc={metricas['modelo_hit']['holdout']['accuracy']}")
-    print(f"  importância top: {importancias[0]['feature']} {importancias[0]['importancia']:.3f}, "
-          f"{importancias[1]['feature']} {importancias[1]['importancia']:.3f}")
+    print(f"  importância top: " + ", ".join(f"{i['feature']} {i['importancia']:.3f}" for i in importancias[:3]))
     print(f"  back-test: {acertos}/{len(com_real)} acertos · subestimação mediana {backtest_stats['mediana_subestimacao_x']}x")
     for p in predicoes:
-        if p["destaque"]:
-            print(f"    {p['title']:<18} previsto US$ {p['receita_prevista_usd']/1e6:6.1f} mi · "
-                  f"prob {p['prob_hit']:.2f} · real {p['actual_box_office_usd'] and p['actual_box_office_usd']/1e6}")
+        a = p["actual_box_office_usd"]
+        print(f"    {p['title']:<18} previsto US$ {p['receita_prevista_usd']/1e6:7.1f} mi · prob {p['prob_hit']:.2f}"
+              + (f" · real US$ {a/1e6:.1f} mi" if a else ""))
 
 
 if __name__ == "__main__":
