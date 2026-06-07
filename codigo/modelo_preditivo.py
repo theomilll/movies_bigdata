@@ -180,8 +180,8 @@ def build_preprocessor(target_type):
 # folhas grandes evitam decorar o treino (menos gap entre holdout e CV).
 _HGB_PARAMS = dict(
     max_iter=300,
-    learning_rate=0.06,
-    max_leaf_nodes=15,
+    learning_rate=0.03,
+    max_leaf_nodes=7,
     min_samples_leaf=40,
     l2_regularization=1.0,
     random_state=RANDOM_STATE,

@@ -18,7 +18,7 @@
     "destaque": true,
     "actual_box_office_usd": 155000000,
     "fonte": "A24/Chernin; Box Office Mojo, Variety, Deadline (jun/2026) — bilheteria provisória",
-    "nota": "Estreia A24 recorde (US$ 118M no fim de semana de abertura mundial). IP viral do YouTube."
+    "nota": "IP viral do YouTube; lançamento A24/Chernin. Bilheteria de 2026 provisória."
   },
   {
     "title": "Obsessão",
@@ -227,7 +227,7 @@
     "runtime": 160,
     "primary_genre": "Music",
     "director": "Jon M. Chu",
-    "has_collection": 0,
+    "has_collection": 1,
     "original_language": "en",
     "release_year": 2024,
     "keywords": [

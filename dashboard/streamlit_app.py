@@ -208,7 +208,7 @@ with tab_previsao:
         in_director = st.text_input("Diretor", value="")
         in_collection = st.checkbox("Faz parte de coleção/franquia")
         in_sequel = st.checkbox("É sequência")
-        in_novel = st.checkbox("Adaptação de livro")
+        in_novel = st.checkbox("Baseado em romance (livro)")
 
     if st.button("Prever"):
         row = pd.DataFrame(
@@ -219,7 +219,7 @@ with tab_previsao:
                     "release_year": float(in_year),
                     "has_collection": int(in_collection),
                     "keyword_count": float(in_keywords),
-                    "is_sequel": int(in_sequel or in_collection),
+                    "is_sequel": int(in_sequel),
                     "based_on_novel": int(in_novel),
                     "primary_genre": in_genre,
                     "original_language": in_language,

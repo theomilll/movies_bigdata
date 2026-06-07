@@ -98,18 +98,20 @@ def construir_bloco_modelo(metricas, importancias):
 
 
 def _feature_row(f):
-    kws = [str(k).lower() for k in (f.get("keywords") or [])]
+    kws = f.get("keywords") or []
+    # mesma derivação do treino (M._keyword_flags), sem acoplar has_collection
+    flag_seq, flag_novel = M._keyword_flags(kws)
     return {
         "log_budget": float(np.log1p(f["budget"])),
         "runtime": float(f.get("runtime") or 100),
         "release_year": float(f["release_year"]),
         "has_collection": int(f.get("has_collection", 0)),
         "keyword_count": float(len(kws)),
-        "is_sequel": int(f.get("is_sequel", int("sequel" in kws or f.get("has_collection", 0)))),
-        "based_on_novel": int(f.get("based_on_novel", int("based on novel" in kws))),
+        "is_sequel": int(f.get("is_sequel", flag_seq)),
+        "based_on_novel": int(f.get("based_on_novel", flag_novel)),
         "primary_genre": f["primary_genre"],
         "original_language": f.get("original_language", "en"),
-        "director": f.get("director", "desconhecido"),
+        "director": (f.get("director") or "desconhecido"),
     }
 
 
@@ -123,7 +125,7 @@ def prever_lancamentos(rev_model, hit_model, filmes):
         linhas.append({
             "title": f["title"],
             "genero": f["primary_genre"],
-            "diretor": f["director"],
+            "diretor": (f.get("director") or "desconhecido"),
             "ano": f["release_year"],
             "budget_usd": float(f["budget"]),
             "receita_prevista_usd": receita,
