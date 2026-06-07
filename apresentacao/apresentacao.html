@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>movies_bigdata — O Próximo Grande Sucesso (Tema 14)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,600&family=Space+Mono:wght@400;700&family=Sora:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+<!-- Plotly local (offline) para os gráficos interativos -->
+<script src="plotly.min.js"></script>
+<style>
+/* ===========================================
+   TEMA "SALA ESCURA" — variáveis (edite aqui para mudar tudo)
+   =========================================== */
+:root{
+  --stage-bg:#050407; --slide-bg:#08070b;
+  --ink:#f3ece1;        /* osso */
+  --muted:#9b9088; --dim:#6b6259;
+  --amber:#e8b33d;      /* acento primário (marquise) */
+  --amber-soft:#f0cd7e;
+  --blood:#b0121a;      /* acento terror / perigo */
+  --blood-bright:#e0232e;
+  --good:#5fbf94;       /* sucesso / hit */
+  --panel:rgba(255,255,255,.035);
+  --panel-2:rgba(255,255,255,.06);
+  --line:rgba(232,179,61,.16);
+  --line-soft:rgba(243,236,225,.10);
+  --font-display:'Anton',sans-serif;
+  --font-serif:'Fraunces',serif;
+  --font-body:'Sora',sans-serif;
+  --font-mono:'Space Mono',monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ===========================================
+   VIEWPORT-BASE.CSS (palco fixo 16:9 — obrigatório)
+   =========================================== */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+  .deck-viewport{position:static;overflow:visible;background:#fff;}
+  .deck-stage{position:static;width:auto;height:auto;transform:none!important;background:none;}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+  .slide:last-child{break-after:auto;page-break-after:auto;}
+  .deck-controls{display:none!important;}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important;}}
+
+/* ===========================================
+   ATMOSFERA — granulação, vinheta, feixe (em cada slide)
+   =========================================== */
+.slide{font-family:var(--font-body);color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 80% -12%, rgba(232,179,61,.13), transparent 60%),
+    radial-gradient(1000px 1000px at 8% 120%, rgba(176,18,26,.16), transparent 62%),
+    linear-gradient(160deg,#0b0910 0%,#08070b 55%,#050406 100%);}
+.grain{position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;pointer-events:none;z-index:40;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:39;box-shadow:inset 0 0 360px 70px rgba(0,0,0,.82);}
+.beam{position:absolute;top:-14%;right:4%;width:1000px;height:1300px;z-index:0;pointer-events:none;
+  background:conic-gradient(from 210deg at 50% 0%, transparent 0deg, rgba(232,179,61,.08) 14deg, transparent 30deg);filter:blur(8px);transform:rotate(8deg);}
+
+/* ===========================================
+   CHROME — cabeçalho/rodapé/numeração
+   =========================================== */
+.pad{position:absolute;inset:0;padding:78px 110px 64px;display:flex;flex-direction:column;z-index:10;}
+.chrome-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);
+  font-size:18px;letter-spacing:.28em;color:var(--dim);text-transform:uppercase;flex:0 0 auto;}
+.chrome-top .acc{color:var(--amber);}
+.chrome-foot{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);
+  font-size:15px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;flex:0 0 auto;border-top:1px solid var(--line-soft);padding-top:18px;margin-top:auto;}
+.kicker{font-family:var(--font-mono);letter-spacing:.4em;font-size:19px;color:var(--amber);text-transform:uppercase;}
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;}
+
+/* headings */
+h2{font-family:var(--font-display);font-weight:400;text-transform:uppercase;line-height:.98;letter-spacing:.5px;font-size:96px;color:var(--ink);padding-top:.06em;}
+h2 .em{color:var(--blood-bright);}
+h2 .am{color:var(--amber);}
+.lead{font-family:var(--font-serif);font-style:italic;font-weight:400;font-size:38px;line-height:1.32;color:#d9cdbb;max-width:1320px;}
+.muted{color:var(--muted);}
+
+/* reveal animations (cinematic: slow fades) */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease),transform 1s var(--ease);}
+.slide.visible .reveal{opacity:1;transform:none;}
+.slide.visible .d1{transition-delay:.12s}.slide.visible .d2{transition-delay:.26s}
+.slide.visible .d3{transition-delay:.4s}.slide.visible .d4{transition-delay:.54s}
+.slide.visible .d5{transition-delay:.68s}.slide.visible .d6{transition-delay:.82s}
+.reveal-blur{opacity:0;filter:blur(12px);transition:opacity 1.1s var(--ease),filter 1.1s var(--ease);}
+.slide.visible .reveal-blur{opacity:1;filter:none;}
+
+/* ===========================================
+   COMPONENTES
+   =========================================== */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;}
+.stat-row{display:flex;gap:26px;}
+.stat{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:30px 32px;}
+.stat .n{font-family:var(--font-display);font-size:64px;line-height:.95;color:var(--amber);}
+.stat .n.blood{color:var(--blood-bright);}
+.stat .n.good{color:var(--good);}
+.stat .c{font-family:var(--font-mono);font-size:16px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-top:12px;}
+.chip{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:16px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--amber);border:1px solid var(--line);border-radius:999px;padding:9px 18px;}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--blood);box-shadow:0 0 14px 2px rgba(176,18,26,.8);}
+
+/* two-column with chart */
+.cols{display:grid;grid-template-columns:1fr 1.18fr;gap:60px;align-items:center;height:100%;}
+.cols.narrow{grid-template-columns:.85fr 1.3fr;}
+.chart-wrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 18px 8px;}
+.chart{width:100%;}
+.takeaway{margin-top:8px;font-family:var(--font-serif);font-style:italic;font-size:30px;color:var(--amber-soft);line-height:1.3;}
+
+/* section divider */
+.divider .body{justify-content:center;}
+.divider .num{font-family:var(--font-display);font-size:300px;line-height:.8;color:transparent;-webkit-text-stroke:2px rgba(232,179,61,.5);text-stroke:2px rgba(232,179,61,.5);}
+.divider h2{font-size:128px;margin-top:-20px;}
+
+/* lists */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:10px;}
+.stage{flex:1;position:relative;padding:26px 24px;background:var(--panel);border:1px solid var(--line);}
+.stage:not(:last-child){border-right:none;}
+.stage .s-k{font-family:var(--font-mono);font-size:14px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;}
+.stage .s-t{font-family:var(--font-body);font-weight:600;font-size:26px;margin-top:10px;color:var(--ink);}
+.stage .s-d{font-size:18px;color:var(--muted);margin-top:8px;line-height:1.4;}
+.stage .arrow{position:absolute;right:-13px;top:50%;transform:translateY(-50%);z-index:5;color:var(--amber);font-size:24px;}
+.bands{display:flex;gap:26px;margin-top:26px;}
+.band{flex:1;border-radius:12px;padding:22px 26px;border:1px solid var(--line-soft);}
+.band.bronze{background:linear-gradient(135deg,rgba(176,18,26,.10),transparent);}
+.band.silver{background:linear-gradient(135deg,rgba(155,144,136,.12),transparent);}
+.band.gold{background:linear-gradient(135deg,rgba(232,179,61,.12),transparent);}
+.band .bt{font-family:var(--font-display);font-size:30px;letter-spacing:.04em;}
+.band.bronze .bt{color:var(--blood-bright);}.band.silver .bt{color:#cfc6bb;}.band.gold .bt{color:var(--amber);}
+.band .bd{font-size:18px;color:var(--muted);margin-top:8px;line-height:1.45;}
+
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px;}
+.tech{background:var(--panel);border:1px solid var(--line-soft);border-radius:12px;padding:20px 22px;}
+.tech .tt{font-family:var(--font-body);font-weight:700;font-size:24px;color:var(--ink);}
+.tech .td{font-size:16px;color:var(--muted);margin-top:6px;line-height:1.35;}
+
+.bullets{list-style:none;display:flex;flex-direction:column;gap:24px;margin-top:6px;}
+.bullets li{position:relative;padding-left:42px;font-size:30px;line-height:1.4;color:#e7ddcf;}
+.bullets li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;background:var(--blood);transform:rotate(45deg);box-shadow:0 0 12px rgba(176,18,26,.6);}
+.bullets li b{color:var(--amber);font-weight:600;}
+
+/* prediction cards */
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:6px;}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px 30px 26px;position:relative;overflow:hidden;}
+.pcard::after{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--blood);}
+.pcard.sci::after{background:var(--amber);}
+.pcard .pt{font-family:var(--font-display);font-size:46px;line-height:1;color:var(--ink);text-transform:uppercase;}
+.pcard .pm{font-family:var(--font-mono);font-size:15px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:10px;}
+.pcard .prow{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;padding-top:16px;border-top:1px solid var(--line-soft);}
+.pcard .prow .lbl{font-family:var(--font-mono);font-size:15px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+.pcard .prow .val{font-family:var(--font-body);font-weight:700;font-size:28px;color:var(--amber);}
+.pcard .prow .val.big{font-size:38px;}
+.gauge{height:12px;border-radius:999px;background:rgba(255,255,255,.08);margin-top:8px;overflow:hidden;}
+.gauge > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blood),var(--amber));}
+
+/* big-number statement */
+.statement .body{justify-content:center;}
+.statement .huge{font-family:var(--font-display);font-size:150px;line-height:1.0;text-transform:uppercase;padding-top:.08em;}
+.statement .huge .em{color:var(--blood-bright);}
+.statement .sub{font-family:var(--font-serif);font-style:italic;font-size:42px;color:#d9cdbb;margin-top:30px;max-width:1300px;line-height:1.32;}
+
+/* table-ish compact rows */
+.rows{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+.row{display:grid;grid-template-columns:38px 1.6fr 1fr 1fr 1fr;gap:18px;align-items:center;padding:14px 22px;background:var(--panel);border:1px solid var(--line-soft);border-radius:10px;}
+.row.head{background:transparent;border:none;font-family:var(--font-mono);font-size:15px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;padding:4px 22px;}
+.row .rk{font-family:var(--font-display);font-size:30px;color:var(--amber);}
+.row .nm{font-size:24px;color:var(--ink);font-weight:600;}
+.row .nm small{display:block;font-weight:400;font-size:16px;color:var(--muted);font-family:var(--font-mono);letter-spacing:.04em;}
+.row .v{font-family:var(--font-body);font-size:24px;color:#e7ddcf;}
+.row .v.am{color:var(--amber);font-weight:700;}
+.row .v.bl{color:var(--blood-bright);font-weight:700;}
+
+/* sprocket strip (title + closing) */
+.sprockets{position:absolute;left:0;top:0;bottom:0;width:56px;background:#0b0a10;border-right:1px solid #1a1622;z-index:8;
+  display:flex;flex-direction:column;justify-content:space-around;align-items:center;padding:28px 0;}
+.sprockets i{width:24px;height:32px;border-radius:5px;background:#070509;box-shadow:inset 0 0 0 2px #201b28;}
+
+/* title slide specifics */
+.title-slide .pad{padding-left:140px;}
+.t-kick{font-family:var(--font-mono);letter-spacing:.42em;font-size:21px;color:var(--amber);text-transform:uppercase;}
+.t-h1{font-family:var(--font-display);text-transform:uppercase;line-height:.98;margin-top:24px;padding-top:.06em;}
+.t-h1 .l1{display:block;font-size:132px;color:var(--ink);}
+.t-h1 .l2{display:block;font-size:168px;color:var(--blood);text-shadow:0 0 60px rgba(176,18,26,.45);}
+.t-sub{margin-top:30px;font-family:var(--font-serif);font-style:italic;font-size:40px;color:#d9cdbb;max-width:1180px;line-height:1.3;}
+.authors{font-size:20px;color:var(--muted);line-height:1.7;}
+.authors b{color:var(--ink);font-weight:600;}
+.badge{font-family:var(--font-mono);font-size:17px;letter-spacing:.18em;color:#0b0910;background:var(--amber);padding:13px 20px;border-radius:3px;text-transform:uppercase;font-weight:700;}
+
+.src{font-family:var(--font-mono);font-size:14px;color:var(--dim);letter-spacing:.06em;margin-top:14px;}
+.shotframe{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 55px rgba(0,0,0,.55);background:#fff;}
+.shot{display:block;width:100%;height:auto;}
+
+/* progress + counter chrome */
+.progress{position:fixed;left:0;bottom:0;height:3px;background:var(--amber);z-index:1000;transition:width .4s var(--ease);box-shadow:0 0 12px var(--amber);}
+.counter{position:fixed;right:26px;bottom:20px;font-family:var(--font-mono);font-size:15px;letter-spacing:.16em;color:var(--muted);z-index:1000;}
+.hint{position:fixed;left:26px;bottom:20px;font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;color:var(--dim);z-index:1000;}
+
+/* edit affordance */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
+.edit-toggle{position:fixed;top:18px;left:18px;width:46px;height:46px;border-radius:10px;border:1px solid var(--line);
+  background:rgba(20,16,24,.9);color:var(--amber);font-size:20px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s;z-index:10001;}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
+.edit-toggle.active{background:var(--amber);color:#0b0910;}
+[contenteditable="true"]{outline:2px dashed var(--amber);outline-offset:4px;border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============ 01 · CAPA ============ -->
+<section class="slide title-slide active">
+  <div class="beam"></div>
+  <div class="sprockets"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="pad">
+    <div class="chrome-top"><span>movies_bigdata</span><span><span class="acc">●</span> Fundamentos de Big Data · AV2</span></div>
+    <div class="body">
+      <div class="t-kick reveal d1">Tema 14 · Prever o sucesso de um filme</div>
+      <h1 class="t-h1"><span class="l1 reveal d2">O Próximo</span><span class="l2 reveal d3">Grande Sucesso</span></h1>
+      <p class="t-sub reveal d4">Um pipeline de Big Data que estima a bilheteria de <em>qualquer</em> filme antes da estreia — testado em lançamentos em cartaz, de blockbusters a fenômenos de baixo orçamento.</p>
+    </div>
+    <div class="chrome-foot reveal d5" style="border:none;padding:0;">
+      <div class="authors"><b>Theomilll · João Pedro · João Batista · Mathews Ivo · menex100</b><br>43.608 filmes · 5 fontes · modelo de predição pré-lançamento</div>
+      <div class="badge">Junho / 2026</div>
+    </div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 02 · O PROBLEMA ============ -->
+<section class="slide statement">
+  <div class="pad">
+    <div class="chrome-top"><span>O Problema</span><span class="acc">01 — Contexto</span></div>
+    <div class="body">
+      <div class="kicker reveal d1">A pergunta de um bilhão de dólares</div>
+      <div class="huge reveal-blur d2" style="margin-top:24px;">Custa milhões.<br><span class="em">Ninguém sabe</span><br>se vai dar certo.</div>
+      <div class="sub reveal d4">Um longa-metragem é uma aposta de altíssimo risco feita anos antes de qualquer espectador comprar um ingresso. E se os dados pudessem reduzir essa incerteza?</div>
+    </div>
+    <div class="chrome-foot"><span>movies_bigdata</span><span>Fundamentos de Big Data — AV2</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 03 · MOTIVAÇÃO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Motivação</span><span class="acc">01 — Contexto</span></div>
+    <div class="body">
+      <h2 class="reveal d1">Por que <span class="am">prever</span>?</h2>
+      <p class="lead reveal d2" style="margin-top:24px;">Cada filme é uma aposta de milhões feita anos antes da estreia — em <em>qualquer</em> gênero. Com o histórico de milhares de lançamentos, dá para estimar o risco antes de gastar o primeiro dólar.</p>
+      <div class="stat-row reveal d3" style="margin-top:46px;">
+        <div class="stat"><div class="n" id="g-filmes">—</div><div class="c">filmes analisados</div></div>
+        <div class="stat"><div class="n" id="g-receita">—</div><div class="c">receita total (US$ bi)</div></div>
+        <div class="stat"><div class="n" id="g-generos">—</div><div class="c">gêneros cobertos</div></div>
+        <div class="stat"><div class="n good">1894–2018</div><div class="c">décadas de cinema</div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>Relevância e justificativa</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 04 · OBJETIVO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Objetivo</span><span class="acc">01 — Contexto</span></div>
+    <div class="body">
+      <h2 class="reveal d1">O que <span class="am">construímos</span></h2>
+      <ul class="bullets reveal d2" style="margin-top:40px;">
+        <li>Um <b>pipeline de Big Data completo</b> — das fontes brutas ao destino analítico — sobre 43.608 filmes.</li>
+        <li>Um <b>modelo preditivo pré-lançamento</b> que estima bilheteria e probabilidade de sucesso usando só o que se sabe antes da estreia.</li>
+        <li>Uma <b>demonstração em lançamentos de 2026</b> — de terror a ficção científica — com back-test multigênero contra a bilheteria real.</li>
+      </ul>
+    </div>
+    <div class="chrome-foot"><span>O que se pretende alcançar</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 05 · DIVIDER · PIPELINE ============ -->
+<section class="slide divider">
+  <div class="pad">
+    <div class="chrome-top"><span>Metodologia</span><span class="acc">02 — O Pipeline</span></div>
+    <div class="body">
+      <div class="num reveal-blur d1">02</div>
+      <h2 class="reveal d2">O Pipeline de Big Data</h2>
+      <p class="lead reveal d3" style="margin-top:18px;">Arquitetura medalhão · Bronze → Silver → Gold</p>
+    </div>
+    <div class="chrome-foot"><span>Fontes · Ingestão · Transformação · Carregamento · Destino</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 06 · ARQUITETURA ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Arquitetura</span><span class="acc">02 — O Pipeline</span></div>
+    <div class="body">
+      <h2 class="reveal d1" style="font-size:78px;">As 5 etapas obrigatórias</h2>
+      <div class="flow reveal d2" style="margin-top:34px;">
+        <div class="stage"><div class="s-k">Fontes</div><div class="s-t">5 CSVs brutos</div><div class="s-d">The Movies Dataset (Kaggle): metadados, elenco, keywords, links, ratings.</div><div class="arrow">▸</div></div>
+        <div class="stage"><div class="s-k">Ingestão</div><div class="s-t">Batch</div><div class="s-d">pandas.read_csv + validação de colunas obrigatórias.</div><div class="arrow">▸</div></div>
+        <div class="stage"><div class="s-k">Transformação</div><div class="s-t">Limpeza + enriquecimento</div><div class="s-d">Parsing JSON, derivação de ROI, lucro, década.</div><div class="arrow">▸</div></div>
+        <div class="stage"><div class="s-k">Carregamento</div><div class="s-t">CSV + Parquet</div><div class="s-d">pyarrow grava o dataset gold e 11 tabelas.</div><div class="arrow">▸</div></div>
+        <div class="stage"><div class="s-k">Destino</div><div class="s-t">Dashboard + modelo</div><div class="s-d">Plotly/Streamlit, notebook e predição.</div></div>
+      </div>
+      <div class="bands reveal d3">
+        <div class="band bronze"><div class="bt">BRONZE</div><div class="bd">Ingestão e validação dos 5 arquivos brutos.</div></div>
+        <div class="band silver"><div class="bt">SILVER</div><div class="bd">Limpeza, parsing e cruzamento (diretores, keywords, ratings).</div></div>
+        <div class="band gold"><div class="bt">GOLD</div><div class="bd">Dataset consolidado + 11 tabelas analíticas + modelo.</div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>codigo/pipeline_filmes.py · main()</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 07 · FONTES & INGESTÃO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Fontes & Ingestão</span><span class="acc">02 — O Pipeline</span></div>
+    <div class="body">
+      <div class="cols narrow">
+        <div>
+          <div class="kicker reveal d1">Bronze</div>
+          <h2 class="reveal d2" style="font-size:80px;margin-top:14px;">A fonte: <span class="am">45 mil filmes</span></h2>
+          <p class="lead reveal d3" style="font-size:32px;margin-top:22px;">The Movies Dataset (Kaggle) — dados estruturados e semiestruturados (campos JSON de elenco, gênero e keywords). <b>≈45 mil filmes brutos → 43.608 após a limpeza.</b></p>
+          <p class="src reveal d4">kaggle.com/datasets/rounakbanik/the-movies-dataset</p>
+        </div>
+        <div class="reveal d3">
+          <div class="rows">
+            <div class="row head"><span></span><span>Arquivo</span><span>Conteúdo</span><span></span><span>Papel</span></div>
+            <div class="row"><span class="rk">01</span><span class="nm">movies_metadata.csv</span><span class="v">orçamento, receita, gênero</span><span class="v"></span><span class="v am">núcleo</span></div>
+            <div class="row"><span class="rk">02</span><span class="nm">credits.csv</span><span class="v">elenco e equipe</span><span class="v"></span><span class="v">diretor</span></div>
+            <div class="row"><span class="rk">03</span><span class="nm">keywords.csv</span><span class="v">palavras-chave</span><span class="v"></span><span class="v">temas</span></div>
+            <div class="row"><span class="rk">04</span><span class="nm">links.csv</span><span class="v">ponte MovieLens↔TMDB</span><span class="v"></span><span class="v">join</span></div>
+            <div class="row"><span class="rk">05</span><span class="nm">ratings_small.csv</span><span class="v">avaliações de usuários</span><span class="v"></span><span class="v">notas</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>Ingestão em batch · validação de colunas</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 08 · TRANSFORMAÇÃO & CARREGAMENTO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Transformação & Carregamento</span><span class="acc">02 — O Pipeline</span></div>
+    <div class="body">
+      <h2 class="reveal d1" style="font-size:78px;">De bruto a <span class="am">valor</span></h2>
+      <div class="stat-row reveal d2" style="margin-top:30px;">
+        <div class="stat"><div class="n" id="m-filmes">—</div><div class="c">filmes no dataset gold</div></div>
+        <div class="stat"><div class="n">11</div><div class="c">tabelas analíticas</div></div>
+        <div class="stat"><div class="n" id="m-com-dir">—</div><div class="c">filmes com diretor extraído</div></div>
+        <div class="stat"><div class="n">CSV + Parquet</div><div class="c">formatos de saída (pyarrow)</div></div>
+      </div>
+      <ul class="bullets reveal d3" style="margin-top:36px;">
+        <li><b>Limpeza (Silver):</b> remoção de IDs inválidos/duplicados, coerção numérica, exclusão de conteúdo adulto, orçamento/receita zero → nulo.</li>
+        <li><b>Enriquecimento:</b> parsing de campos JSON (gênero, elenco, keywords) e derivação de <b>ROI, lucro, década e flag de franquia</b>.</li>
+        <li><b>Carregamento (Gold):</b> dataset consolidado + 11 agregações gravados em CSV e Parquet colunar.</li>
+      </ul>
+    </div>
+    <div class="chrome-foot"><span>clean_movies · build_gold_dataset · build_aggregations · save_outputs</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 09 · TECNOLOGIAS ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Tecnologias</span><span class="acc">02 — O Pipeline</span></div>
+    <div class="body">
+      <h2 class="reveal d1" style="font-size:78px;">Stack <span class="am">open-source</span></h2>
+      <div class="tech-grid reveal d2" style="margin-top:30px;">
+        <div class="tech"><div class="tt">pandas</div><div class="td">Limpeza, merge e agregação.</div></div>
+        <div class="tech"><div class="tt">pyarrow · Parquet</div><div class="td">Armazenamento colunar eficiente.</div></div>
+        <div class="tech"><div class="tt">scikit-learn</div><div class="td">Modelo de predição (gradient boosting).</div></div>
+        <div class="tech"><div class="tt">Plotly · Streamlit</div><div class="td">Dashboard interativo.</div></div>
+        <div class="tech"><div class="tt">matplotlib · seaborn</div><div class="td">Gráficos estáticos do pipeline.</div></div>
+        <div class="tech"><div class="tt">Jupyter</div><div class="td">Exploração passo a passo.</div></div>
+        <div class="tech"><div class="tt">pytest</div><div class="td">Testes do pipeline (2/2 ✓).</div></div>
+        <div class="tech"><div class="tt">GitHub</div><div class="td">Versionamento e entrega.</div></div>
+      </div>
+      <p class="takeaway reveal d3" style="margin-top:26px;">Alternativas pagas para escala: Apache Spark / Databricks, Delta Lake e BI (Power BI / Tableau).</p>
+    </div>
+    <div class="chrome-foot"><span>Gratuito e suficiente para ~100 mil registros</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 10 · DIVIDER · DADOS ============ -->
+<section class="slide divider">
+  <div class="pad">
+    <div class="chrome-top"><span>Resultados</span><span class="acc">03 — O que os dados revelam</span></div>
+    <div class="body">
+      <div class="num reveal-blur d1">03</div>
+      <h2 class="reveal d2">O que os dados<br>revelam</h2>
+      <p class="lead reveal d3" style="margin-top:18px;">Quatro padrões que definem o sucesso comercial</p>
+    </div>
+    <div class="chrome-foot"><span>Profundidade da análise</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 11 · RECEITA POR GÊNERO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Receita por gênero</span><span class="acc">03 — Dados</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <div class="kicker reveal d1">Padrão 1 · Onde está o dinheiro</div>
+          <h2 class="reveal d2" style="font-size:74px;margin-top:14px;">Ação e aventura<br><span class="am">dominam a receita</span></h2>
+          <p class="lead reveal d3" style="font-size:30px;margin-top:22px;">Os blockbusters concentram o faturamento total. Mas o jogo muda quando olhamos <b style="color:var(--amber)">eficiência (ROI)</b> — onde os baixos orçamentos brilham.</p>
+        </div>
+        <div class="chart-wrap reveal d3"><div id="chart-genero" class="chart" style="height:760px;"></div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>dados/processed/receita_por_genero.csv</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 12 · DÉCADAS ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Tendência por década</span><span class="acc">03 — Dados</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <div class="kicker reveal d1">Padrão 2 · Mais filmes, menos amor</div>
+          <h2 class="reveal d2" style="font-size:74px;margin-top:14px;">A produção <span class="am">explode</span>,<br>a nota <span class="em">cai</span></h2>
+          <p class="lead reveal d3" style="font-size:30px;margin-top:22px;">A quantidade de filmes dispara década após década, enquanto a nota média dos usuários recua — saturação do mercado.</p>
+        </div>
+        <div class="chart-wrap reveal d3"><div id="chart-decada" class="chart" style="height:760px;"></div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>dados/processed/filmes_por_decada.csv</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 13 · CORRELAÇÕES ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>O que prevê a receita</span><span class="acc">03 — Dados</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <div class="kicker reveal d1">Padrão 3 · Sinais de bilheteria</div>
+          <h2 class="reveal d2" style="font-size:74px;margin-top:14px;">Orçamento e<br><span class="am">buzz</span> mandam</h2>
+          <p class="lead reveal d3" style="font-size:30px;margin-top:22px;">A receita tem forte correlação com o nº de votos (0,78) e o orçamento (0,73). Atenção: votos e popularidade só existem <em>depois</em> da estreia.</p>
+        </div>
+        <div class="chart-wrap reveal d3"><div id="chart-corr" class="chart" style="height:760px;"></div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>dados/processed/correlacoes_sucesso.csv</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 14 · PARADOXO DO ROI + TERROR ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>O paradoxo do ROI</span><span class="acc">03 — Dados</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <div class="kicker reveal d1">Padrão 4 · O grande achado</div>
+          <h2 class="reveal d2" style="font-size:70px;margin-top:14px;">Dinheiro compra<br>receita — <span class="em">não</span> ROI</h2>
+          <p class="lead reveal d3" style="font-size:29px;margin-top:20px;">O ROI não se correlaciona com <b>nada</b> (todos ≈ 0). E o pódio de retorno é dos <b style="color:var(--amber)">baixos orçamentos</b> — de animações clássicas a terror e drama indie: multiplicadores absurdos.</p>
+          <p class="takeaway reveal d4" style="margin-top:18px;">Sequências e franquias faturam mais — mas a <em>eficiência</em> (ROI) é imprevisível.</p>
+        </div>
+        <div class="chart-wrap reveal d3"><div id="chart-roi" class="chart" style="height:780px;"></div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>dados/processed/top_filmes_roi.csv</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 15 · DIVIDER · MODELO ============ -->
+<section class="slide divider">
+  <div class="pad">
+    <div class="chrome-top"><span>Predição</span><span class="acc">04 — O Modelo</span></div>
+    <div class="body">
+      <div class="num reveal-blur d1">04</div>
+      <h2 class="reveal d2">O modelo<br>pré-lançamento</h2>
+      <p class="lead reveal d3" style="margin-top:18px;">Prever sucesso usando só o que se sabe antes da estreia</p>
+    </div>
+    <div class="chrome-foot"><span>codigo/modelo_predicao.py</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 16 · METODOLOGIA DO MODELO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Metodologia do modelo</span><span class="acc">04 — O Modelo</span></div>
+    <div class="body">
+      <div class="cols narrow">
+        <div>
+          <h2 class="reveal d1" style="font-size:66px;">Honestidade <span class="am">primeiro</span></h2>
+          <p class="lead reveal d2" style="font-size:28px;margin-top:18px;">Excluímos tudo que só existe <em>depois</em> da estreia — votos, notas, popularidade. Usar isso seria <b style="color:var(--blood-bright)">vazamento de dados</b> (ver o futuro).</p>
+          <ul class="bullets reveal d3" style="margin-top:24px;font-size:24px;">
+            <li style="font-size:25px;"><b>Entram:</b> orçamento, gênero, duração, franquia, idioma, histórico do diretor, keywords.</li>
+            <li style="font-size:25px;"><b>Modelo:</b> Gradient Boosting (regressão de receita + classificação hit/flop).</li>
+          </ul>
+        </div>
+        <div class="reveal d3">
+          <div class="stat-row" style="flex-wrap:wrap;gap:22px;">
+            <div class="stat" style="flex:1 1 44%;"><div class="n" id="mm-r2">—</div><div class="c">R² · receita (log) · ±<span id="mm-r2s">—</span></div></div>
+            <div class="stat" style="flex:1 1 44%;"><div class="n" id="mm-auc">—</div><div class="c">ROC-AUC · hit/flop · ±<span id="mm-aucs">—</span></div></div>
+            <div class="stat" style="flex:1 1 44%;"><div class="n good" id="mm-acc">—</div><div class="c">acurácia (base 51%)</div></div>
+            <div class="stat" style="flex:1 1 44%;"><div class="n" id="mm-mae">—</div><div class="c">erro médio (US$ mi)</div></div>
+          </div>
+          <p class="takeaway" style="margin-top:22px;font-size:25px;">Validação cruzada 5-fold · 5.363 filmes com bilheteria reportada · R² em escala log · base trivial (classe maioritária) = 51%.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>HistGradientBoosting · sem vazamento de dados</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 17 · IMPORTÂNCIA DAS FEATURES ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>O que o modelo aprendeu</span><span class="acc">04 — O Modelo</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <div class="kicker reveal d1">Importância das variáveis</div>
+          <h2 class="reveal d2" style="font-size:74px;margin-top:14px;">O <span class="am">orçamento</span><br>domina tudo</h2>
+          <p class="lead reveal d3" style="font-size:30px;margin-top:22px;">Quanto se gasta é, de longe, o sinal pré-lançamento mais forte. Diretor, franquia e keywords ajustam nas margens.</p>
+        </div>
+        <div class="chart-wrap reveal d3"><div id="chart-imp" class="chart" style="height:760px;"></div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>permutation importance · holdout</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 18 · DIVIDER · DEMO ============ -->
+<section class="slide divider">
+  <div class="pad">
+    <div class="chrome-top"><span>Demonstração</span><span class="acc">05 — Em cartaz</span></div>
+    <div class="body">
+      <div class="num reveal-blur d1">05</div>
+      <h2 class="reveal d2">Prevendo lançamentos<br>em cartaz</h2>
+      <p class="lead reveal d3" style="margin-top:18px;">De blockbusters a fenômenos de baixo orçamento — vários gêneros</p>
+    </div>
+    <div class="chrome-foot"><span>codigo/predicao_lancamentos.py</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 19 · CARDS DE PREDIÇÃO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Predição pré-lançamento</span><span class="acc">05 — Em cartaz</span></div>
+    <div class="body">
+      <h2 class="reveal d1" style="font-size:62px;">Três lançamentos <span class="am">em cartaz</span></h2>
+      <div class="pcards reveal d2" id="pcards" style="margin-top:30px;"></div>
+      <p class="takeaway reveal d4" style="margin-top:24px;">Escolha do grupo (2 de terror + 1 de ficção científica) — mas o modelo vale para <b>qualquer gênero</b>. O back-test completo cobre <span id="bt-gen2">7</span> gêneros.</p>
+    </div>
+    <div class="chrome-foot"><span>Orçamentos: A24, Focus Features, Universal (Box Office Mojo, Variety)</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 20 · PREVISTO vs REAL ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Back-test · previsto vs real</span><span class="acc">05 — Em cartaz</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <div class="kicker reveal d1">Back-test · <span id="bt-n">13</span> lançamentos, <span id="bt-gen">7</span> gêneros</div>
+          <h2 class="reveal d2" style="font-size:54px;margin-top:14px;">Calibrado no meio,<br>cego nas <span class="em">caudas</span></h2>
+          <p class="lead reveal d3" style="font-size:26px;margin-top:16px;">No mainstream ele acerta — Dune 2: previsto <span id="bt-dune">~US$ 623 mi</span> vs real US$ 715 mi. Mas <b>superestima os flops caros</b> (Furiosa, The Crow) e <b style="color:var(--blood-bright)">subestima as surpresas baratas</b> de qualquer gênero — Anora (drama) e Obsessão (<span id="bt-under" style="color:var(--blood-bright)">~120×</span>).</p>
+          <p class="takeaway reveal d4" style="margin-top:12px;">Nesses <span id="bt-n2">13</span> extremos: <span id="bt-score">6/13</span> acertos · subestimação mediana <span id="bt-med">~4,9×</span>. Na validação cruzada (5-fold): <b><span id="bt-acc">67%</span> · AUC <span id="bt-auc2">0,74</span></b>.</p>
+        </div>
+        <div class="chart-wrap reveal d3"><div id="chart-backtest" class="chart" style="height:780px;"></div></div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>dados/processed/predicoes_lancamentos.csv · 7 gêneros</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 21 · A LIÇÃO ============ -->
+<section class="slide statement">
+  <div class="pad">
+    <div class="chrome-top"><span>A lição</span><span class="acc">05 — Em cartaz</span></div>
+    <div class="body">
+      <div class="kicker reveal d1">Obsessão · US$ 750 mil → US$ 171 mi · 228×</div>
+      <div class="huge reveal-blur d2" style="margin-top:22px;font-size:118px;">O modelo previu<br><span class="am" id="les-pred">US$ 2 mi.</span><br>A realidade: <span class="em">US$ 171 mi.</span></div>
+      <div class="sub reveal d4">E não é só terror: <b>Anora</b> (drama, US$ 6 mi → US$ 59 mi) também escapou. O sucesso explosivo de baixo orçamento — em <b>qualquer gênero</b> — vive no <b style="color:var(--amber)">buzz social</b> (engajamento pré-estreia), o sinal que falta. É a fronteira que o Tema 14 aponta.</div>
+    </div>
+    <div class="chrome-foot"><span>O que o modelo não consegue ver</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 22 · CONCLUSÕES ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Conclusões</span><span class="acc">06 — Fechamento</span></div>
+    <div class="body">
+      <h2 class="reveal d1" style="font-size:74px;">Conclusões & <span class="am">próximos passos</span></h2>
+      <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:30px;align-items:start;">
+        <ul class="bullets reveal d2" style="font-size:27px;">
+          <li><b>Pipeline completo</b> entregue e testado (Bronze→Gold, 11 tabelas, 2/2 testes).</li>
+          <li><b>Análise:</b> orçamento e buzz preveem receita; ROI é imprevisível.</li>
+          <li><b>Modelo geral</b> (qualquer gênero) acerta o miolo (AUC <span id="c-auc">0,76</span>), mas erra as caudas.</li>
+        </ul>
+        <ul class="bullets reveal d3" style="font-size:27px;">
+          <li><b>Limitação:</b> métricas valem só para filmes com bilheteria reportada (viés de sobrevivência).</li>
+          <li><b>Futuro:</b> incorporar <b>buzz de redes sociais</b> (X, Reddit, YouTube).</li>
+          <li><b>Futuro:</b> elenco, sazonalidade de estreia e gasto de marketing.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>Análise crítica, dificuldades e trabalhos futuros</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 23 · DASHBOARD & REPO ============ -->
+<section class="slide">
+  <div class="pad">
+    <div class="chrome-top"><span>Demonstração & Repositório</span><span class="acc">06 — Fechamento</span></div>
+    <div class="body">
+      <h2 class="reveal d1" style="font-size:64px;">Dashboard <span class="am">interativo</span></h2>
+      <div class="cols" style="grid-template-columns:1.45fr .55fr;margin-top:22px;align-items:center;">
+        <div class="reveal d2 shotframe"><img src="assets/dashboard_predicao.png" alt="Dashboard Streamlit — aba de predição de lançamentos" class="shot"></div>
+        <div>
+          <div class="panel reveal d3" style="padding:26px 30px;">
+            <div class="kicker">Streamlit · ao vivo</div>
+            <p class="lead" style="font-size:23px;margin-top:14px;">Filtros por gênero/década, gráficos Plotly, ranking de ROI e o formulário <em>"teste seu próprio filme"</em>.</p>
+            <p class="src" style="font-size:16px;margin-top:14px;">streamlit run dashboard/streamlit_app.py</p>
+          </div>
+          <div class="panel reveal d4" style="padding:26px 30px;margin-top:22px;">
+            <div class="kicker">Repositório GitHub</div>
+            <p class="lead" style="font-size:23px;margin-top:14px;">README em formato de relatório ABNT + código versionado.</p>
+            <p class="src" style="font-size:15px;margin-top:12px;">/codigo · /notebooks · /dados · /documentacao · /apresentacao</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome-foot"><span>Pipeline em ação · resultados consolidados</span><span>movies_bigdata</span></div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+<!-- ============ 24 · ENCERRAMENTO ============ -->
+<section class="slide title-slide">
+  <div class="beam"></div>
+  <div class="sprockets"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="pad">
+    <div class="chrome-top"><span>movies_bigdata</span><span><span class="acc">●</span> Fundamentos de Big Data · AV2</span></div>
+    <div class="body">
+      <div class="t-kick reveal d1">Obrigado</div>
+      <h1 class="t-h1"><span class="l1 reveal d2">Perguntas?</span><span class="l2 reveal d3" style="font-size:120px;">Que comece a sessão.</span></h1>
+      <p class="t-sub reveal d4">Da ingestão de ~45 mil filmes brutos à predição do próximo grande sucesso — em qualquer gênero — um pipeline de Big Data de ponta a ponta.</p>
+    </div>
+    <div class="chrome-foot reveal d5" style="border:none;padding:0;">
+      <div class="authors"><b>Theomilll · João Pedro · João Batista · Mathews Ivo · menex100</b></div>
+      <div class="badge">Junho / 2026</div>
+    </div>
+  </div>
+  <div class="grain"></div><div class="vignette"></div>
+</section>
+
+</main>
+</div>
+
+<!-- chrome fora do palco -->
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter">01 / 24</div>
+<div class="hint">← → espaço · E editar</div>
+<div class="edit-hotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Modo edição (E)">✏️</button>
+
+<script>
+const DADOS = {"gerado_em": "2026-06-06", "dataset": {"filmes_total": 43608, "colunas": 25, "filmes_com_receita": 7371, "filmes_com_orcamento": 8808, "filmes_com_diretor": 42993, "anos": [1874, 2018], "tabelas_agregadas": 11, "fontes_csv": 5}, "genero_receita": [{"primary_genre": "Action", "receita_total_bi": 122.04, "receita_media_mi": 102.3, "qtd_filmes": 1193}, {"primary_genre": "Adventure", "receita_total_bi": 84.13, "receita_media_mi": 177.49, "qtd_filmes": 474}, {"primary_genre": "Comedy", "receita_total_bi": 75.77, "receita_media_mi": 48.63, "qtd_filmes": 1558}, {"primary_genre": "Drama", "receita_total_bi": 72.53, "receita_media_mi": 37.6, "qtd_filmes": 1929}, {"primary_genre": "Animation", "receita_total_bi": 35.85, "receita_media_mi": 190.7, "qtd_filmes": 188}, {"primary_genre": "Fantasy", "receita_total_bi": 19.48, "receita_media_mi": 107.64, "qtd_filmes": 181}, {"primary_genre": "Science Fiction", "receita_total_bi": 17.34, "receita_media_mi": 149.51, "qtd_filmes": 116}, {"primary_genre": "Horror", "receita_total_bi": 17.09, "receita_media_mi": 42.4, "qtd_filmes": 403}, {"primary_genre": "Thriller", "receita_total_bi": 15.35, "receita_media_mi": 59.26, "qtd_filmes": 259}, {"primary_genre": "Family", "receita_total_bi": 13.68, "receita_media_mi": 173.14, "qtd_filmes": 79}, {"primary_genre": "Crime", "receita_total_bi": 13.58, "receita_media_mi": 41.15, "qtd_filmes": 330}, {"primary_genre": "Romance", "receita_total_bi": 9.53, "receita_media_mi": 54.78, "qtd_filmes": 174}, {"primary_genre": "Mystery", "receita_total_bi": 4.18, "receita_media_mi": 45.92, "qtd_filmes": 91}, {"primary_genre": "War", "receita_total_bi": 2.12, "receita_media_mi": 42.47, "qtd_filmes": 50}, {"primary_genre": "History", "receita_total_bi": 1.97, "receita_media_mi": 50.63, "qtd_filmes": 39}, {"primary_genre": "Music", "receita_total_bi": 1.81, "receita_media_mi": 36.93, "qtd_filmes": 49}, {"primary_genre": "Western", "receita_total_bi": 1.46, "receita_media_mi": 33.86, "qtd_filmes": 43}, {"primary_genre": "Documentary", "receita_total_bi": 1.04, "receita_media_mi": 5.54, "qtd_filmes": 188}, {"primary_genre": "TV Movie", "receita_total_bi": 0.04, "receita_media_mi": 42.0, "qtd_filmes": 1}, {"primary_genre": "Foreign", "receita_total_bi": 0.03, "receita_media_mi": 4.3, "qtd_filmes": 6}], "resumo_genero": [{"primary_genre": "Action", "qtd_filmes": 1193, "receita_total_bi": 122.04, "receita_media_mi": 102.3, "receita_mediana_mi": 27.48, "roi_medio": 521.63, "nota_metadata_media": 6.04, "nota_usuarios_media": 2.99}, {"primary_genre": "Adventure", "qtd_filmes": 474, "receita_total_bi": 84.13, "receita_media_mi": 177.49, "receita_mediana_mi": 65.72, "roi_medio": 247029.46, "nota_metadata_media": 6.33, "nota_usuarios_media": 3.19}, {"primary_genre": "Comedy", "qtd_filmes": 1558, "receita_total_bi": 75.77, "receita_media_mi": 48.63, "receita_mediana_mi": 17.13, "roi_medio": 262525.5, "nota_metadata_media": 6.03, "nota_usuarios_media": 3.12}, {"primary_genre": "Drama", "qtd_filmes": 1929, "receita_total_bi": 72.53, "receita_media_mi": 37.6, "receita_mediana_mi": 9.0, "roi_medio": 1594366.3, "nota_metadata_media": 6.48, "nota_usuarios_media": 3.48}, {"primary_genre": "Animation", "qtd_filmes": 188, "receita_total_bi": 35.85, "receita_media_mi": 190.7, "receita_mediana_mi": 71.35, "roi_medio": 623.35, "nota_metadata_media": 6.51, "nota_usuarios_media": 3.22}, {"primary_genre": "Fantasy", "qtd_filmes": 181, "receita_total_bi": 19.48, "receita_media_mi": 107.64, "receita_mediana_mi": 42.72, "roi_medio": 338.09, "nota_metadata_media": 6.19, "nota_usuarios_media": 3.15}, {"primary_genre": "Science Fiction", "qtd_filmes": 116, "receita_total_bi": 17.34, "receita_media_mi": 149.51, "receita_mediana_mi": 58.29, "roi_medio": 452.23, "nota_metadata_media": 6.19, "nota_usuarios_media": 3.15}, {"primary_genre": "Horror", "qtd_filmes": 403, "receita_total_bi": 17.09, "receita_media_mi": 42.4, "receita_mediana_mi": 18.09, "roi_medio": 314198.01, "nota_metadata_media": 5.79, "nota_usuarios_media": 2.93}, {"primary_genre": "Thriller", "qtd_filmes": 259, "receita_total_bi": 15.35, "receita_media_mi": 59.26, "receita_mediana_mi": 17.74, "roi_medio": 269.43, "nota_metadata_media": 6.08, "nota_usuarios_media": 3.14}, {"primary_genre": "Family", "qtd_filmes": 79, "receita_total_bi": 13.68, "receita_media_mi": 173.14, "receita_mediana_mi": 47.09, "roi_medio": 528.37, "nota_metadata_media": 6.14, "nota_usuarios_media": 3.14}, {"primary_genre": "Crime", "qtd_filmes": 330, "receita_total_bi": 13.58, "receita_media_mi": 41.15, "receita_mediana_mi": 14.73, "roi_medio": 221.93, "nota_metadata_media": 6.52, "nota_usuarios_media": 3.41}, {"primary_genre": "Romance", "qtd_filmes": 174, "receita_total_bi": 9.53, "receita_media_mi": 54.78, "receita_mediana_mi": 13.25, "roi_medio": 313.56, "nota_metadata_media": 6.13, "nota_usuarios_media": 3.3}, {"primary_genre": "Mystery", "qtd_filmes": 91, "receita_total_bi": 4.18, "receita_media_mi": 45.92, "receita_mediana_mi": 13.28, "roi_medio": 652.95, "nota_metadata_media": 6.22, "nota_usuarios_media": 3.29}, {"primary_genre": "War", "qtd_filmes": 50, "receita_total_bi": 2.12, "receita_media_mi": 42.47, "receita_mediana_mi": 14.42, "roi_medio": 11046099.18, "nota_metadata_media": 6.59, "nota_usuarios_media": 3.58}, {"primary_genre": "History", "qtd_filmes": 39, "receita_total_bi": 1.97, "receita_media_mi": 50.63, "receita_mediana_mi": 13.0, "roi_medio": 412.9, "nota_metadata_media": 6.74, "nota_usuarios_media": 3.67}, {"primary_genre": "Music", "qtd_filmes": 49, "receita_total_bi": 1.81, "receita_media_mi": 36.93, "receita_mediana_mi": 14.87, "roi_medio": 275.2, "nota_metadata_media": 6.53, "nota_usuarios_media": 3.12}, {"primary_genre": "Western", "qtd_filmes": 43, "receita_total_bi": 1.46, "receita_media_mi": 33.86, "receita_mediana_mi": 8.0, "roi_medio": 592.23, "nota_metadata_media": 6.59, "nota_usuarios_media": 3.68}, {"primary_genre": "Documentary", "qtd_filmes": 188, "receita_total_bi": 1.04, "receita_media_mi": 5.54, "receita_mediana_mi": 0.31, "roi_medio": 12708.65, "nota_metadata_media": 6.47, "nota_usuarios_media": 3.57}], "decada": [{"decade": 1900, "qtd_filmes": 87, "nota_metadata_media": 5.34, "nota_usuarios_media": 4.33, "duracao_media": 5.3}, {"decade": 1910, "qtd_filmes": 175, "nota_metadata_media": 5.47, "nota_usuarios_media": 3.6, "duracao_media": 56.66}, {"decade": 1920, "qtd_filmes": 423, "nota_metadata_media": 5.91, "nota_usuarios_media": 3.86, "duracao_media": 81.65}, {"decade": 1930, "qtd_filmes": 1302, "nota_metadata_media": 5.06, "nota_usuarios_media": 3.64, "duracao_media": 81.55}, {"decade": 1940, "qtd_filmes": 1476, "nota_metadata_media": 5.62, "nota_usuarios_media": 3.64, "duracao_media": 90.8}, {"decade": 1950, "qtd_filmes": 2031, "nota_metadata_media": 5.75, "nota_usuarios_media": 3.58, "duracao_media": 92.42}, {"decade": 1960, "qtd_filmes": 2550, "nota_metadata_media": 5.8, "nota_usuarios_media": 3.48, "duracao_media": 98.85}, {"decade": 1970, "qtd_filmes": 3350, "nota_metadata_media": 5.66, "nota_usuarios_media": 3.52, "duracao_media": 101.17}, {"decade": 1980, "qtd_filmes": 3796, "nota_metadata_media": 5.67, "nota_usuarios_media": 3.29, "duracao_media": 100.68}, {"decade": 1990, "qtd_filmes": 5452, "nota_metadata_media": 5.61, "nota_usuarios_media": 3.25, "duracao_media": 101.76}, {"decade": 2000, "qtd_filmes": 10685, "nota_metadata_media": 5.66, "nota_usuarios_media": 3.24, "duracao_media": 100.03}, {"decade": 2010, "qtd_filmes": 12150, "nota_metadata_media": 5.77, "nota_usuarios_media": 3.09, "duracao_media": 96.88}], "correlacoes": {"revenue": [{"feature": "vote_count", "correlation": 0.7816}, {"feature": "budget", "correlation": 0.7301}, {"feature": "popularity", "correlation": 0.4576}, {"feature": "runtime", "correlation": 0.2043}, {"feature": "vote_average", "correlation": 0.1489}, {"feature": "user_rating_avg", "correlation": 0.0011}], "roi": [{"feature": "vote_average", "correlation": 0.0156}, {"feature": "user_rating_avg", "correlation": 0.0062}, {"feature": "popularity", "correlation": -0.0087}, {"feature": "vote_count", "correlation": -0.0087}, {"feature": "runtime", "correlation": -0.0144}, {"feature": "budget", "correlation": -0.0199}]}, "top_diretores": [{"director": "Steven Spielberg", "receita_total_bi": 9.26, "nota_metadata_media": 6.94, "nota_usuarios_media": 3.53, "qtd_filmes": 30}, {"director": "Peter Jackson", "receita_total_bi": 6.53, "nota_metadata_media": 7.27, "nota_usuarios_media": 3.55, "qtd_filmes": 11}, {"director": "Michael Bay", "receita_total_bi": 6.44, "nota_metadata_media": 6.39, "nota_usuarios_media": 2.99, "qtd_filmes": 13}, {"director": "James Cameron", "receita_total_bi": 5.9, "nota_metadata_media": 7.31, "nota_usuarios_media": 3.71, "qtd_filmes": 8}, {"director": "David Yates", "receita_total_bi": 5.33, "nota_metadata_media": 7.15, "nota_usuarios_media": 3.69, "qtd_filmes": 6}, {"director": "Christopher Nolan", "receita_total_bi": 4.75, "nota_metadata_media": 7.72, "nota_usuarios_media": 3.91, "qtd_filmes": 10}, {"director": "Robert Zemeckis", "receita_total_bi": 4.14, "nota_metadata_media": 6.86, "nota_usuarios_media": 3.36, "qtd_filmes": 17}, {"director": "Tim Burton", "receita_total_bi": 4.03, "nota_metadata_media": 6.73, "nota_usuarios_media": 3.32, "qtd_filmes": 18}, {"director": "Ridley Scott", "receita_total_bi": 3.92, "nota_metadata_media": 6.58, "nota_usuarios_media": 3.3, "qtd_filmes": 23}, {"director": "Chris Columbus", "receita_total_bi": 3.87, "nota_metadata_media": 6.46, "nota_usuarios_media": 3.14, "qtd_filmes": 13}], "top_roi_filmes": [{"title": "Alice in Wonderland", "release_year": 1951, "primary_genre": "Animation", "director": "Hamilton Luske", "revenue": 572000000.0, "budget": 3000000.0, "profit": 569000000.0, "roi": 18966.67, "vote_average": 7.0, "user_rating_avg": 3.61, "vote_count": 1557.0, "user_rating_count": 49.0}, {"title": "Snow White and the Seven Dwarfs", "release_year": 1937, "primary_genre": "Fantasy", "director": "David Hand", "revenue": 184925486.0, "budget": 1488423.0, "profit": 183437063.0, "roi": 12324.26, "vote_average": 6.9, "user_rating_avg": 3.66, "vote_count": 1973.0, "user_rating_count": 71.0}, {"title": "Rocky", "release_year": 1976, "primary_genre": "Drama", "director": "John G. Avildsen", "revenue": 117235147.0, "budget": 1000000.0, "profit": 116235147.0, "roi": 11623.51, "vote_average": 7.5, "user_rating_avg": 3.79, "vote_count": 1843.0, "user_rating_count": 69.0}, {"title": "The Devil Inside", "release_year": 2012, "primary_genre": "Thriller", "director": "William Brent Bell", "revenue": 101758490.0, "budget": 1000000.0, "profit": 100758490.0, "roi": 10075.85, "vote_average": 4.6, "user_rating_avg": NaN, "vote_count": 263.0, "user_rating_count": NaN}, {"title": "Gone with the Wind", "release_year": 1939, "primary_genre": "Drama", "director": "Victor Fleming", "revenue": 400176459.0, "budget": 4000000.0, "profit": 396176459.0, "roi": 9904.41, "vote_average": 7.7, "user_rating_avg": 4.04, "vote_count": 995.0, "user_rating_count": 68.0}, {"title": "The Rocky Horror Picture Show", "release_year": 1975, "primary_genre": "Comedy", "director": "Jim Sharman", "revenue": 112892319.0, "budget": 1200000.0, "profit": 111692319.0, "roi": 9307.69, "vote_average": 7.4, "user_rating_avg": 3.17, "vote_count": 703.0, "user_rating_count": 63.0}, {"title": "Cinderella", "release_year": 1950, "primary_genre": "Family", "director": "Clyde Geronimi", "revenue": 263591415.0, "budget": 2900000.0, "profit": 260691415.0, "roi": 8989.36, "vote_average": 6.8, "user_rating_avg": 3.56, "vote_count": 1760.0, "user_rating_count": 55.0}, {"title": "Saw", "release_year": 2004, "primary_genre": "Horror", "director": "James Wan", "revenue": 103911669.0, "budget": 1200000.0, "profit": 102711669.0, "roi": 8559.31, "vote_average": 7.2, "user_rating_avg": 3.27, "vote_count": 2255.0, "user_rating_count": 33.0}, {"title": "E.T. the Extra-Terrestrial", "release_year": 1982, "primary_genre": "Science Fiction", "director": "Steven Spielberg", "revenue": 792965326.0, "budget": 10500000.0, "profit": 782465326.0, "roi": 7452.05, "vote_average": 7.3, "user_rating_avg": 3.77, "vote_count": 3359.0, "user_rating_count": 160.0}, {"title": "My Big Fat Greek Wedding", "release_year": 2002, "primary_genre": "Comedy", "director": "Joel Zwick", "revenue": 368744044.0, "budget": 5000000.0, "profit": 363744044.0, "roi": 7274.88, "vote_average": 6.2, "user_rating_avg": 3.36, "vote_count": 686.0, "user_rating_count": 51.0}, {"title": "The Full Monty", "release_year": 1997, "primary_genre": "Comedy", "director": "Peter Cattaneo", "revenue": 257850122.0, "budget": 3500000.0, "profit": 254350122.0, "roi": 7267.15, "vote_average": 6.9, "user_rating_avg": 3.77, "vote_count": 372.0, "user_rating_count": 64.0}, {"title": "Star Wars", "release_year": 1977, "primary_genre": "Adventure", "director": "George Lucas", "revenue": 775398007.0, "budget": 11000000.0, "profit": 764398007.0, "roi": 6949.07, "vote_average": 8.1, "user_rating_avg": 4.22, "vote_count": 6778.0, "user_rating_count": 291.0}], "top_receita_filmes": [{"title": "Avatar", "release_year": 2009, "primary_genre": "Action", "director": "James Cameron", "revenue": 2787965087.0, "budget": 237000000.0, "profit": 2550965087.0, "roi": 1076.36, "vote_average": 7.2, "user_rating_avg": 3.64, "vote_count": 12114.0, "user_rating_count": 67.0}, {"title": "Star Wars: The Force Awakens", "release_year": 2015, "primary_genre": "Action", "director": "J.J. Abrams", "revenue": 2068223624.0, "budget": 245000000.0, "profit": 1823223624.0, "roi": 744.17, "vote_average": 7.5, "user_rating_avg": 3.52, "vote_count": 7993.0, "user_rating_count": 29.0}, {"title": "Titanic", "release_year": 1997, "primary_genre": "Drama", "director": "James Cameron", "revenue": 1845034188.0, "budget": 200000000.0, "profit": 1645034188.0, "roi": 822.52, "vote_average": 7.5, "user_rating_avg": 3.33, "vote_count": 7770.0, "user_rating_count": 164.0}, {"title": "The Avengers", "release_year": 2012, "primary_genre": "Science Fiction", "director": "Joss Whedon", "revenue": 1519557910.0, "budget": 220000000.0, "profit": 1299557910.0, "roi": 590.71, "vote_average": 7.4, "user_rating_avg": 4.01, "vote_count": 12000.0, "user_rating_count": 46.0}, {"title": "Jurassic World", "release_year": 2015, "primary_genre": "Action", "director": "Colin Trevorrow", "revenue": 1513528810.0, "budget": 150000000.0, "profit": 1363528810.0, "roi": 909.02, "vote_average": 6.5, "user_rating_avg": 3.44, "vote_count": 8842.0, "user_rating_count": 9.0}, {"title": "Furious 7", "release_year": 2015, "primary_genre": "Action", "director": "James Wan", "revenue": 1506249360.0, "budget": 190000000.0, "profit": 1316249360.0, "roi": 692.76, "vote_average": 7.3, "user_rating_avg": 2.25, "vote_count": 4253.0, "user_rating_count": 2.0}, {"title": "Avengers: Age of Ultron", "release_year": 2015, "primary_genre": "Action", "director": "Joss Whedon", "revenue": 1405403694.0, "budget": 280000000.0, "profit": 1125403694.0, "roi": 401.93, "vote_average": 7.3, "user_rating_avg": 3.88, "vote_count": 6908.0, "user_rating_count": 13.0}, {"title": "Harry Potter and the Deathly Hallows: Part 2", "release_year": 2011, "primary_genre": "Family", "director": "David Yates", "revenue": 1342000000.0, "budget": 125000000.0, "profit": 1217000000.0, "roi": 973.6, "vote_average": 7.9, "user_rating_avg": 4.22, "vote_count": 6141.0, "user_rating_count": 34.0}, {"title": "Frozen", "release_year": 2013, "primary_genre": "Animation", "director": "Chris Buck", "revenue": 1274219009.0, "budget": 150000000.0, "profit": 1124219009.0, "roi": 749.48, "vote_average": 7.3, "user_rating_avg": 4.04, "vote_count": 5440.0, "user_rating_count": 12.0}, {"title": "Beauty and the Beast", "release_year": 2017, "primary_genre": "Family", "director": "Bill Condon", "revenue": 1262886337.0, "budget": 160000000.0, "profit": 1102886337.0, "roi": 689.3, "vote_average": 6.8, "user_rating_avg": NaN, "vote_count": 5530.0, "user_rating_count": NaN}], "keywords": [{"keyword": "woman director", "qtd_filmes": 2947, "receita_media_mi": 44.2, "nota_usuarios_media": 3.28}, {"keyword": "independent film", "qtd_filmes": 1894, "receita_media_mi": 6.28, "nota_usuarios_media": 3.45}, {"keyword": "murder", "qtd_filmes": 1278, "receita_media_mi": 43.48, "nota_usuarios_media": 3.27}, {"keyword": "based on novel", "qtd_filmes": 812, "receita_media_mi": 108.25, "nota_usuarios_media": 3.4}, {"keyword": "musical", "qtd_filmes": 723, "receita_media_mi": 96.23, "nota_usuarios_media": 3.31}, {"keyword": "sex", "qtd_filmes": 675, "receita_media_mi": 31.84, "nota_usuarios_media": 3.22}, {"keyword": "violence", "qtd_filmes": 644, "receita_media_mi": 75.8, "nota_usuarios_media": 3.25}, {"keyword": "nudity", "qtd_filmes": 621, "receita_media_mi": 31.93, "nota_usuarios_media": 3.27}, {"keyword": "revenge", "qtd_filmes": 616, "receita_media_mi": 80.54, "nota_usuarios_media": 3.17}, {"keyword": "biography", "qtd_filmes": 607, "receita_media_mi": 47.2, "nota_usuarios_media": 3.48}, {"keyword": "suspense", "qtd_filmes": 576, "receita_media_mi": 65.93, "nota_usuarios_media": 3.36}, {"keyword": "love", "qtd_filmes": 559, "receita_media_mi": 57.89, "nota_usuarios_media": 3.38}], "horror": {"qtd_filmes": 403, "receita_total_bi": 17.09, "receita_media_mi": 42.4, "receita_mediana_mi": 18.09, "nota_metadata_media": 5.79}, "modelo": {"metricas": {"n_total_treinaveis": 5363, "validacao": "5-fold cross-validation estratificada (por hit)", "n_splits": 5, "taxa_hit_base": 0.5131, "orcamento_p05_usd": 500000.0, "orcamento_p01_usd": 5620.0, "subpopulacao": "filmes com orçamento E bilheteria reportados (revenue>0)", "regressao_log_receita": {"escala_r2": "log1p(receita)", "r2": 0.5726, "r2_std": 0.0458, "mae_usd_milhoes": 49.15, "mae_usd_milhoes_std": 2.03, "baseline_mediana_mae_milhoes": 81.15, "baseline_orcamento_mae_milhoes": 56.35}, "classificacao_hit": {"definicao_hit": "bilheteria >= 2x orçamento", "acuracia": 0.6718, "acuracia_std": 0.0161, "roc_auc": 0.7393, "roc_auc_std": 0.0123, "precisao": 0.6886, "recall": 0.6581}, "features_usadas": ["primary_genre", "lang_group", "log_budget", "runtime", "release_year", "has_collection", "is_sequel", "based_on_novel", "keyword_count", "director_track_record"], "features_excluidas_por_vazamento": ["revenue", "profit", "roi", "vote_count", "vote_average", "user_rating_avg", "user_rating_count", "popularity"]}, "importancias": [{"feature": "log_budget", "importancia": 0.776073097385052}, {"feature": "has_collection", "importancia": 0.0478562256365516}, {"feature": "director_track_record", "importancia": 0.037284789832447}, {"feature": "keyword_count", "importancia": 0.0351340223163941}, {"feature": "release_year", "importancia": 0.0315750968277293}, {"feature": "runtime", "importancia": 0.0168821554180703}, {"feature": "primary_genre", "importancia": 0.0101201105285154}, {"feature": "lang_group", "importancia": 0.0067313436028445}, {"feature": "is_sequel", "importancia": 1.2385224819664308e-05}, {"feature": "based_on_novel", "importancia": -9.387109569442664e-05}]}, "predicoes": [{"title": "Obsessão", "budget_usd": 750000.0, "receita_prevista_usd": 1429523.747023154, "roi_previsto_pct": 90.60316626975387, "prob_hit": 0.4806723262654642, "veredito": "ALTO RISCO", "fora_distribuicao": false, "destaque": true, "genero": "Horror", "diretor": "Curry Barker", "ano": 2026, "actual_box_office_usd": 171000000.0, "nota": "US$ 750 mil de orçamento -> ~228x. Direitos comprados por US$ 14-15M no TIFF 2025.", "fonte": "Focus Features; Variety, NBC News, Collider (jun/2026) — bilheteria provisória", "roi_real_x": 228.0, "roi_previsto_x": 1.9060316626975387, "erro_x": 119.62025839451151}, {"title": "Backrooms", "budget_usd": 10000000.0, "receita_prevista_usd": 9799626.470722588, "roi_previsto_pct": -2.003735292774122, "prob_hit": 0.41408105984212684, "veredito": "ALTO RISCO", "fora_distribuicao": false, "destaque": true, "genero": "Horror", "diretor": "Kane Parsons", "ano": 2026, "actual_box_office_usd": 155000000.0, "nota": "Estreia A24 recorde (US$ 118M no fim de semana de abertura mundial). IP viral do YouTube.", "fonte": "A24/Chernin; Box Office Mojo, Variety, Deadline (jun/2026) — bilheteria provisória", "roi_real_x": 15.5, "roi_previsto_x": 0.9799626470722588, "erro_x": 15.816929396551876}, {"title": "Dia D (sci-fi)", "budget_usd": 140000000.0, "receita_prevista_usd": 251319096.65556726, "roi_previsto_pct": 79.51364046826232, "prob_hit": 0.6156721321719308, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": true, "genero": "Science Fiction", "diretor": "Steven Spielberg", "ano": 2026, "actual_box_office_usd": NaN, "nota": "Ficção científica de Steven Spielberg (Emily Blunt). NÃO é terror — contraste tentpole.", "fonte": "Universal Pictures; AdoroCinema, Omelete, IMDb (orçamento estimado)", "roi_real_x": NaN, "roi_previsto_x": 1.7951364046826233, "erro_x": NaN}, {"title": "Terrifier 3", "budget_usd": 2000000.0, "receita_prevista_usd": 10434182.165809672, "roi_previsto_pct": 421.7091082904836, "prob_hit": 0.8471918169156752, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Horror", "diretor": "Damien Leone", "ano": 2024, "actual_box_office_usd": 90322103.0, "nota": "Filme sem classificação de maior bilheteria da história (~45x).", "fonte": "Box Office Mojo, The Numbers (alta confiança)", "roi_real_x": 45.1610515, "roi_previsto_x": 5.217091082904836, "erro_x": 8.656366312633875}, {"title": "Longlegs", "budget_usd": 10000000.0, "receita_prevista_usd": 10853889.320090193, "roi_previsto_pct": 8.538893200901933, "prob_hit": 0.4509251560372941, "veredito": "ALTO RISCO", "fora_distribuicao": false, "destaque": false, "genero": "Horror", "diretor": "Osgood Perkins", "ano": 2024, "actual_box_office_usd": 127961936.0, "nota": "Indie de maior bilheteria de 2024 (marketing viral). ~13x.", "fonte": "Box Office Mojo, Variety (alta confiança)", "roi_real_x": 12.7961936, "roi_previsto_x": 1.0853889320090193, "erro_x": 11.789500724237776}, {"title": "Anora", "budget_usd": 6000000.0, "receita_prevista_usd": 3544263.8280569147, "roi_previsto_pct": -40.92893619905142, "prob_hit": 0.227379261835842, "veredito": "ALTO RISCO", "fora_distribuicao": false, "destaque": false, "genero": "Drama", "diretor": "Sean Baker", "ano": 2024, "actual_box_office_usd": 59300000.0, "nota": "Drama indie de baixo orçamento: US$ 6 mi -> US$ 59 mi (~9,9x). Oscar de Melhor Filme.", "fonte": "Box Office Mojo, Wikipedia (alta confiança)", "roi_real_x": 9.883333333333333, "roi_previsto_x": 0.5907106380094858, "erro_x": 16.731260108396125}, {"title": "Inside Out 2", "budget_usd": 200000000.0, "receita_prevista_usd": 772364243.769274, "roi_previsto_pct": 286.182121884637, "prob_hit": 0.9230046964022406, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Animation", "diretor": "Kelsey Mann", "ano": 2024, "actual_box_office_usd": 1698863816.0, "nota": "Animação de maior bilheteria da história. ~8,5x.", "fonte": "Box Office Mojo, The Numbers (alta confiança)", "roi_real_x": 8.49431908, "roi_previsto_x": 3.86182121884637, "erro_x": 2.199563003731561}, {"title": "Wicked", "budget_usd": 150000000.0, "receita_prevista_usd": 349436524.7916057, "roi_previsto_pct": 132.95768319440378, "prob_hit": 0.5628876316858151, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Music", "diretor": "Jon M. Chu", "ano": 2024, "actual_box_office_usd": 765103982.0, "nota": "Musical/fantasia. ~5,1x.", "fonte": "Box Office Mojo, The Numbers (alta confiança)", "roi_real_x": 5.100693213333333, "roi_previsto_x": 2.329576831944038, "erro_x": 2.18953637561582}, {"title": "Smile 2", "budget_usd": 28000000.0, "receita_prevista_usd": 81684474.59999453, "roi_previsto_pct": 191.73026642855186, "prob_hit": 0.8353454921578451, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Horror", "diretor": "Parker Finn", "ano": 2024, "actual_box_office_usd": 138128854.0, "nota": "Sequência de Smile (2022). ~4,9x.", "fonte": "Box Office Mojo, Wikipedia (alta confiança)", "roi_real_x": 4.9331733571428575, "roi_previsto_x": 2.917302664285519, "erro_x": 1.69100498811324}, {"title": "The Substance", "budget_usd": 18000000.0, "receita_prevista_usd": 15700689.109967273, "roi_previsto_pct": -12.773949389070708, "prob_hit": 0.30486906771446287, "veredito": "ALTO RISCO", "fora_distribuicao": false, "destaque": false, "genero": "Horror", "diretor": "Coralie Fargeat", "ano": 2024, "actual_box_office_usd": 77316812.0, "nota": "Roteiro original (MUBI). 5 indicações ao Oscar 2025.", "fonte": "Box Office Mojo, Wikipedia (alta confiança)", "roi_real_x": 4.295378444444444, "roi_previsto_x": 0.872260506109293, "erro_x": 4.92442156254893}, {"title": "Dune: Parte Dois", "budget_usd": 190000000.0, "receita_prevista_usd": 623486497.8671763, "roi_previsto_pct": 228.15078835114542, "prob_hit": 0.9367831970485149, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Science Fiction", "diretor": "Denis Villeneuve", "ano": 2024, "actual_box_office_usd": 714844358.0, "nota": "Ficção científica épica. ~3,8x.", "fonte": "Box Office Mojo, Wikipedia (alta confiança)", "roi_real_x": 3.7623387263157895, "roi_previsto_x": 3.281507883511454, "erro_x": 1.146527407482505}, {"title": "Nosferatu", "budget_usd": 50000000.0, "receita_prevista_usd": 102520118.17033674, "roi_previsto_pct": 105.04023634067347, "prob_hit": 0.5446746660226879, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Horror", "diretor": "Robert Eggers", "ano": 2024, "actual_box_office_usd": 182113849.0, "nota": "Terror gótico de orçamento maior. ~3,6x.", "fonte": "The Numbers, Wikipedia (alta confiança)", "roi_real_x": 3.64227698, "roi_previsto_x": 2.050402363406735, "erro_x": 1.7763718209670674}, {"title": "Furiosa", "budget_usd": 168000000.0, "receita_prevista_usd": 611736778.1014934, "roi_previsto_pct": 264.12903458422227, "prob_hit": 0.957345520198377, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Action", "diretor": "George Miller", "ano": 2024, "actual_box_office_usd": 174375791.0, "nota": "Ação de orçamento alto que decepcionou: ~1,0x. O modelo SUPERESTIMA.", "fonte": "Box Office Mojo, Wikipedia (alta confiança)", "roi_real_x": 1.0379511369047618, "roi_previsto_x": 3.6412903458422226, "erro_x": 0.2850503635586044}, {"title": "The Crow", "budget_usd": 50000000.0, "receita_prevista_usd": 146833456.37573043, "roi_previsto_pct": 193.66691275146084, "prob_hit": 0.7991915519838352, "veredito": "PROVÁVEL SUCESSO", "fora_distribuicao": false, "destaque": false, "genero": "Fantasy", "diretor": "Rupert Sanders", "ano": 2024, "actual_box_office_usd": 24100000.0, "nota": "Reboot sombrio que fracassou: US$ 50 mi -> US$ 24 mi (0,5x). O modelo SUPERESTIMA.", "fonte": "Box Office Mojo, The Numbers, Wikipedia (alta confiança)", "roi_real_x": 0.482, "roi_previsto_x": 2.9366691275146084, "erro_x": 0.16413153102063327}], "backtest_stats": {"n_filmes": 13, "acertos_classificacao": 6, "n_sucessos_reais": 11, "mediana_subestimacao_x": 4.9}};
+
+/* ===========================================
+   TEMA DOS GRÁFICOS PLOTLY (Sala Escura)
+   =========================================== */
+const C={ink:'#f3ece1',muted:'#9b9088',dim:'#6b6259',amber:'#e8b33d',amberSoft:'#f0cd7e',blood:'#b0121a',bloodBright:'#e0232e',good:'#5fbf94',grid:'rgba(243,236,225,0.08)'};
+const FONT={family:'Sora, sans-serif',color:C.ink,size:18};
+const MONO='Space Mono, monospace';
+function baseLayout(extra){
+  return Object.assign({
+    paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+    font:FONT,margin:{l:60,r:30,t:20,b:50},
+    xaxis:{gridcolor:C.grid,zerolinecolor:C.grid,tickfont:{family:MONO,size:14,color:C.muted},titlefont:{size:15,color:C.muted}},
+    yaxis:{gridcolor:C.grid,zerolinecolor:C.grid,tickfont:{family:MONO,size:14,color:C.muted},titlefont:{size:15,color:C.muted}},
+    hoverlabel:{bgcolor:'#15121a',bordercolor:C.amber,font:{family:'Sora',color:C.ink,size:16}},
+    showlegend:false
+  },extra||{});
+}
+const CFG={displayModeBar:false,responsive:false};
+const GENRE_PT={Action:'Ação',Adventure:'Aventura',Comedy:'Comédia',Drama:'Drama',Animation:'Animação',Fantasy:'Fantasia','Science Fiction':'Ficção Científica',Horror:'Terror',Thriller:'Suspense',Family:'Família',Crime:'Crime',Romance:'Romance',Mystery:'Mistério',War:'Guerra',History:'História',Music:'Música',Western:'Faroeste',Documentary:'Documentário'};
+const FEAT_PT={log_budget:'Orçamento',release_year:'Ano de estreia',keyword_count:'Nº de keywords',has_collection:'Franquia',director_track_record:'Histórico do diretor',runtime:'Duração',lang_group:'Idioma',primary_genre:'Gênero',is_sequel:'Sequência',based_on_novel:'Adaptação'};
+const CORR_PT={vote_count:'Nº de votos*',budget:'Orçamento',popularity:'Popularidade*',runtime:'Duração',vote_average:'Nota TMDB*',user_rating_avg:'Nota usuários*'};
+
+/* ===== gráficos ===== */
+function chartGenero(){
+  const g=DADOS.genero_receita.slice(0,12).reverse();
+  const y=g.map(d=>GENRE_PT[d.primary_genre]||d.primary_genre);
+  const x=g.map(d=>d.receita_total_bi);
+  const col=g.map(d=>d.primary_genre==='Horror'?C.bloodBright:C.amber);
+  Plotly.newPlot('chart-genero',[{type:'bar',orientation:'h',x,y,marker:{color:col},
+    text:x.map(v=>v.toFixed(0)+' bi'),textposition:'auto',textfont:{family:MONO,color:'#0b0910',size:13},
+    hovertemplate:'%{y}<br>US$ %{x:.1f} bi<extra></extra>'}],
+    baseLayout({xaxis:{title:'Receita total (US$ bi)',gridcolor:C.grid,tickfont:{family:MONO,size:13,color:C.muted}},margin:{l:150,r:30,t:10,b:50}}),CFG);
+}
+function chartDecada(){
+  const d=DADOS.decada.filter(r=>r.decade>=1930);
+  const x=d.map(r=>String(r.decade));
+  Plotly.newPlot('chart-decada',[
+    {type:'bar',x,y:d.map(r=>r.qtd_filmes),marker:{color:'rgba(232,179,61,0.55)'},name:'Filmes',yaxis:'y',hovertemplate:'%{x}: %{y} filmes<extra></extra>'},
+    {type:'scatter',mode:'lines+markers',x,y:d.map(r=>r.nota_usuarios_media),line:{color:C.bloodBright,width:4},marker:{size:9,color:C.bloodBright},name:'Nota',yaxis:'y2',hovertemplate:'%{x}: nota %{y}<extra></extra>'}
+  ],baseLayout({margin:{l:60,r:60,t:10,b:50},
+    yaxis:{title:'Nº de filmes',gridcolor:C.grid,tickfont:{family:MONO,size:13,color:'rgba(232,179,61,.8)'}},
+    yaxis2:{title:'Nota usuários',overlaying:'y',side:'right',gridcolor:'rgba(0,0,0,0)',tickfont:{family:MONO,size:13,color:C.bloodBright},range:[2.8,4]},
+    showlegend:true,legend:{orientation:'h',y:1.12,font:{family:MONO,size:13,color:C.muted}}}),CFG);
+}
+function chartCorr(){
+  const rev=DADOS.correlacoes.revenue.slice().sort((a,b)=>a.correlation-b.correlation);
+  Plotly.newPlot('chart-corr',[{type:'bar',orientation:'h',
+    y:rev.map(d=>CORR_PT[d.feature]||d.feature),x:rev.map(d=>d.correlation),
+    marker:{color:rev.map(d=>d.correlation>0.4?C.amber:'rgba(232,179,61,0.45)')},
+    text:rev.map(d=>d.correlation.toFixed(2)),textposition:'auto',textfont:{family:MONO,color:'#0b0910',size:13},
+    hovertemplate:'%{y}: r = %{x:.2f}<extra></extra>'}],
+    baseLayout({margin:{l:175,r:30,t:10,b:60},xaxis:{title:'Correlação com a receita  (* = sinal pós-estreia)',range:[0,0.9],gridcolor:C.grid,tickfont:{family:MONO,size:13,color:C.muted}}}),CFG);
+}
+function chartRoi(){
+  const f=DADOS.top_roi_filmes.slice(0,10).reverse();
+  const col=f.map(()=>C.amber);
+  Plotly.newPlot('chart-roi',[{type:'bar',orientation:'h',
+    y:f.map(d=>d.title),x:f.map(d=>d.roi/100),marker:{color:col},
+    text:f.map(d=>Math.round(d.roi/100)+'×'),textposition:'auto',textfont:{family:MONO,color:'#0b0910',size:12},
+    customdata:f.map(d=>[GENRE_PT[d.primary_genre]||d.primary_genre,(d.budget/1e6).toFixed(1)]),
+    hovertemplate:'%{y}<br>%{customdata[0]} · orç. US$ %{customdata[1]} mi<br>ROI %{x:.0f}×<extra></extra>'}],
+    baseLayout({margin:{l:345,r:30,t:10,b:50},yaxis:{tickfont:{family:MONO,size:11,color:C.muted}},xaxis:{title:'ROI (× o orçamento) · vários gêneros',gridcolor:C.grid,tickfont:{family:MONO,size:13,color:C.muted}}}),CFG);
+}
+function chartImp(){
+  const im=DADOS.modelo.importancias.slice().filter(d=>d.importancia>0.0005).sort((a,b)=>a.importancia-b.importancia);
+  Plotly.newPlot('chart-imp',[{type:'bar',orientation:'h',
+    y:im.map(d=>FEAT_PT[d.feature]||d.feature),x:im.map(d=>d.importancia),
+    marker:{color:im.map(d=>d.feature==='log_budget'?C.bloodBright:C.amber)},
+    text:im.map(d=>(d.importancia*100).toFixed(0)+'%'),textposition:'auto',textfont:{family:MONO,color:'#0b0910',size:13},
+    hovertemplate:'%{y}: %{x:.3f}<extra></extra>'}],
+    baseLayout({margin:{l:230,r:30,t:10,b:50},xaxis:{title:'Importância relativa (permutação)',gridcolor:C.grid,tickfont:{family:MONO,size:13,color:C.muted}}}),CFG);
+}
+function chartBacktest(){
+  const p=DADOS.predicoes.filter(d=>d.actual_box_office_usd&&d.receita_prevista_usd>0);
+  const lim=[0.6,2600];
+  // rótulos só nos pontos-chave (resto via hover) para não poluir
+  const label=new Set(['Obsessão','Backrooms','Anora','Furiosa','The Crow','Inside Out 2','Dune: Parte Dois']);
+  const POS={'Obsessão':'middle left','Backrooms':'top center','Anora':'bottom center','The Crow':'bottom center','Furiosa':'middle right','Inside Out 2':'bottom right','Dune: Parte Dois':'top left'};
+  const xs=p.map(d=>d.receita_prevista_usd/1e6), ys=p.map(d=>d.actual_box_office_usd/1e6);
+  const sizes=p.map(d=>Math.max(11,Math.min(52,Math.sqrt(d.budget_usd/1e6)*5)));
+  // âmbar = subestimado (real>previsto) · vermelho = superestimado (flop que o modelo não viu)
+  const col=p.map(d=>d.actual_box_office_usd < d.receita_prevista_usd ? C.bloodBright : C.amber);
+  Plotly.newPlot('chart-backtest',[
+    {type:'scatter',mode:'lines',x:lim,y:lim,line:{color:C.dim,dash:'dash',width:2},hoverinfo:'skip'},
+    {type:'scatter',mode:'markers+text',x:xs,y:ys,
+      text:p.map(d=>label.has(d.title)?d.title:''),textposition:p.map(d=>POS[d.title]||'top center'),textfont:{family:MONO,size:12,color:C.ink},
+      marker:{size:sizes,color:col,opacity:.85,line:{color:'#0b0910',width:1}},
+      customdata:p.map(d=>[d.title,GENRE_PT[d.genero]||d.genero,(d.budget_usd/1e6).toFixed(1),(d.roi_real_x||0).toFixed(1)]),
+      hovertemplate:'<b>%{customdata[0]}</b> · %{customdata[1]}<br>orç. US$ %{customdata[2]} mi<br>previsto US$ %{x:.0f} mi · real US$ %{y:.0f} mi · ROI %{customdata[3]}×<extra></extra>'}
+  ],baseLayout({margin:{l:70,r:40,t:46,b:60},
+    xaxis:{title:'Bilheteria PREVISTA (US$ mi, log)',type:'log',range:[Math.log10(0.6),Math.log10(2600)],gridcolor:C.grid,tickfont:{family:MONO,size:12,color:C.muted}},
+    yaxis:{title:'Bilheteria REAL (US$ mi, log)',type:'log',range:[Math.log10(0.6),Math.log10(2600)],gridcolor:C.grid,tickfont:{family:MONO,size:12,color:C.muted}}}),CFG);
+}
+
+/* ===== cards de predição ===== */
+function fmtUsd(v){if(v==null)return'—';if(v>=1e9)return'US$ '+(v/1e9).toFixed(2)+' bi';return'US$ '+(v/1e6).toFixed(1)+' mi';}
+function buildCards(){
+  const el=document.getElementById('pcards');
+  const order=['Backrooms','Obsessão','Dia D (sci-fi)'];
+  const items=order.map(t=>DADOS.predicoes.find(d=>d.title===t)).filter(Boolean);
+  el.innerHTML=items.map(d=>{
+    const sci=d.title.indexOf('Dia D')>=0;
+    const name=sci?'Dia D':d.title;
+    const real=d.actual_box_office_usd?`<div class="prow"><span class="lbl">Bilheteria real</span><span class="val">${fmtUsd(d.actual_box_office_usd)}</span></div>`:`<div class="prow"><span class="lbl">Status</span><span class="val" style="color:var(--muted);font-size:22px;">recém-lançado</span></div>`;
+    return `<div class="pcard${sci?' sci':''}">
+      <div class="pt">${name}</div>
+      <div class="pm">${d.diretor} · ${sci?'Ficção científica':'Terror'} · orç. ${fmtUsd(d.budget_usd)}</div>
+      <div class="prow"><span class="lbl">Receita prevista</span><span class="val big">${fmtUsd(d.receita_prevista_usd)}</span></div>
+      <div class="prow" style="border:none;padding-top:14px;"><span class="lbl">Prob. de sucesso</span><span class="val">${Math.round(d.prob_hit*100)}%</span></div>
+      <div class="gauge"><i style="width:${Math.round(d.prob_hit*100)}%"></i></div>
+      ${real}
+    </div>`;}).join('');
+}
+
+/* ===== métricas dinâmicas ===== */
+function fillMetrics(){
+  const m=DADOS.modelo.metricas, ds=DADOS.dataset, h=DADOS.horror;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('m-filmes',ds.filmes_total.toLocaleString('pt-BR'));
+  set('m-com-dir',ds.filmes_com_diretor.toLocaleString('pt-BR'));
+  // estatísticas gerais (slide motivação)
+  set('g-filmes',ds.filmes_total.toLocaleString('pt-BR'));
+  set('g-receita',Math.round(DADOS.genero_receita.reduce((a,b)=>a+b.receita_total_bi,0)).toLocaleString('pt-BR'));
+  set('g-generos',DADOS.genero_receita.length);
+  set('mm-r2',m.regressao_log_receita.r2.toFixed(2));
+  set('mm-auc',m.classificacao_hit.roc_auc.toFixed(2));
+  set('mm-acc',Math.round(m.classificacao_hit.acuracia*100)+'%');
+  set('mm-mae',m.regressao_log_receita.mae_usd_milhoes.toFixed(0));
+  if(m.regressao_log_receita.r2_std!=null) set('mm-r2s',m.regressao_log_receita.r2_std.toFixed(2));
+  if(m.classificacao_hit.roc_auc_std!=null) set('mm-aucs',m.classificacao_hit.roc_auc_std.toFixed(2));
+  // AUC dinâmico (slide de conclusões)
+  set('c-auc', m.classificacao_hit.roc_auc.toFixed(2).replace('.', ','));
+  // back-test: fatores das duas caudas + placar honesto (dinâmicos)
+  const fx = v => '~' + (v >= 10 ? Math.round(v) : v.toFixed(1).replace('.', ',')) + '×';
+  const preds = DADOS.predicoes.filter(d => d.actual_box_office_usd && d.receita_prevista_usd > 0);
+  if (preds.length) {
+    const under = Math.max(...preds.map(d => d.actual_box_office_usd / d.receita_prevista_usd));
+    const over = Math.max(...preds.map(d => d.receita_prevista_usd / d.actual_box_office_usd));
+    set('bt-under', fx(under)); set('bt-over', fx(over));
+  }
+  const bs = DADOS.backtest_stats;
+  if (bs) { set('bt-score', bs.acertos_classificacao + '/' + bs.n_filmes); set('bt-med', fx(bs.mediana_subestimacao_x)); }
+  // contagem dinâmica de lançamentos e gêneros do back-test + métricas do holdout
+  const withActual = DADOS.predicoes.filter(d => d.actual_box_office_usd);
+  const ng = new Set(withActual.map(d => d.genero)).size;
+  set('bt-n', withActual.length); set('bt-n2', withActual.length);
+  set('bt-gen', ng); set('bt-gen2', ng);
+  set('bt-acc', Math.round(m.classificacao_hit.acuracia * 100) + '%');
+  set('bt-auc2', m.classificacao_hit.roc_auc.toFixed(2).replace('.', ','));
+  const dune = DADOS.predicoes.find(d => d.title === 'Dune: Parte Dois');
+  if (dune) set('bt-dune', '~US$ ' + Math.round(dune.receita_prevista_usd / 1e6) + ' mi');
+  const obs = DADOS.predicoes.find(d => d.title === 'Obsessão');
+  if (obs) set('les-pred', 'US$ ' + (obs.receita_prevista_usd / 1e6).toFixed(1).replace('.', ',') + ' mi.');
+}
+let charted=false;
+function renderAll(){
+  if(charted)return;charted=true;
+  try{chartGenero();chartDecada();chartCorr();chartRoi();chartImp();chartBacktest();buildCards();}
+  catch(e){console.error('Erro ao renderizar gráficos',e);}
+}
+
+/* ===========================================
+   CONTROLADOR DE SLIDES
+   =========================================== */
+class SlidePresentation{
+  constructor(){
+    this.slides=[...document.querySelectorAll('.slide')];
+    this.i=0;this.stage=document.getElementById('deckStage');
+    this.scale();addEventListener('resize',()=>this.scale());
+    this.nav();this.show(0);
+  }
+  scale(){const k=Math.min(innerWidth/1920,innerHeight/1080);
+    this.stage.style.transform=`translate(${(innerWidth-1920*k)/2}px,${(innerHeight-1080*k)/2}px) scale(${k})`;}
+  show(n){
+    this.i=Math.max(0,Math.min(n,this.slides.length-1));
+    this.slides.forEach((s,j)=>{s.classList.toggle('active',j===this.i);s.classList.toggle('visible',j===this.i);});
+    const p=(this.i+1)/this.slides.length*100;
+    document.getElementById('progress').style.width=p+'%';
+    document.getElementById('counter').textContent=String(this.i+1).padStart(2,'0')+' / '+String(this.slides.length).padStart(2,'0');
+  }
+  next(){this.show(this.i+1);}prev(){this.show(this.i-1);}
+  nav(){
+    addEventListener('keydown',e=>{
+      if(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
+      if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();this.next();}
+      else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.prev();}
+      else if(e.key==='Home')this.show(0);else if(e.key==='End')this.show(this.slides.length-1);
+    });
+    let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+    addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)dx<0?this.next():this.prev();},{passive:true});
+    let wl=0;addEventListener('wheel',e=>{const t=Date.now();if(t-wl<700)return;if(Math.abs(e.deltaY)<30)return;wl=t;e.deltaY>0?this.next():this.prev();},{passive:true});
+  }
+}
+
+/* ===========================================
+   EDIÇÃO INLINE (tecla E / hotzone)
+   =========================================== */
+const editor={isActive:false,toggleEditMode(){this.isActive=!this.isActive;const b=document.getElementById('editToggle');
+  b.classList.toggle('active',this.isActive);
+  document.querySelectorAll('.slide h1,.slide h2,.slide p,.slide li,.slide .s-t,.slide .s-d,.slide .pt,.slide .lead,.slide .takeaway')
+    .forEach(el=>el.setAttribute('contenteditable',this.isActive));
+  if(!this.isActive){try{localStorage.setItem('deck_movies',document.querySelector('.deck-stage').innerHTML);}catch(e){}}
+}};
+
+window.addEventListener('DOMContentLoaded',()=>{
+  fillMetrics();
+  renderAll();
+  const deck=new SlidePresentation();
+  // edição
+  const hz=document.querySelector('.edit-hotzone'),bt=document.getElementById('editToggle');let ht=null;
+  hz.addEventListener('mouseenter',()=>{clearTimeout(ht);bt.classList.add('show');});
+  hz.addEventListener('mouseleave',()=>{ht=setTimeout(()=>{if(!editor.isActive)bt.classList.remove('show');},400);});
+  bt.addEventListener('mouseenter',()=>clearTimeout(ht));
+  bt.addEventListener('mouseleave',()=>{ht=setTimeout(()=>{if(!editor.isActive)bt.classList.remove('show');},400);});
+  bt.addEventListener('click',()=>editor.toggleEditMode());
+  hz.addEventListener('click',()=>editor.toggleEditMode());
+  addEventListener('keydown',e=>{if((e.key==='e'||e.key==='E')&&!(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true'))editor.toggleEditMode();});
+});
+</script>
+</body>
+</html>
