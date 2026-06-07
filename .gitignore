@@ -14,3 +14,16 @@ tmp/
 
 dados/processed/filmes_processados.csv
 dados/raw/*.csv
+
+# Modelo preditivo e suas saídas ficam FORA do repo (no drive do grupo)
+codigo/modelo_predicao.py
+codigo/predicao_lancamentos.py
+codigo/dados_apresentacao.py
+dados/processed/modelo_metricas.json
+dados/processed/importancia_features.csv
+dados/processed/predicoes_lancamentos.csv
+
+# Artefatos grandes/regeneráveis da apresentação (recriáveis pelos scripts)
+apresentacao/apresentacao_standalone.html
+apresentacao/apresentacao.zip
+apresentacao/_pdf_frames/

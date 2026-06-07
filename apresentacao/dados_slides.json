@@ -1,0 +1,1292 @@
+{
+  "gerado_em": "2026-06-06",
+  "dataset": {
+    "filmes_total": 43608,
+    "colunas": 25,
+    "filmes_com_receita": 7371,
+    "filmes_com_orcamento": 8808,
+    "filmes_com_diretor": 42993,
+    "anos": [
+      1874,
+      2018
+    ],
+    "tabelas_agregadas": 11,
+    "fontes_csv": 5
+  },
+  "genero_receita": [
+    {
+      "primary_genre": "Action",
+      "receita_total_bi": 122.04,
+      "receita_media_mi": 102.3,
+      "qtd_filmes": 1193
+    },
+    {
+      "primary_genre": "Adventure",
+      "receita_total_bi": 84.13,
+      "receita_media_mi": 177.49,
+      "qtd_filmes": 474
+    },
+    {
+      "primary_genre": "Comedy",
+      "receita_total_bi": 75.77,
+      "receita_media_mi": 48.63,
+      "qtd_filmes": 1558
+    },
+    {
+      "primary_genre": "Drama",
+      "receita_total_bi": 72.53,
+      "receita_media_mi": 37.6,
+      "qtd_filmes": 1929
+    },
+    {
+      "primary_genre": "Animation",
+      "receita_total_bi": 35.85,
+      "receita_media_mi": 190.7,
+      "qtd_filmes": 188
+    },
+    {
+      "primary_genre": "Fantasy",
+      "receita_total_bi": 19.48,
+      "receita_media_mi": 107.64,
+      "qtd_filmes": 181
+    },
+    {
+      "primary_genre": "Science Fiction",
+      "receita_total_bi": 17.34,
+      "receita_media_mi": 149.51,
+      "qtd_filmes": 116
+    },
+    {
+      "primary_genre": "Horror",
+      "receita_total_bi": 17.09,
+      "receita_media_mi": 42.4,
+      "qtd_filmes": 403
+    },
+    {
+      "primary_genre": "Thriller",
+      "receita_total_bi": 15.35,
+      "receita_media_mi": 59.26,
+      "qtd_filmes": 259
+    },
+    {
+      "primary_genre": "Family",
+      "receita_total_bi": 13.68,
+      "receita_media_mi": 173.14,
+      "qtd_filmes": 79
+    },
+    {
+      "primary_genre": "Crime",
+      "receita_total_bi": 13.58,
+      "receita_media_mi": 41.15,
+      "qtd_filmes": 330
+    },
+    {
+      "primary_genre": "Romance",
+      "receita_total_bi": 9.53,
+      "receita_media_mi": 54.78,
+      "qtd_filmes": 174
+    },
+    {
+      "primary_genre": "Mystery",
+      "receita_total_bi": 4.18,
+      "receita_media_mi": 45.92,
+      "qtd_filmes": 91
+    },
+    {
+      "primary_genre": "War",
+      "receita_total_bi": 2.12,
+      "receita_media_mi": 42.47,
+      "qtd_filmes": 50
+    },
+    {
+      "primary_genre": "History",
+      "receita_total_bi": 1.97,
+      "receita_media_mi": 50.63,
+      "qtd_filmes": 39
+    },
+    {
+      "primary_genre": "Music",
+      "receita_total_bi": 1.81,
+      "receita_media_mi": 36.93,
+      "qtd_filmes": 49
+    },
+    {
+      "primary_genre": "Western",
+      "receita_total_bi": 1.46,
+      "receita_media_mi": 33.86,
+      "qtd_filmes": 43
+    },
+    {
+      "primary_genre": "Documentary",
+      "receita_total_bi": 1.04,
+      "receita_media_mi": 5.54,
+      "qtd_filmes": 188
+    },
+    {
+      "primary_genre": "TV Movie",
+      "receita_total_bi": 0.04,
+      "receita_media_mi": 42.0,
+      "qtd_filmes": 1
+    },
+    {
+      "primary_genre": "Foreign",
+      "receita_total_bi": 0.03,
+      "receita_media_mi": 4.3,
+      "qtd_filmes": 6
+    }
+  ],
+  "resumo_genero": [
+    {
+      "primary_genre": "Action",
+      "qtd_filmes": 1193,
+      "receita_total_bi": 122.04,
+      "receita_media_mi": 102.3,
+      "receita_mediana_mi": 27.48,
+      "roi_medio": 521.63,
+      "nota_metadata_media": 6.04,
+      "nota_usuarios_media": 2.99
+    },
+    {
+      "primary_genre": "Adventure",
+      "qtd_filmes": 474,
+      "receita_total_bi": 84.13,
+      "receita_media_mi": 177.49,
+      "receita_mediana_mi": 65.72,
+      "roi_medio": 247029.46,
+      "nota_metadata_media": 6.33,
+      "nota_usuarios_media": 3.19
+    },
+    {
+      "primary_genre": "Comedy",
+      "qtd_filmes": 1558,
+      "receita_total_bi": 75.77,
+      "receita_media_mi": 48.63,
+      "receita_mediana_mi": 17.13,
+      "roi_medio": 262525.5,
+      "nota_metadata_media": 6.03,
+      "nota_usuarios_media": 3.12
+    },
+    {
+      "primary_genre": "Drama",
+      "qtd_filmes": 1929,
+      "receita_total_bi": 72.53,
+      "receita_media_mi": 37.6,
+      "receita_mediana_mi": 9.0,
+      "roi_medio": 1594366.3,
+      "nota_metadata_media": 6.48,
+      "nota_usuarios_media": 3.48
+    },
+    {
+      "primary_genre": "Animation",
+      "qtd_filmes": 188,
+      "receita_total_bi": 35.85,
+      "receita_media_mi": 190.7,
+      "receita_mediana_mi": 71.35,
+      "roi_medio": 623.35,
+      "nota_metadata_media": 6.51,
+      "nota_usuarios_media": 3.22
+    },
+    {
+      "primary_genre": "Fantasy",
+      "qtd_filmes": 181,
+      "receita_total_bi": 19.48,
+      "receita_media_mi": 107.64,
+      "receita_mediana_mi": 42.72,
+      "roi_medio": 338.09,
+      "nota_metadata_media": 6.19,
+      "nota_usuarios_media": 3.15
+    },
+    {
+      "primary_genre": "Science Fiction",
+      "qtd_filmes": 116,
+      "receita_total_bi": 17.34,
+      "receita_media_mi": 149.51,
+      "receita_mediana_mi": 58.29,
+      "roi_medio": 452.23,
+      "nota_metadata_media": 6.19,
+      "nota_usuarios_media": 3.15
+    },
+    {
+      "primary_genre": "Horror",
+      "qtd_filmes": 403,
+      "receita_total_bi": 17.09,
+      "receita_media_mi": 42.4,
+      "receita_mediana_mi": 18.09,
+      "roi_medio": 314198.01,
+      "nota_metadata_media": 5.79,
+      "nota_usuarios_media": 2.93
+    },
+    {
+      "primary_genre": "Thriller",
+      "qtd_filmes": 259,
+      "receita_total_bi": 15.35,
+      "receita_media_mi": 59.26,
+      "receita_mediana_mi": 17.74,
+      "roi_medio": 269.43,
+      "nota_metadata_media": 6.08,
+      "nota_usuarios_media": 3.14
+    },
+    {
+      "primary_genre": "Family",
+      "qtd_filmes": 79,
+      "receita_total_bi": 13.68,
+      "receita_media_mi": 173.14,
+      "receita_mediana_mi": 47.09,
+      "roi_medio": 528.37,
+      "nota_metadata_media": 6.14,
+      "nota_usuarios_media": 3.14
+    },
+    {
+      "primary_genre": "Crime",
+      "qtd_filmes": 330,
+      "receita_total_bi": 13.58,
+      "receita_media_mi": 41.15,
+      "receita_mediana_mi": 14.73,
+      "roi_medio": 221.93,
+      "nota_metadata_media": 6.52,
+      "nota_usuarios_media": 3.41
+    },
+    {
+      "primary_genre": "Romance",
+      "qtd_filmes": 174,
+      "receita_total_bi": 9.53,
+      "receita_media_mi": 54.78,
+      "receita_mediana_mi": 13.25,
+      "roi_medio": 313.56,
+      "nota_metadata_media": 6.13,
+      "nota_usuarios_media": 3.3
+    },
+    {
+      "primary_genre": "Mystery",
+      "qtd_filmes": 91,
+      "receita_total_bi": 4.18,
+      "receita_media_mi": 45.92,
+      "receita_mediana_mi": 13.28,
+      "roi_medio": 652.95,
+      "nota_metadata_media": 6.22,
+      "nota_usuarios_media": 3.29
+    },
+    {
+      "primary_genre": "War",
+      "qtd_filmes": 50,
+      "receita_total_bi": 2.12,
+      "receita_media_mi": 42.47,
+      "receita_mediana_mi": 14.42,
+      "roi_medio": 11046099.18,
+      "nota_metadata_media": 6.59,
+      "nota_usuarios_media": 3.58
+    },
+    {
+      "primary_genre": "History",
+      "qtd_filmes": 39,
+      "receita_total_bi": 1.97,
+      "receita_media_mi": 50.63,
+      "receita_mediana_mi": 13.0,
+      "roi_medio": 412.9,
+      "nota_metadata_media": 6.74,
+      "nota_usuarios_media": 3.67
+    },
+    {
+      "primary_genre": "Music",
+      "qtd_filmes": 49,
+      "receita_total_bi": 1.81,
+      "receita_media_mi": 36.93,
+      "receita_mediana_mi": 14.87,
+      "roi_medio": 275.2,
+      "nota_metadata_media": 6.53,
+      "nota_usuarios_media": 3.12
+    },
+    {
+      "primary_genre": "Western",
+      "qtd_filmes": 43,
+      "receita_total_bi": 1.46,
+      "receita_media_mi": 33.86,
+      "receita_mediana_mi": 8.0,
+      "roi_medio": 592.23,
+      "nota_metadata_media": 6.59,
+      "nota_usuarios_media": 3.68
+    },
+    {
+      "primary_genre": "Documentary",
+      "qtd_filmes": 188,
+      "receita_total_bi": 1.04,
+      "receita_media_mi": 5.54,
+      "receita_mediana_mi": 0.31,
+      "roi_medio": 12708.65,
+      "nota_metadata_media": 6.47,
+      "nota_usuarios_media": 3.57
+    }
+  ],
+  "decada": [
+    {
+      "decade": 1900,
+      "qtd_filmes": 87,
+      "nota_metadata_media": 5.34,
+      "nota_usuarios_media": 4.33,
+      "duracao_media": 5.3
+    },
+    {
+      "decade": 1910,
+      "qtd_filmes": 175,
+      "nota_metadata_media": 5.47,
+      "nota_usuarios_media": 3.6,
+      "duracao_media": 56.66
+    },
+    {
+      "decade": 1920,
+      "qtd_filmes": 423,
+      "nota_metadata_media": 5.91,
+      "nota_usuarios_media": 3.86,
+      "duracao_media": 81.65
+    },
+    {
+      "decade": 1930,
+      "qtd_filmes": 1302,
+      "nota_metadata_media": 5.06,
+      "nota_usuarios_media": 3.64,
+      "duracao_media": 81.55
+    },
+    {
+      "decade": 1940,
+      "qtd_filmes": 1476,
+      "nota_metadata_media": 5.62,
+      "nota_usuarios_media": 3.64,
+      "duracao_media": 90.8
+    },
+    {
+      "decade": 1950,
+      "qtd_filmes": 2031,
+      "nota_metadata_media": 5.75,
+      "nota_usuarios_media": 3.58,
+      "duracao_media": 92.42
+    },
+    {
+      "decade": 1960,
+      "qtd_filmes": 2550,
+      "nota_metadata_media": 5.8,
+      "nota_usuarios_media": 3.48,
+      "duracao_media": 98.85
+    },
+    {
+      "decade": 1970,
+      "qtd_filmes": 3350,
+      "nota_metadata_media": 5.66,
+      "nota_usuarios_media": 3.52,
+      "duracao_media": 101.17
+    },
+    {
+      "decade": 1980,
+      "qtd_filmes": 3796,
+      "nota_metadata_media": 5.67,
+      "nota_usuarios_media": 3.29,
+      "duracao_media": 100.68
+    },
+    {
+      "decade": 1990,
+      "qtd_filmes": 5452,
+      "nota_metadata_media": 5.61,
+      "nota_usuarios_media": 3.25,
+      "duracao_media": 101.76
+    },
+    {
+      "decade": 2000,
+      "qtd_filmes": 10685,
+      "nota_metadata_media": 5.66,
+      "nota_usuarios_media": 3.24,
+      "duracao_media": 100.03
+    },
+    {
+      "decade": 2010,
+      "qtd_filmes": 12150,
+      "nota_metadata_media": 5.77,
+      "nota_usuarios_media": 3.09,
+      "duracao_media": 96.88
+    }
+  ],
+  "correlacoes": {
+    "revenue": [
+      {
+        "feature": "vote_count",
+        "correlation": 0.7816
+      },
+      {
+        "feature": "budget",
+        "correlation": 0.7301
+      },
+      {
+        "feature": "popularity",
+        "correlation": 0.4576
+      },
+      {
+        "feature": "runtime",
+        "correlation": 0.2043
+      },
+      {
+        "feature": "vote_average",
+        "correlation": 0.1489
+      },
+      {
+        "feature": "user_rating_avg",
+        "correlation": 0.0011
+      }
+    ],
+    "roi": [
+      {
+        "feature": "vote_average",
+        "correlation": 0.0156
+      },
+      {
+        "feature": "user_rating_avg",
+        "correlation": 0.0062
+      },
+      {
+        "feature": "popularity",
+        "correlation": -0.0087
+      },
+      {
+        "feature": "vote_count",
+        "correlation": -0.0087
+      },
+      {
+        "feature": "runtime",
+        "correlation": -0.0144
+      },
+      {
+        "feature": "budget",
+        "correlation": -0.0199
+      }
+    ]
+  },
+  "top_diretores": [
+    {
+      "director": "Steven Spielberg",
+      "receita_total_bi": 9.26,
+      "nota_metadata_media": 6.94,
+      "nota_usuarios_media": 3.53,
+      "qtd_filmes": 30
+    },
+    {
+      "director": "Peter Jackson",
+      "receita_total_bi": 6.53,
+      "nota_metadata_media": 7.27,
+      "nota_usuarios_media": 3.55,
+      "qtd_filmes": 11
+    },
+    {
+      "director": "Michael Bay",
+      "receita_total_bi": 6.44,
+      "nota_metadata_media": 6.39,
+      "nota_usuarios_media": 2.99,
+      "qtd_filmes": 13
+    },
+    {
+      "director": "James Cameron",
+      "receita_total_bi": 5.9,
+      "nota_metadata_media": 7.31,
+      "nota_usuarios_media": 3.71,
+      "qtd_filmes": 8
+    },
+    {
+      "director": "David Yates",
+      "receita_total_bi": 5.33,
+      "nota_metadata_media": 7.15,
+      "nota_usuarios_media": 3.69,
+      "qtd_filmes": 6
+    },
+    {
+      "director": "Christopher Nolan",
+      "receita_total_bi": 4.75,
+      "nota_metadata_media": 7.72,
+      "nota_usuarios_media": 3.91,
+      "qtd_filmes": 10
+    },
+    {
+      "director": "Robert Zemeckis",
+      "receita_total_bi": 4.14,
+      "nota_metadata_media": 6.86,
+      "nota_usuarios_media": 3.36,
+      "qtd_filmes": 17
+    },
+    {
+      "director": "Tim Burton",
+      "receita_total_bi": 4.03,
+      "nota_metadata_media": 6.73,
+      "nota_usuarios_media": 3.32,
+      "qtd_filmes": 18
+    },
+    {
+      "director": "Ridley Scott",
+      "receita_total_bi": 3.92,
+      "nota_metadata_media": 6.58,
+      "nota_usuarios_media": 3.3,
+      "qtd_filmes": 23
+    },
+    {
+      "director": "Chris Columbus",
+      "receita_total_bi": 3.87,
+      "nota_metadata_media": 6.46,
+      "nota_usuarios_media": 3.14,
+      "qtd_filmes": 13
+    }
+  ],
+  "top_roi_filmes": [
+    {
+      "title": "Alice in Wonderland",
+      "release_year": 1951,
+      "primary_genre": "Animation",
+      "director": "Hamilton Luske",
+      "revenue": 572000000.0,
+      "budget": 3000000.0,
+      "profit": 569000000.0,
+      "roi": 18966.67,
+      "vote_average": 7.0,
+      "user_rating_avg": 3.61,
+      "vote_count": 1557.0,
+      "user_rating_count": 49.0
+    },
+    {
+      "title": "Snow White and the Seven Dwarfs",
+      "release_year": 1937,
+      "primary_genre": "Fantasy",
+      "director": "David Hand",
+      "revenue": 184925486.0,
+      "budget": 1488423.0,
+      "profit": 183437063.0,
+      "roi": 12324.26,
+      "vote_average": 6.9,
+      "user_rating_avg": 3.66,
+      "vote_count": 1973.0,
+      "user_rating_count": 71.0
+    },
+    {
+      "title": "Rocky",
+      "release_year": 1976,
+      "primary_genre": "Drama",
+      "director": "John G. Avildsen",
+      "revenue": 117235147.0,
+      "budget": 1000000.0,
+      "profit": 116235147.0,
+      "roi": 11623.51,
+      "vote_average": 7.5,
+      "user_rating_avg": 3.79,
+      "vote_count": 1843.0,
+      "user_rating_count": 69.0
+    },
+    {
+      "title": "The Devil Inside",
+      "release_year": 2012,
+      "primary_genre": "Thriller",
+      "director": "William Brent Bell",
+      "revenue": 101758490.0,
+      "budget": 1000000.0,
+      "profit": 100758490.0,
+      "roi": 10075.85,
+      "vote_average": 4.6,
+      "user_rating_avg": NaN,
+      "vote_count": 263.0,
+      "user_rating_count": NaN
+    },
+    {
+      "title": "Gone with the Wind",
+      "release_year": 1939,
+      "primary_genre": "Drama",
+      "director": "Victor Fleming",
+      "revenue": 400176459.0,
+      "budget": 4000000.0,
+      "profit": 396176459.0,
+      "roi": 9904.41,
+      "vote_average": 7.7,
+      "user_rating_avg": 4.04,
+      "vote_count": 995.0,
+      "user_rating_count": 68.0
+    },
+    {
+      "title": "The Rocky Horror Picture Show",
+      "release_year": 1975,
+      "primary_genre": "Comedy",
+      "director": "Jim Sharman",
+      "revenue": 112892319.0,
+      "budget": 1200000.0,
+      "profit": 111692319.0,
+      "roi": 9307.69,
+      "vote_average": 7.4,
+      "user_rating_avg": 3.17,
+      "vote_count": 703.0,
+      "user_rating_count": 63.0
+    },
+    {
+      "title": "Cinderella",
+      "release_year": 1950,
+      "primary_genre": "Family",
+      "director": "Clyde Geronimi",
+      "revenue": 263591415.0,
+      "budget": 2900000.0,
+      "profit": 260691415.0,
+      "roi": 8989.36,
+      "vote_average": 6.8,
+      "user_rating_avg": 3.56,
+      "vote_count": 1760.0,
+      "user_rating_count": 55.0
+    },
+    {
+      "title": "Saw",
+      "release_year": 2004,
+      "primary_genre": "Horror",
+      "director": "James Wan",
+      "revenue": 103911669.0,
+      "budget": 1200000.0,
+      "profit": 102711669.0,
+      "roi": 8559.31,
+      "vote_average": 7.2,
+      "user_rating_avg": 3.27,
+      "vote_count": 2255.0,
+      "user_rating_count": 33.0
+    },
+    {
+      "title": "E.T. the Extra-Terrestrial",
+      "release_year": 1982,
+      "primary_genre": "Science Fiction",
+      "director": "Steven Spielberg",
+      "revenue": 792965326.0,
+      "budget": 10500000.0,
+      "profit": 782465326.0,
+      "roi": 7452.05,
+      "vote_average": 7.3,
+      "user_rating_avg": 3.77,
+      "vote_count": 3359.0,
+      "user_rating_count": 160.0
+    },
+    {
+      "title": "My Big Fat Greek Wedding",
+      "release_year": 2002,
+      "primary_genre": "Comedy",
+      "director": "Joel Zwick",
+      "revenue": 368744044.0,
+      "budget": 5000000.0,
+      "profit": 363744044.0,
+      "roi": 7274.88,
+      "vote_average": 6.2,
+      "user_rating_avg": 3.36,
+      "vote_count": 686.0,
+      "user_rating_count": 51.0
+    },
+    {
+      "title": "The Full Monty",
+      "release_year": 1997,
+      "primary_genre": "Comedy",
+      "director": "Peter Cattaneo",
+      "revenue": 257850122.0,
+      "budget": 3500000.0,
+      "profit": 254350122.0,
+      "roi": 7267.15,
+      "vote_average": 6.9,
+      "user_rating_avg": 3.77,
+      "vote_count": 372.0,
+      "user_rating_count": 64.0
+    },
+    {
+      "title": "Star Wars",
+      "release_year": 1977,
+      "primary_genre": "Adventure",
+      "director": "George Lucas",
+      "revenue": 775398007.0,
+      "budget": 11000000.0,
+      "profit": 764398007.0,
+      "roi": 6949.07,
+      "vote_average": 8.1,
+      "user_rating_avg": 4.22,
+      "vote_count": 6778.0,
+      "user_rating_count": 291.0
+    }
+  ],
+  "top_receita_filmes": [
+    {
+      "title": "Avatar",
+      "release_year": 2009,
+      "primary_genre": "Action",
+      "director": "James Cameron",
+      "revenue": 2787965087.0,
+      "budget": 237000000.0,
+      "profit": 2550965087.0,
+      "roi": 1076.36,
+      "vote_average": 7.2,
+      "user_rating_avg": 3.64,
+      "vote_count": 12114.0,
+      "user_rating_count": 67.0
+    },
+    {
+      "title": "Star Wars: The Force Awakens",
+      "release_year": 2015,
+      "primary_genre": "Action",
+      "director": "J.J. Abrams",
+      "revenue": 2068223624.0,
+      "budget": 245000000.0,
+      "profit": 1823223624.0,
+      "roi": 744.17,
+      "vote_average": 7.5,
+      "user_rating_avg": 3.52,
+      "vote_count": 7993.0,
+      "user_rating_count": 29.0
+    },
+    {
+      "title": "Titanic",
+      "release_year": 1997,
+      "primary_genre": "Drama",
+      "director": "James Cameron",
+      "revenue": 1845034188.0,
+      "budget": 200000000.0,
+      "profit": 1645034188.0,
+      "roi": 822.52,
+      "vote_average": 7.5,
+      "user_rating_avg": 3.33,
+      "vote_count": 7770.0,
+      "user_rating_count": 164.0
+    },
+    {
+      "title": "The Avengers",
+      "release_year": 2012,
+      "primary_genre": "Science Fiction",
+      "director": "Joss Whedon",
+      "revenue": 1519557910.0,
+      "budget": 220000000.0,
+      "profit": 1299557910.0,
+      "roi": 590.71,
+      "vote_average": 7.4,
+      "user_rating_avg": 4.01,
+      "vote_count": 12000.0,
+      "user_rating_count": 46.0
+    },
+    {
+      "title": "Jurassic World",
+      "release_year": 2015,
+      "primary_genre": "Action",
+      "director": "Colin Trevorrow",
+      "revenue": 1513528810.0,
+      "budget": 150000000.0,
+      "profit": 1363528810.0,
+      "roi": 909.02,
+      "vote_average": 6.5,
+      "user_rating_avg": 3.44,
+      "vote_count": 8842.0,
+      "user_rating_count": 9.0
+    },
+    {
+      "title": "Furious 7",
+      "release_year": 2015,
+      "primary_genre": "Action",
+      "director": "James Wan",
+      "revenue": 1506249360.0,
+      "budget": 190000000.0,
+      "profit": 1316249360.0,
+      "roi": 692.76,
+      "vote_average": 7.3,
+      "user_rating_avg": 2.25,
+      "vote_count": 4253.0,
+      "user_rating_count": 2.0
+    },
+    {
+      "title": "Avengers: Age of Ultron",
+      "release_year": 2015,
+      "primary_genre": "Action",
+      "director": "Joss Whedon",
+      "revenue": 1405403694.0,
+      "budget": 280000000.0,
+      "profit": 1125403694.0,
+      "roi": 401.93,
+      "vote_average": 7.3,
+      "user_rating_avg": 3.88,
+      "vote_count": 6908.0,
+      "user_rating_count": 13.0
+    },
+    {
+      "title": "Harry Potter and the Deathly Hallows: Part 2",
+      "release_year": 2011,
+      "primary_genre": "Family",
+      "director": "David Yates",
+      "revenue": 1342000000.0,
+      "budget": 125000000.0,
+      "profit": 1217000000.0,
+      "roi": 973.6,
+      "vote_average": 7.9,
+      "user_rating_avg": 4.22,
+      "vote_count": 6141.0,
+      "user_rating_count": 34.0
+    },
+    {
+      "title": "Frozen",
+      "release_year": 2013,
+      "primary_genre": "Animation",
+      "director": "Chris Buck",
+      "revenue": 1274219009.0,
+      "budget": 150000000.0,
+      "profit": 1124219009.0,
+      "roi": 749.48,
+      "vote_average": 7.3,
+      "user_rating_avg": 4.04,
+      "vote_count": 5440.0,
+      "user_rating_count": 12.0
+    },
+    {
+      "title": "Beauty and the Beast",
+      "release_year": 2017,
+      "primary_genre": "Family",
+      "director": "Bill Condon",
+      "revenue": 1262886337.0,
+      "budget": 160000000.0,
+      "profit": 1102886337.0,
+      "roi": 689.3,
+      "vote_average": 6.8,
+      "user_rating_avg": NaN,
+      "vote_count": 5530.0,
+      "user_rating_count": NaN
+    }
+  ],
+  "keywords": [
+    {
+      "keyword": "woman director",
+      "qtd_filmes": 2947,
+      "receita_media_mi": 44.2,
+      "nota_usuarios_media": 3.28
+    },
+    {
+      "keyword": "independent film",
+      "qtd_filmes": 1894,
+      "receita_media_mi": 6.28,
+      "nota_usuarios_media": 3.45
+    },
+    {
+      "keyword": "murder",
+      "qtd_filmes": 1278,
+      "receita_media_mi": 43.48,
+      "nota_usuarios_media": 3.27
+    },
+    {
+      "keyword": "based on novel",
+      "qtd_filmes": 812,
+      "receita_media_mi": 108.25,
+      "nota_usuarios_media": 3.4
+    },
+    {
+      "keyword": "musical",
+      "qtd_filmes": 723,
+      "receita_media_mi": 96.23,
+      "nota_usuarios_media": 3.31
+    },
+    {
+      "keyword": "sex",
+      "qtd_filmes": 675,
+      "receita_media_mi": 31.84,
+      "nota_usuarios_media": 3.22
+    },
+    {
+      "keyword": "violence",
+      "qtd_filmes": 644,
+      "receita_media_mi": 75.8,
+      "nota_usuarios_media": 3.25
+    },
+    {
+      "keyword": "nudity",
+      "qtd_filmes": 621,
+      "receita_media_mi": 31.93,
+      "nota_usuarios_media": 3.27
+    },
+    {
+      "keyword": "revenge",
+      "qtd_filmes": 616,
+      "receita_media_mi": 80.54,
+      "nota_usuarios_media": 3.17
+    },
+    {
+      "keyword": "biography",
+      "qtd_filmes": 607,
+      "receita_media_mi": 47.2,
+      "nota_usuarios_media": 3.48
+    },
+    {
+      "keyword": "suspense",
+      "qtd_filmes": 576,
+      "receita_media_mi": 65.93,
+      "nota_usuarios_media": 3.36
+    },
+    {
+      "keyword": "love",
+      "qtd_filmes": 559,
+      "receita_media_mi": 57.89,
+      "nota_usuarios_media": 3.38
+    }
+  ],
+  "horror": {
+    "qtd_filmes": 403,
+    "receita_total_bi": 17.09,
+    "receita_media_mi": 42.4,
+    "receita_mediana_mi": 18.09,
+    "nota_metadata_media": 5.79
+  },
+  "modelo": {
+    "metricas": {
+      "n_total_treinaveis": 5363,
+      "validacao": "5-fold cross-validation estratificada (por hit)",
+      "n_splits": 5,
+      "taxa_hit_base": 0.5131,
+      "orcamento_p05_usd": 500000.0,
+      "orcamento_p01_usd": 5620.0,
+      "subpopulacao": "filmes com orçamento E bilheteria reportados (revenue>0)",
+      "regressao_log_receita": {
+        "escala_r2": "log1p(receita)",
+        "r2": 0.5726,
+        "r2_std": 0.0458,
+        "mae_usd_milhoes": 49.15,
+        "mae_usd_milhoes_std": 2.03,
+        "baseline_mediana_mae_milhoes": 81.15,
+        "baseline_orcamento_mae_milhoes": 56.35
+      },
+      "classificacao_hit": {
+        "definicao_hit": "bilheteria >= 2x orçamento",
+        "acuracia": 0.6718,
+        "acuracia_std": 0.0161,
+        "roc_auc": 0.7393,
+        "roc_auc_std": 0.0123,
+        "precisao": 0.6886,
+        "recall": 0.6581
+      },
+      "features_usadas": [
+        "primary_genre",
+        "lang_group",
+        "log_budget",
+        "runtime",
+        "release_year",
+        "has_collection",
+        "is_sequel",
+        "based_on_novel",
+        "keyword_count",
+        "director_track_record"
+      ],
+      "features_excluidas_por_vazamento": [
+        "revenue",
+        "profit",
+        "roi",
+        "vote_count",
+        "vote_average",
+        "user_rating_avg",
+        "user_rating_count",
+        "popularity"
+      ]
+    },
+    "importancias": [
+      {
+        "feature": "log_budget",
+        "importancia": 0.776073097385052
+      },
+      {
+        "feature": "has_collection",
+        "importancia": 0.0478562256365516
+      },
+      {
+        "feature": "director_track_record",
+        "importancia": 0.037284789832447
+      },
+      {
+        "feature": "keyword_count",
+        "importancia": 0.0351340223163941
+      },
+      {
+        "feature": "release_year",
+        "importancia": 0.0315750968277293
+      },
+      {
+        "feature": "runtime",
+        "importancia": 0.0168821554180703
+      },
+      {
+        "feature": "primary_genre",
+        "importancia": 0.0101201105285154
+      },
+      {
+        "feature": "lang_group",
+        "importancia": 0.0067313436028445
+      },
+      {
+        "feature": "is_sequel",
+        "importancia": 1.2385224819664308e-05
+      },
+      {
+        "feature": "based_on_novel",
+        "importancia": -9.387109569442664e-05
+      }
+    ]
+  },
+  "predicoes": [
+    {
+      "title": "Obsessão",
+      "budget_usd": 750000.0,
+      "receita_prevista_usd": 1429523.747023154,
+      "roi_previsto_pct": 90.60316626975387,
+      "prob_hit": 0.4806723262654642,
+      "veredito": "ALTO RISCO",
+      "fora_distribuicao": false,
+      "destaque": true,
+      "genero": "Horror",
+      "diretor": "Curry Barker",
+      "ano": 2026,
+      "actual_box_office_usd": 171000000.0,
+      "nota": "US$ 750 mil de orçamento -> ~228x. Direitos comprados por US$ 14-15M no TIFF 2025.",
+      "fonte": "Focus Features; Variety, NBC News, Collider (jun/2026) — bilheteria provisória",
+      "roi_real_x": 228.0,
+      "roi_previsto_x": 1.9060316626975387,
+      "erro_x": 119.62025839451151
+    },
+    {
+      "title": "Backrooms",
+      "budget_usd": 10000000.0,
+      "receita_prevista_usd": 9799626.470722588,
+      "roi_previsto_pct": -2.003735292774122,
+      "prob_hit": 0.41408105984212684,
+      "veredito": "ALTO RISCO",
+      "fora_distribuicao": false,
+      "destaque": true,
+      "genero": "Horror",
+      "diretor": "Kane Parsons",
+      "ano": 2026,
+      "actual_box_office_usd": 155000000.0,
+      "nota": "Estreia A24 recorde (US$ 118M no fim de semana de abertura mundial). IP viral do YouTube.",
+      "fonte": "A24/Chernin; Box Office Mojo, Variety, Deadline (jun/2026) — bilheteria provisória",
+      "roi_real_x": 15.5,
+      "roi_previsto_x": 0.9799626470722588,
+      "erro_x": 15.816929396551876
+    },
+    {
+      "title": "Dia D (sci-fi)",
+      "budget_usd": 140000000.0,
+      "receita_prevista_usd": 251319096.65556726,
+      "roi_previsto_pct": 79.51364046826232,
+      "prob_hit": 0.6156721321719308,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": true,
+      "genero": "Science Fiction",
+      "diretor": "Steven Spielberg",
+      "ano": 2026,
+      "actual_box_office_usd": NaN,
+      "nota": "Ficção científica de Steven Spielberg (Emily Blunt). NÃO é terror — contraste tentpole.",
+      "fonte": "Universal Pictures; AdoroCinema, Omelete, IMDb (orçamento estimado)",
+      "roi_real_x": NaN,
+      "roi_previsto_x": 1.7951364046826233,
+      "erro_x": NaN
+    },
+    {
+      "title": "Terrifier 3",
+      "budget_usd": 2000000.0,
+      "receita_prevista_usd": 10434182.165809672,
+      "roi_previsto_pct": 421.7091082904836,
+      "prob_hit": 0.8471918169156752,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Horror",
+      "diretor": "Damien Leone",
+      "ano": 2024,
+      "actual_box_office_usd": 90322103.0,
+      "nota": "Filme sem classificação de maior bilheteria da história (~45x).",
+      "fonte": "Box Office Mojo, The Numbers (alta confiança)",
+      "roi_real_x": 45.1610515,
+      "roi_previsto_x": 5.217091082904836,
+      "erro_x": 8.656366312633875
+    },
+    {
+      "title": "Longlegs",
+      "budget_usd": 10000000.0,
+      "receita_prevista_usd": 10853889.320090193,
+      "roi_previsto_pct": 8.538893200901933,
+      "prob_hit": 0.4509251560372941,
+      "veredito": "ALTO RISCO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Horror",
+      "diretor": "Osgood Perkins",
+      "ano": 2024,
+      "actual_box_office_usd": 127961936.0,
+      "nota": "Indie de maior bilheteria de 2024 (marketing viral). ~13x.",
+      "fonte": "Box Office Mojo, Variety (alta confiança)",
+      "roi_real_x": 12.7961936,
+      "roi_previsto_x": 1.0853889320090193,
+      "erro_x": 11.789500724237776
+    },
+    {
+      "title": "Anora",
+      "budget_usd": 6000000.0,
+      "receita_prevista_usd": 3544263.8280569147,
+      "roi_previsto_pct": -40.92893619905142,
+      "prob_hit": 0.227379261835842,
+      "veredito": "ALTO RISCO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Drama",
+      "diretor": "Sean Baker",
+      "ano": 2024,
+      "actual_box_office_usd": 59300000.0,
+      "nota": "Drama indie de baixo orçamento: US$ 6 mi -> US$ 59 mi (~9,9x). Oscar de Melhor Filme.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+      "roi_real_x": 9.883333333333333,
+      "roi_previsto_x": 0.5907106380094858,
+      "erro_x": 16.731260108396125
+    },
+    {
+      "title": "Inside Out 2",
+      "budget_usd": 200000000.0,
+      "receita_prevista_usd": 772364243.769274,
+      "roi_previsto_pct": 286.182121884637,
+      "prob_hit": 0.9230046964022406,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Animation",
+      "diretor": "Kelsey Mann",
+      "ano": 2024,
+      "actual_box_office_usd": 1698863816.0,
+      "nota": "Animação de maior bilheteria da história. ~8,5x.",
+      "fonte": "Box Office Mojo, The Numbers (alta confiança)",
+      "roi_real_x": 8.49431908,
+      "roi_previsto_x": 3.86182121884637,
+      "erro_x": 2.199563003731561
+    },
+    {
+      "title": "Wicked",
+      "budget_usd": 150000000.0,
+      "receita_prevista_usd": 349436524.7916057,
+      "roi_previsto_pct": 132.95768319440378,
+      "prob_hit": 0.5628876316858151,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Music",
+      "diretor": "Jon M. Chu",
+      "ano": 2024,
+      "actual_box_office_usd": 765103982.0,
+      "nota": "Musical/fantasia. ~5,1x.",
+      "fonte": "Box Office Mojo, The Numbers (alta confiança)",
+      "roi_real_x": 5.100693213333333,
+      "roi_previsto_x": 2.329576831944038,
+      "erro_x": 2.18953637561582
+    },
+    {
+      "title": "Smile 2",
+      "budget_usd": 28000000.0,
+      "receita_prevista_usd": 81684474.59999453,
+      "roi_previsto_pct": 191.73026642855186,
+      "prob_hit": 0.8353454921578451,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Horror",
+      "diretor": "Parker Finn",
+      "ano": 2024,
+      "actual_box_office_usd": 138128854.0,
+      "nota": "Sequência de Smile (2022). ~4,9x.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+      "roi_real_x": 4.9331733571428575,
+      "roi_previsto_x": 2.917302664285519,
+      "erro_x": 1.69100498811324
+    },
+    {
+      "title": "The Substance",
+      "budget_usd": 18000000.0,
+      "receita_prevista_usd": 15700689.109967273,
+      "roi_previsto_pct": -12.773949389070708,
+      "prob_hit": 0.30486906771446287,
+      "veredito": "ALTO RISCO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Horror",
+      "diretor": "Coralie Fargeat",
+      "ano": 2024,
+      "actual_box_office_usd": 77316812.0,
+      "nota": "Roteiro original (MUBI). 5 indicações ao Oscar 2025.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+      "roi_real_x": 4.295378444444444,
+      "roi_previsto_x": 0.872260506109293,
+      "erro_x": 4.92442156254893
+    },
+    {
+      "title": "Dune: Parte Dois",
+      "budget_usd": 190000000.0,
+      "receita_prevista_usd": 623486497.8671763,
+      "roi_previsto_pct": 228.15078835114542,
+      "prob_hit": 0.9367831970485149,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Science Fiction",
+      "diretor": "Denis Villeneuve",
+      "ano": 2024,
+      "actual_box_office_usd": 714844358.0,
+      "nota": "Ficção científica épica. ~3,8x.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+      "roi_real_x": 3.7623387263157895,
+      "roi_previsto_x": 3.281507883511454,
+      "erro_x": 1.146527407482505
+    },
+    {
+      "title": "Nosferatu",
+      "budget_usd": 50000000.0,
+      "receita_prevista_usd": 102520118.17033674,
+      "roi_previsto_pct": 105.04023634067347,
+      "prob_hit": 0.5446746660226879,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Horror",
+      "diretor": "Robert Eggers",
+      "ano": 2024,
+      "actual_box_office_usd": 182113849.0,
+      "nota": "Terror gótico de orçamento maior. ~3,6x.",
+      "fonte": "The Numbers, Wikipedia (alta confiança)",
+      "roi_real_x": 3.64227698,
+      "roi_previsto_x": 2.050402363406735,
+      "erro_x": 1.7763718209670674
+    },
+    {
+      "title": "Furiosa",
+      "budget_usd": 168000000.0,
+      "receita_prevista_usd": 611736778.1014934,
+      "roi_previsto_pct": 264.12903458422227,
+      "prob_hit": 0.957345520198377,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Action",
+      "diretor": "George Miller",
+      "ano": 2024,
+      "actual_box_office_usd": 174375791.0,
+      "nota": "Ação de orçamento alto que decepcionou: ~1,0x. O modelo SUPERESTIMA.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+      "roi_real_x": 1.0379511369047618,
+      "roi_previsto_x": 3.6412903458422226,
+      "erro_x": 0.2850503635586044
+    },
+    {
+      "title": "The Crow",
+      "budget_usd": 50000000.0,
+      "receita_prevista_usd": 146833456.37573043,
+      "roi_previsto_pct": 193.66691275146084,
+      "prob_hit": 0.7991915519838352,
+      "veredito": "PROVÁVEL SUCESSO",
+      "fora_distribuicao": false,
+      "destaque": false,
+      "genero": "Fantasy",
+      "diretor": "Rupert Sanders",
+      "ano": 2024,
+      "actual_box_office_usd": 24100000.0,
+      "nota": "Reboot sombrio que fracassou: US$ 50 mi -> US$ 24 mi (0,5x). O modelo SUPERESTIMA.",
+      "fonte": "Box Office Mojo, The Numbers, Wikipedia (alta confiança)",
+      "roi_real_x": 0.482,
+      "roi_previsto_x": 2.9366691275146084,
+      "erro_x": 0.16413153102063327
+    }
+  ],
+  "backtest_stats": {
+    "n_filmes": 13,
+    "acertos_classificacao": 6,
+    "n_sucessos_reais": 11,
+    "mediana_subestimacao_x": 4.9
+  }
+}
