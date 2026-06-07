@@ -3,7 +3,7 @@ Exporta a apresentação para PDF (1 página por slide, 1920x1080, 16:9).
 Captura cada slide com o navegador (gráficos e imagens já renderizados) e junta
 tudo num PDF. Estático: as animações viram seu estado final (normal num PDF).
 
-Uso: python apresentacao/export_pdf.py [n_slides]   (padrão 24)
+Uso: python apresentacao/export_pdf.py [n_slides]   (padrão 25)
 """
 
 import sys
@@ -14,7 +14,7 @@ from playwright.sync_api import sync_playwright
 
 HERE = Path(__file__).resolve().parent
 HTML = (HERE / "apresentacao.html").resolve()
-N = int(sys.argv[1]) if len(sys.argv) > 1 else 24
+N = int(sys.argv[1]) if len(sys.argv) > 1 else 25
 SCALE = 2  # nitidez (1920x1080 -> 3840x2160 por página)
 
 frames_dir = HERE / "_pdf_frames"

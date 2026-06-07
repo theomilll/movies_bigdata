@@ -1,0 +1,284 @@
+[
+  {
+    "title": "Backrooms",
+    "budget": 10000000,
+    "runtime": 110,
+    "primary_genre": "Horror",
+    "director": "Kane Parsons",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2026,
+    "keywords": [
+      "supernatural",
+      "found footage",
+      "based on web series",
+      "liminal space"
+    ],
+    "is_sequel": 0,
+    "destaque": true,
+    "actual_box_office_usd": 155000000,
+    "fonte": "A24/Chernin; Box Office Mojo, Variety, Deadline (jun/2026) — bilheteria provisória",
+    "nota": "Estreia A24 recorde (US$ 118M no fim de semana de abertura mundial). IP viral do YouTube."
+  },
+  {
+    "title": "Obsessão",
+    "budget": 750000,
+    "runtime": 100,
+    "primary_genre": "Horror",
+    "director": "Curry Barker",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2026,
+    "keywords": [
+      "supernatural",
+      "viral horror",
+      "low budget"
+    ],
+    "is_sequel": 0,
+    "destaque": true,
+    "actual_box_office_usd": 171000000,
+    "fonte": "Focus Features; Variety, NBC News, Collider (jun/2026) — bilheteria provisória",
+    "nota": "US$ 750 mil de orçamento -> ~228x. Direitos comprados por US$ 14-15M no TIFF 2025."
+  },
+  {
+    "title": "Dia D (sci-fi)",
+    "budget": 140000000,
+    "runtime": 120,
+    "primary_genre": "Science Fiction",
+    "director": "Steven Spielberg",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2026,
+    "keywords": [
+      "alien",
+      "first contact",
+      "conspiracy"
+    ],
+    "is_sequel": 0,
+    "destaque": true,
+    "actual_box_office_usd": null,
+    "fonte": "Universal Pictures; AdoroCinema, Omelete, IMDb (orçamento estimado)",
+    "nota": "Ficção científica de Steven Spielberg (Emily Blunt). NÃO é terror — contraste tentpole."
+  },
+  {
+    "title": "Terrifier 3",
+    "budget": 2000000,
+    "runtime": 125,
+    "primary_genre": "Horror",
+    "director": "Damien Leone",
+    "has_collection": 1,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "slasher",
+      "clown",
+      "sequel",
+      "gore"
+    ],
+    "is_sequel": 1,
+    "destaque": false,
+    "actual_box_office_usd": 90322103,
+    "fonte": "Box Office Mojo, The Numbers (alta confiança)",
+    "nota": "Filme sem classificação de maior bilheteria da história (~45x)."
+  },
+  {
+    "title": "The Substance",
+    "budget": 18000000,
+    "runtime": 141,
+    "primary_genre": "Horror",
+    "director": "Coralie Fargeat",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "body horror",
+      "transformation"
+    ],
+    "is_sequel": 0,
+    "destaque": false,
+    "actual_box_office_usd": 77316812,
+    "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+    "nota": "Roteiro original (MUBI). 5 indicações ao Oscar 2025."
+  },
+  {
+    "title": "Smile 2",
+    "budget": 28000000,
+    "runtime": 127,
+    "primary_genre": "Horror",
+    "director": "Parker Finn",
+    "has_collection": 1,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "supernatural",
+      "curse",
+      "sequel"
+    ],
+    "is_sequel": 1,
+    "destaque": false,
+    "actual_box_office_usd": 138128854,
+    "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+    "nota": "Sequência de Smile (2022). ~4,9x."
+  },
+  {
+    "title": "Longlegs",
+    "budget": 10000000,
+    "runtime": 101,
+    "primary_genre": "Horror",
+    "director": "Osgood Perkins",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "serial killer",
+      "occult",
+      "mystery"
+    ],
+    "is_sequel": 0,
+    "destaque": false,
+    "actual_box_office_usd": 127961936,
+    "fonte": "Box Office Mojo, Variety (alta confiança)",
+    "nota": "Indie de maior bilheteria de 2024 (marketing viral). ~13x."
+  },
+  {
+    "title": "Nosferatu",
+    "budget": 50000000,
+    "runtime": 132,
+    "primary_genre": "Horror",
+    "director": "Robert Eggers",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "vampire",
+      "gothic",
+      "based on novel"
+    ],
+    "is_sequel": 0,
+    "destaque": false,
+    "actual_box_office_usd": 182113849,
+    "fonte": "The Numbers, Wikipedia (alta confiança)",
+    "nota": "Terror gótico de orçamento maior. ~3,6x."
+  },
+  {
+    "title": "The Crow",
+    "budget": 50000000,
+    "runtime": 111,
+    "primary_genre": "Fantasy",
+    "director": "Rupert Sanders",
+    "has_collection": 1,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "supernatural",
+      "revenge",
+      "based on comic",
+      "gothic"
+    ],
+    "is_sequel": 0,
+    "destaque": false,
+    "actual_box_office_usd": 24100000,
+    "fonte": "Box Office Mojo, The Numbers, Wikipedia (alta confiança)",
+    "nota": "Reboot sombrio que fracassou: US$ 50 mi -> US$ 24 mi (0,5x). O modelo SUPERESTIMA."
+  },
+  {
+    "title": "Inside Out 2",
+    "budget": 200000000,
+    "runtime": 96,
+    "primary_genre": "Animation",
+    "director": "Kelsey Mann",
+    "has_collection": 1,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "sequel",
+      "emotions",
+      "pixar"
+    ],
+    "is_sequel": 1,
+    "destaque": false,
+    "actual_box_office_usd": 1698863816,
+    "fonte": "Box Office Mojo, The Numbers (alta confiança)",
+    "nota": "Animação de maior bilheteria da história. ~8,5x."
+  },
+  {
+    "title": "Dune: Parte Dois",
+    "budget": 190000000,
+    "runtime": 166,
+    "primary_genre": "Science Fiction",
+    "director": "Denis Villeneuve",
+    "has_collection": 1,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "sequel",
+      "based on novel",
+      "space"
+    ],
+    "is_sequel": 1,
+    "destaque": false,
+    "actual_box_office_usd": 714844358,
+    "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+    "nota": "Ficção científica épica. ~3,8x."
+  },
+  {
+    "title": "Wicked",
+    "budget": 150000000,
+    "runtime": 160,
+    "primary_genre": "Music",
+    "director": "Jon M. Chu",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "musical",
+      "based on novel",
+      "witch"
+    ],
+    "is_sequel": 0,
+    "based_on_novel": 1,
+    "destaque": false,
+    "actual_box_office_usd": 765103982,
+    "fonte": "Box Office Mojo, The Numbers (alta confiança)",
+    "nota": "Musical/fantasia. ~5,1x."
+  },
+  {
+    "title": "Furiosa",
+    "budget": 168000000,
+    "runtime": 148,
+    "primary_genre": "Action",
+    "director": "George Miller",
+    "has_collection": 1,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "prequel",
+      "post-apocalyptic",
+      "sequel"
+    ],
+    "is_sequel": 1,
+    "destaque": false,
+    "actual_box_office_usd": 174375791,
+    "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+    "nota": "Ação de orçamento alto que decepcionou: ~1,0x. O modelo SUPERESTIMA."
+  },
+  {
+    "title": "Anora",
+    "budget": 6000000,
+    "runtime": 139,
+    "primary_genre": "Drama",
+    "director": "Sean Baker",
+    "has_collection": 0,
+    "original_language": "en",
+    "release_year": 2024,
+    "keywords": [
+      "independent film",
+      "romance"
+    ],
+    "is_sequel": 0,
+    "destaque": false,
+    "actual_box_office_usd": 59300000,
+    "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
+    "nota": "Drama indie de baixo orçamento: US$ 6 mi -> US$ 59 mi (~9,9x). Oscar de Melhor Filme."
+  }
+]

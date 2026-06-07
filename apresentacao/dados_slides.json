@@ -925,368 +925,373 @@
   "modelo": {
     "metricas": {
       "n_total_treinaveis": 5363,
-      "validacao": "5-fold cross-validation estratificada (por hit)",
-      "n_splits": 5,
       "taxa_hit_base": 0.5131,
-      "orcamento_p05_usd": 500000.0,
-      "orcamento_p01_usd": 5620.0,
-      "subpopulacao": "filmes com orçamento E bilheteria reportados (revenue>0)",
-      "regressao_log_receita": {
-        "escala_r2": "log1p(receita)",
-        "r2": 0.5726,
-        "r2_std": 0.0458,
-        "mae_usd_milhoes": 49.15,
-        "mae_usd_milhoes_std": 2.03,
-        "baseline_mediana_mae_milhoes": 81.15,
-        "baseline_orcamento_mae_milhoes": 56.35
-      },
-      "classificacao_hit": {
-        "definicao_hit": "bilheteria >= 2x orçamento",
-        "acuracia": 0.6718,
-        "acuracia_std": 0.0161,
-        "roc_auc": 0.7393,
-        "roc_auc_std": 0.0123,
-        "precisao": 0.6886,
-        "recall": 0.6581
-      },
+      "definicao_hit": "bilheteria >= 2x orçamento",
+      "validacao": "holdout 80/20 + 5-fold CV + split temporal (treino <2010 / teste >=2010)",
+      "aviso_leakage": "vote_count, popularity, vote_average e user_rating_* só existem após o lançamento; o modelo estima a bilheteria com buzz pós-lançamento, não é previsão pura pré-lançamento.",
       "features_usadas": [
-        "primary_genre",
-        "lang_group",
-        "log_budget",
+        "budget",
         "runtime",
+        "vote_average",
+        "vote_count",
+        "popularity",
+        "user_rating_avg",
+        "user_rating_count",
+        "keyword_count",
         "release_year",
         "has_collection",
-        "is_sequel",
-        "based_on_novel",
-        "keyword_count",
-        "director_track_record"
+        "primary_genre",
+        "original_language"
+      ],
+      "features_engajamento_pos_estreia": [
+        "vote_average",
+        "vote_count",
+        "popularity",
+        "user_rating_avg",
+        "user_rating_count"
       ],
       "features_excluidas_por_vazamento": [
         "revenue",
         "profit",
-        "roi",
-        "vote_count",
-        "vote_average",
-        "user_rating_avg",
-        "user_rating_count",
-        "popularity"
-      ]
+        "roi"
+      ],
+      "regressao_log_receita": {
+        "r2": 0.6496,
+        "r2_std": 0.0479,
+        "mae_usd_milhoes": 38.5
+      },
+      "classificacao_hit": {
+        "roc_auc": 0.8028,
+        "roc_auc_std": 0.0321,
+        "acuracia": 0.7605
+      },
+      "receita": {
+        "holdout": {
+          "r2_log": 0.7178,
+          "mae_milhoes": 38.5,
+          "rmse_milhoes": 84.8
+        },
+        "cv": {
+          "r2_log": 0.6496,
+          "r2_log_std": 0.0479
+        },
+        "baseline_ridge": {
+          "r2_log": 0.3664
+        },
+        "temporal": {
+          "r2_log": 0.6158,
+          "mae_milhoes": 57.2
+        }
+      },
+      "hit": {
+        "holdout": {
+          "acuracia": 0.7605,
+          "precisao": 0.7644,
+          "recall": 0.7713,
+          "f1": 0.7678,
+          "roc_auc": 0.846
+        },
+        "cv": {
+          "roc_auc": 0.8028,
+          "roc_auc_std": 0.0321
+        },
+        "baseline_logreg": {
+          "acuracia": 0.7521,
+          "roc_auc": 0.8306
+        },
+        "temporal": {
+          "acuracia": 0.7032,
+          "roc_auc": 0.7771
+        }
+      },
+      "split_temporal": {
+        "corte_ano": 2010,
+        "n_treino": 3732,
+        "n_teste": 1631
+      }
     },
     "importancias": [
       {
-        "feature": "log_budget",
-        "importancia": 0.776073097385052
+        "feature": "vote_count",
+        "importancia": 0.45115679127489994
       },
       {
-        "feature": "has_collection",
-        "importancia": 0.0478562256365516
-      },
-      {
-        "feature": "director_track_record",
-        "importancia": 0.037284789832447
-      },
-      {
-        "feature": "keyword_count",
-        "importancia": 0.0351340223163941
+        "feature": "budget",
+        "importancia": 0.4470220262893013
       },
       {
         "feature": "release_year",
-        "importancia": 0.0315750968277293
+        "importancia": 0.05587041650256075
       },
       {
         "feature": "runtime",
-        "importancia": 0.0168821554180703
+        "importancia": 0.016329643843258124
+      },
+      {
+        "feature": "has_collection",
+        "importancia": 0.015646217508380335
+      },
+      {
+        "feature": "user_rating_count",
+        "importancia": 0.014588845828610442
       },
       {
         "feature": "primary_genre",
-        "importancia": 0.0101201105285154
+        "importancia": 0.01350646146002027
       },
       {
-        "feature": "lang_group",
-        "importancia": 0.0067313436028445
+        "feature": "original_language",
+        "importancia": 0.01010202573821325
       },
       {
-        "feature": "is_sequel",
-        "importancia": 1.2385224819664308e-05
+        "feature": "user_rating_avg",
+        "importancia": 0.004386863634070604
       },
       {
-        "feature": "based_on_novel",
-        "importancia": -9.387109569442664e-05
+        "feature": "vote_average",
+        "importancia": 0.002725452806831474
+      },
+      {
+        "feature": "keyword_count",
+        "importancia": 0.0017838641010782474
+      },
+      {
+        "feature": "popularity",
+        "importancia": -0.008831546813641455
       }
     ]
   },
   "predicoes": [
     {
-      "title": "Obsessão",
-      "budget_usd": 750000.0,
-      "receita_prevista_usd": 1429523.747023154,
-      "roi_previsto_pct": 90.60316626975387,
-      "prob_hit": 0.4806723262654642,
-      "veredito": "ALTO RISCO",
-      "fora_distribuicao": false,
-      "destaque": true,
-      "genero": "Horror",
-      "diretor": "Curry Barker",
-      "ano": 2026,
-      "actual_box_office_usd": 171000000.0,
-      "nota": "US$ 750 mil de orçamento -> ~228x. Direitos comprados por US$ 14-15M no TIFF 2025.",
-      "fonte": "Focus Features; Variety, NBC News, Collider (jun/2026) — bilheteria provisória",
-      "roi_real_x": 228.0,
-      "roi_previsto_x": 1.9060316626975387,
-      "erro_x": 119.62025839451151
-    },
-    {
       "title": "Backrooms",
-      "budget_usd": 10000000.0,
-      "receita_prevista_usd": 9799626.470722588,
-      "roi_previsto_pct": -2.003735292774122,
-      "prob_hit": 0.41408105984212684,
-      "veredito": "ALTO RISCO",
-      "fora_distribuicao": false,
-      "destaque": true,
       "genero": "Horror",
       "diretor": "Kane Parsons",
       "ano": 2026,
+      "budget_usd": 10000000.0,
+      "receita_prevista_usd": 918800.226672307,
+      "roi_previsto_x": 0.0918800226672307,
+      "prob_hit": 0.08687063781352221,
+      "veredito": "ALTO RISCO",
+      "destaque": true,
       "actual_box_office_usd": 155000000.0,
-      "nota": "Estreia A24 recorde (US$ 118M no fim de semana de abertura mundial). IP viral do YouTube.",
-      "fonte": "A24/Chernin; Box Office Mojo, Variety, Deadline (jun/2026) — bilheteria provisória",
       "roi_real_x": 15.5,
-      "roi_previsto_x": 0.9799626470722588,
-      "erro_x": 15.816929396551876
+      "nota": "Estreia A24 recorde (US$ 118M no fim de semana de abertura mundial). IP viral do YouTube.",
+      "fonte": "A24/Chernin; Box Office Mojo, Variety, Deadline (jun/2026) — bilheteria provisória"
+    },
+    {
+      "title": "Obsessão",
+      "genero": "Horror",
+      "diretor": "Curry Barker",
+      "ano": 2026,
+      "budget_usd": 750000.0,
+      "receita_prevista_usd": 566134.088406075,
+      "roi_previsto_x": 0.7548454512081,
+      "prob_hit": 0.24382154844214576,
+      "veredito": "ALTO RISCO",
+      "destaque": true,
+      "actual_box_office_usd": 171000000.0,
+      "roi_real_x": 228.0,
+      "nota": "US$ 750 mil de orçamento -> ~228x. Direitos comprados por US$ 14-15M no TIFF 2025.",
+      "fonte": "Focus Features; Variety, NBC News, Collider (jun/2026) — bilheteria provisória"
     },
     {
       "title": "Dia D (sci-fi)",
-      "budget_usd": 140000000.0,
-      "receita_prevista_usd": 251319096.65556726,
-      "roi_previsto_pct": 79.51364046826232,
-      "prob_hit": 0.6156721321719308,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": true,
       "genero": "Science Fiction",
       "diretor": "Steven Spielberg",
       "ano": 2026,
-      "actual_box_office_usd": NaN,
+      "budget_usd": 140000000.0,
+      "receita_prevista_usd": 7075845.690631421,
+      "roi_previsto_x": 0.05054175493308158,
+      "prob_hit": 0.04539477224988574,
+      "veredito": "ALTO RISCO",
+      "destaque": true,
+      "actual_box_office_usd": null,
+      "roi_real_x": null,
       "nota": "Ficção científica de Steven Spielberg (Emily Blunt). NÃO é terror — contraste tentpole.",
-      "fonte": "Universal Pictures; AdoroCinema, Omelete, IMDb (orçamento estimado)",
-      "roi_real_x": NaN,
-      "roi_previsto_x": 1.7951364046826233,
-      "erro_x": NaN
+      "fonte": "Universal Pictures; AdoroCinema, Omelete, IMDb (orçamento estimado)"
     },
     {
       "title": "Terrifier 3",
-      "budget_usd": 2000000.0,
-      "receita_prevista_usd": 10434182.165809672,
-      "roi_previsto_pct": 421.7091082904836,
-      "prob_hit": 0.8471918169156752,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
       "genero": "Horror",
       "diretor": "Damien Leone",
       "ano": 2024,
+      "budget_usd": 2000000.0,
+      "receita_prevista_usd": 3178307.9050569823,
+      "roi_previsto_x": 1.5891539525284912,
+      "prob_hit": 0.542964618770001,
+      "veredito": "PROVÁVEL SUCESSO",
+      "destaque": false,
       "actual_box_office_usd": 90322103.0,
-      "nota": "Filme sem classificação de maior bilheteria da história (~45x).",
-      "fonte": "Box Office Mojo, The Numbers (alta confiança)",
       "roi_real_x": 45.1610515,
-      "roi_previsto_x": 5.217091082904836,
-      "erro_x": 8.656366312633875
-    },
-    {
-      "title": "Longlegs",
-      "budget_usd": 10000000.0,
-      "receita_prevista_usd": 10853889.320090193,
-      "roi_previsto_pct": 8.538893200901933,
-      "prob_hit": 0.4509251560372941,
-      "veredito": "ALTO RISCO",
-      "fora_distribuicao": false,
-      "destaque": false,
-      "genero": "Horror",
-      "diretor": "Osgood Perkins",
-      "ano": 2024,
-      "actual_box_office_usd": 127961936.0,
-      "nota": "Indie de maior bilheteria de 2024 (marketing viral). ~13x.",
-      "fonte": "Box Office Mojo, Variety (alta confiança)",
-      "roi_real_x": 12.7961936,
-      "roi_previsto_x": 1.0853889320090193,
-      "erro_x": 11.789500724237776
-    },
-    {
-      "title": "Anora",
-      "budget_usd": 6000000.0,
-      "receita_prevista_usd": 3544263.8280569147,
-      "roi_previsto_pct": -40.92893619905142,
-      "prob_hit": 0.227379261835842,
-      "veredito": "ALTO RISCO",
-      "fora_distribuicao": false,
-      "destaque": false,
-      "genero": "Drama",
-      "diretor": "Sean Baker",
-      "ano": 2024,
-      "actual_box_office_usd": 59300000.0,
-      "nota": "Drama indie de baixo orçamento: US$ 6 mi -> US$ 59 mi (~9,9x). Oscar de Melhor Filme.",
-      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
-      "roi_real_x": 9.883333333333333,
-      "roi_previsto_x": 0.5907106380094858,
-      "erro_x": 16.731260108396125
-    },
-    {
-      "title": "Inside Out 2",
-      "budget_usd": 200000000.0,
-      "receita_prevista_usd": 772364243.769274,
-      "roi_previsto_pct": 286.182121884637,
-      "prob_hit": 0.9230046964022406,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
-      "genero": "Animation",
-      "diretor": "Kelsey Mann",
-      "ano": 2024,
-      "actual_box_office_usd": 1698863816.0,
-      "nota": "Animação de maior bilheteria da história. ~8,5x.",
-      "fonte": "Box Office Mojo, The Numbers (alta confiança)",
-      "roi_real_x": 8.49431908,
-      "roi_previsto_x": 3.86182121884637,
-      "erro_x": 2.199563003731561
-    },
-    {
-      "title": "Wicked",
-      "budget_usd": 150000000.0,
-      "receita_prevista_usd": 349436524.7916057,
-      "roi_previsto_pct": 132.95768319440378,
-      "prob_hit": 0.5628876316858151,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
-      "genero": "Music",
-      "diretor": "Jon M. Chu",
-      "ano": 2024,
-      "actual_box_office_usd": 765103982.0,
-      "nota": "Musical/fantasia. ~5,1x.",
-      "fonte": "Box Office Mojo, The Numbers (alta confiança)",
-      "roi_real_x": 5.100693213333333,
-      "roi_previsto_x": 2.329576831944038,
-      "erro_x": 2.18953637561582
-    },
-    {
-      "title": "Smile 2",
-      "budget_usd": 28000000.0,
-      "receita_prevista_usd": 81684474.59999453,
-      "roi_previsto_pct": 191.73026642855186,
-      "prob_hit": 0.8353454921578451,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
-      "genero": "Horror",
-      "diretor": "Parker Finn",
-      "ano": 2024,
-      "actual_box_office_usd": 138128854.0,
-      "nota": "Sequência de Smile (2022). ~4,9x.",
-      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
-      "roi_real_x": 4.9331733571428575,
-      "roi_previsto_x": 2.917302664285519,
-      "erro_x": 1.69100498811324
+      "nota": "Filme sem classificação de maior bilheteria da história (~45x).",
+      "fonte": "Box Office Mojo, The Numbers (alta confiança)"
     },
     {
       "title": "The Substance",
-      "budget_usd": 18000000.0,
-      "receita_prevista_usd": 15700689.109967273,
-      "roi_previsto_pct": -12.773949389070708,
-      "prob_hit": 0.30486906771446287,
-      "veredito": "ALTO RISCO",
-      "fora_distribuicao": false,
-      "destaque": false,
       "genero": "Horror",
       "diretor": "Coralie Fargeat",
       "ano": 2024,
+      "budget_usd": 18000000.0,
+      "receita_prevista_usd": 3948919.581437879,
+      "roi_previsto_x": 0.21938442119099327,
+      "prob_hit": 0.15299129357962757,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
       "actual_box_office_usd": 77316812.0,
-      "nota": "Roteiro original (MUBI). 5 indicações ao Oscar 2025.",
-      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
       "roi_real_x": 4.295378444444444,
-      "roi_previsto_x": 0.872260506109293,
-      "erro_x": 4.92442156254893
+      "nota": "Roteiro original (MUBI). 5 indicações ao Oscar 2025.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)"
     },
     {
-      "title": "Dune: Parte Dois",
-      "budget_usd": 190000000.0,
-      "receita_prevista_usd": 623486497.8671763,
-      "roi_previsto_pct": 228.15078835114542,
-      "prob_hit": 0.9367831970485149,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
-      "genero": "Science Fiction",
-      "diretor": "Denis Villeneuve",
+      "title": "Smile 2",
+      "genero": "Horror",
+      "diretor": "Parker Finn",
       "ano": 2024,
-      "actual_box_office_usd": 714844358.0,
-      "nota": "Ficção científica épica. ~3,8x.",
-      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
-      "roi_real_x": 3.7623387263157895,
-      "roi_previsto_x": 3.281507883511454,
-      "erro_x": 1.146527407482505
+      "budget_usd": 28000000.0,
+      "receita_prevista_usd": 8391435.318711305,
+      "roi_previsto_x": 0.29969411852540373,
+      "prob_hit": 0.38887611300736974,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 138128854.0,
+      "roi_real_x": 4.9331733571428575,
+      "nota": "Sequência de Smile (2022). ~4,9x.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)"
+    },
+    {
+      "title": "Longlegs",
+      "genero": "Horror",
+      "diretor": "Osgood Perkins",
+      "ano": 2024,
+      "budget_usd": 10000000.0,
+      "receita_prevista_usd": 994120.537352421,
+      "roi_previsto_x": 0.0994120537352421,
+      "prob_hit": 0.08396475873606665,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 127961936.0,
+      "roi_real_x": 12.7961936,
+      "nota": "Indie de maior bilheteria de 2024 (marketing viral). ~13x.",
+      "fonte": "Box Office Mojo, Variety (alta confiança)"
     },
     {
       "title": "Nosferatu",
-      "budget_usd": 50000000.0,
-      "receita_prevista_usd": 102520118.17033674,
-      "roi_previsto_pct": 105.04023634067347,
-      "prob_hit": 0.5446746660226879,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
       "genero": "Horror",
       "diretor": "Robert Eggers",
       "ano": 2024,
-      "actual_box_office_usd": 182113849.0,
-      "nota": "Terror gótico de orçamento maior. ~3,6x.",
-      "fonte": "The Numbers, Wikipedia (alta confiança)",
-      "roi_real_x": 3.64227698,
-      "roi_previsto_x": 2.050402363406735,
-      "erro_x": 1.7763718209670674
-    },
-    {
-      "title": "Furiosa",
-      "budget_usd": 168000000.0,
-      "receita_prevista_usd": 611736778.1014934,
-      "roi_previsto_pct": 264.12903458422227,
-      "prob_hit": 0.957345520198377,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
+      "budget_usd": 50000000.0,
+      "receita_prevista_usd": 7428457.178365655,
+      "roi_previsto_x": 0.1485691435673131,
+      "prob_hit": 0.12070283989638586,
+      "veredito": "ALTO RISCO",
       "destaque": false,
-      "genero": "Action",
-      "diretor": "George Miller",
-      "ano": 2024,
-      "actual_box_office_usd": 174375791.0,
-      "nota": "Ação de orçamento alto que decepcionou: ~1,0x. O modelo SUPERESTIMA.",
-      "fonte": "Box Office Mojo, Wikipedia (alta confiança)",
-      "roi_real_x": 1.0379511369047618,
-      "roi_previsto_x": 3.6412903458422226,
-      "erro_x": 0.2850503635586044
+      "actual_box_office_usd": 182113849.0,
+      "roi_real_x": 3.64227698,
+      "nota": "Terror gótico de orçamento maior. ~3,6x.",
+      "fonte": "The Numbers, Wikipedia (alta confiança)"
     },
     {
       "title": "The Crow",
-      "budget_usd": 50000000.0,
-      "receita_prevista_usd": 146833456.37573043,
-      "roi_previsto_pct": 193.66691275146084,
-      "prob_hit": 0.7991915519838352,
-      "veredito": "PROVÁVEL SUCESSO",
-      "fora_distribuicao": false,
-      "destaque": false,
       "genero": "Fantasy",
       "diretor": "Rupert Sanders",
       "ano": 2024,
+      "budget_usd": 50000000.0,
+      "receita_prevista_usd": 4602951.877385899,
+      "roi_previsto_x": 0.09205903754771799,
+      "prob_hit": 0.1302456991629614,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
       "actual_box_office_usd": 24100000.0,
-      "nota": "Reboot sombrio que fracassou: US$ 50 mi -> US$ 24 mi (0,5x). O modelo SUPERESTIMA.",
-      "fonte": "Box Office Mojo, The Numbers, Wikipedia (alta confiança)",
       "roi_real_x": 0.482,
-      "roi_previsto_x": 2.9366691275146084,
-      "erro_x": 0.16413153102063327
+      "nota": "Reboot sombrio que fracassou: US$ 50 mi -> US$ 24 mi (0,5x). O modelo SUPERESTIMA.",
+      "fonte": "Box Office Mojo, The Numbers, Wikipedia (alta confiança)"
+    },
+    {
+      "title": "Inside Out 2",
+      "genero": "Animation",
+      "diretor": "Kelsey Mann",
+      "ano": 2024,
+      "budget_usd": 200000000.0,
+      "receita_prevista_usd": 5934436.268786034,
+      "roi_previsto_x": 0.029672181343930168,
+      "prob_hit": 0.1926627428217425,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 1698863816.0,
+      "roi_real_x": 8.49431908,
+      "nota": "Animação de maior bilheteria da história. ~8,5x.",
+      "fonte": "Box Office Mojo, The Numbers (alta confiança)"
+    },
+    {
+      "title": "Dune: Parte Dois",
+      "genero": "Science Fiction",
+      "diretor": "Denis Villeneuve",
+      "ano": 2024,
+      "budget_usd": 190000000.0,
+      "receita_prevista_usd": 9809959.383991072,
+      "roi_previsto_x": 0.05163136517890038,
+      "prob_hit": 0.17913509184560214,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 714844358.0,
+      "roi_real_x": 3.7623387263157895,
+      "nota": "Ficção científica épica. ~3,8x.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)"
+    },
+    {
+      "title": "Wicked",
+      "genero": "Music",
+      "diretor": "Jon M. Chu",
+      "ano": 2024,
+      "budget_usd": 150000000.0,
+      "receita_prevista_usd": 8878498.159327297,
+      "roi_previsto_x": 0.05918998772884864,
+      "prob_hit": 0.07593554641569673,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 765103982.0,
+      "roi_real_x": 5.100693213333333,
+      "nota": "Musical/fantasia. ~5,1x.",
+      "fonte": "Box Office Mojo, The Numbers (alta confiança)"
+    },
+    {
+      "title": "Furiosa",
+      "genero": "Action",
+      "diretor": "George Miller",
+      "ano": 2024,
+      "budget_usd": 168000000.0,
+      "receita_prevista_usd": 12997265.67627871,
+      "roi_previsto_x": 0.07736467664451613,
+      "prob_hit": 0.20641797833780162,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 174375791.0,
+      "roi_real_x": 1.0379511369047618,
+      "nota": "Ação de orçamento alto que decepcionou: ~1,0x. O modelo SUPERESTIMA.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)"
+    },
+    {
+      "title": "Anora",
+      "genero": "Drama",
+      "diretor": "Sean Baker",
+      "ano": 2024,
+      "budget_usd": 6000000.0,
+      "receita_prevista_usd": 2859681.57465776,
+      "roi_previsto_x": 0.47661359577629336,
+      "prob_hit": 0.22519296686316617,
+      "veredito": "ALTO RISCO",
+      "destaque": false,
+      "actual_box_office_usd": 59300000.0,
+      "roi_real_x": 9.883333333333333,
+      "nota": "Drama indie de baixo orçamento: US$ 6 mi -> US$ 59 mi (~9,9x). Oscar de Melhor Filme.",
+      "fonte": "Box Office Mojo, Wikipedia (alta confiança)"
     }
   ],
   "backtest_stats": {
     "n_filmes": 13,
-    "acertos_classificacao": 6,
+    "acertos_classificacao": 3,
     "n_sucessos_reais": 11,
-    "mediana_subestimacao_x": 4.9
+    "mediana_subestimacao_x": 28.4,
+    "buzz_preenchido_com": "mediana da base (sinais pós-estreia)"
   }
 }

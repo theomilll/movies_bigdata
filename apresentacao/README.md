@@ -1,10 +1,12 @@
 # Apresentação AV2 — movies_bigdata
 
 Apresentação HTML (16:9, roda 100% no navegador, offline) para a entrega AV2 de
-Fundamentos de Big Data. Tema 14: **prever o sucesso de qualquer filme antes da
-estreia**, com back-test multigênero em lançamentos recentes (animação, sci-fi,
-musical, ação, drama e terror — incluindo os escolhidos pelo grupo: Backrooms,
-Obsessão e Dia D).
+Fundamentos de Big Data. Tema 14: **estimar a bilheteria e a chance de sucesso de
+qualquer filme**. O modelo (HistGradientBoosting) usa atributos do filme + sinais
+de engajamento; os slides expõem honestamente por que prever *antes* da estreia
+ainda é a fronteira — o sinal que o modelo mais usa (votos) só existe após a
+estreia. Lançamentos recentes ilustram esse limite (incl. os escolhidos pelo
+grupo: Backrooms, Obsessão e Dia D).
 
 ## Como abrir
 
@@ -25,21 +27,23 @@ xdg-open apresentacao/apresentacao.html     # Linux
   clique no texto, edite; aperte `E` de novo para salvar no navegador.
 - **Gráficos interativos:** passe o mouse sobre as barras/pontos para ver os valores.
 
-São 24 slides desenhados para ~20 minutos de fala (densidade "palestra").
+São 25 slides desenhados para ~20 minutos de fala (densidade "palestra").
 
 ## Como os números são gerados (sem digitação manual)
 
-Todo número vem do pipeline e do modelo, não é digitado à mão:
+Todo número vem do pipeline e do modelo oficial do grupo, não é digitado à mão:
 
 ```bash
 # da raiz do projeto, com o ambiente virtual ativo
-python codigo/modelo_predicao.py        # treina o modelo e salva métricas
-python codigo/predicao_lancamentos.py   # roda a demo de terror (predições)
-python codigo/dados_apresentacao.py     # consolida tudo em apresentacao/dados_slides.json
-python apresentacao/build_deck.py       # injeta os dados em apresentacao.html
+python codigo/pipeline_filmes.py           # Bronze→Gold (dados/processed)
+python codigo/modelo_preditivo.py          # treina o modelo + salva métricas/joblib
+python apresentacao/gerar_dados_modelo.py  # atualiza o bloco do modelo em dados_slides.json
+python apresentacao/build_deck.py          # injeta os dados em apresentacao.html
 ```
 
 `deck_template.html` é o template (com o marcador `__DADOS_JSON__`);
+`gerar_dados_modelo.py` lê `dados/processed/modelos/metricas_modelo.json` e a lista de
+lançamentos (`filmes_lancamentos.json`) para preencher métricas e o back-test pré-estreia;
 `build_deck.py` injeta `dados_slides.json` e gera `apresentacao.html`.
 
 ## Dashboard interativo (demo ao vivo opcional)
@@ -48,8 +52,8 @@ python apresentacao/build_deck.py       # injeta os dados em apresentacao.html
 streamlit run dashboard/streamlit_app.py
 ```
 
-Aba **Panorama** (filtros por gênero/década) + aba **Predição de lançamentos**
-(back-test de terror + formulário "teste seu próprio filme").
+Aba **Panorama** (filtros por gênero/década, gráficos, ranking de ROI) + aba
+**Previsão** (formulário "teste seu próprio filme").
 
 ## Arquivos
 
@@ -58,6 +62,10 @@ Aba **Panorama** (filtros por gênero/década) + aba **Predição de lançamento
 | `apresentacao.html` | **Apresentação final** (abrir esta) |
 | `deck_template.html` | Template editável dos slides |
 | `dados_slides.json` | Números consolidados (pipeline + modelo) |
+| `gerar_dados_modelo.py` | Atualiza o bloco do modelo a partir dos artefatos do repo |
+| `filmes_lancamentos.json` | Lançamentos recentes (metadata + bilheteria pesquisada) |
 | `build_deck.py` | Injeta os dados no template |
+| `build_standalone.py` | Gera 1 arquivo único (plotly + imagens embutidos) |
+| `export_pdf.py` | Exporta a apresentação para PDF |
 | `screenshot.py` | Captura PNGs dos slides (verificação) |
 | `plotly.min.js` | Biblioteca de gráficos (local/offline) |
