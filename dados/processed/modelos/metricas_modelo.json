@@ -3,62 +3,67 @@
   "taxa_hits": 0.5131,
   "features": {
     "numericas": [
-      "budget",
+      "log_budget",
       "runtime",
-      "vote_average",
-      "vote_count",
-      "popularity",
-      "user_rating_avg",
-      "user_rating_count",
-      "keyword_count",
       "release_year",
-      "has_collection"
+      "has_collection",
+      "keyword_count",
+      "is_sequel",
+      "based_on_novel"
     ],
     "categoricas": [
       "primary_genre",
       "original_language"
     ],
+    "target_encoded": [
+      "director"
+    ],
     "excluidas_por_leakage": [
       "revenue",
       "profit",
-      "roi"
+      "roi",
+      "vote_count",
+      "vote_average",
+      "popularity",
+      "user_rating_avg",
+      "user_rating_count"
     ]
   },
-  "aviso_leakage": "vote_count, popularity, vote_average e user_rating_* só existem após o lançamento; o modelo estima a bilheteria com buzz pós-lançamento, não é previsão pura pré-lançamento.",
+  "aviso_leakage": "Modelo pré-estreia: usa apenas atributos conhecidos ANTES do lançamento (orçamento, gênero, diretor, duração, franquia, idioma, keywords). Votos, popularidade e notas foram EXCLUÍDOS por só existirem após a estreia (vazamento).",
   "modelo_receita": {
     "holdout": {
-      "r2_log": 0.7178,
-      "mae_usd": 38467791.21,
-      "rmse_usd": 84770321.24
+      "r2_log": 0.6264,
+      "mae_usd": 49400945.15,
+      "rmse_usd": 106923435.84
     },
     "cv_r2_log": {
-      "media": 0.6496,
-      "desvio": 0.0479
+      "media": 0.558,
+      "desvio": 0.0254
     },
     "baseline_ridge_holdout": {
-      "r2_log": 0.3664,
-      "mae_usd": 603871676.9,
-      "rmse_usd": 10773765396.63
+      "r2_log": 0.6174,
+      "mae_usd": 55929747.41,
+      "rmse_usd": 130028767.47
     }
   },
   "modelo_hit": {
     "holdout": {
-      "accuracy": 0.7605,
-      "precision": 0.7644,
-      "recall": 0.7713,
-      "f1": 0.7678,
-      "roc_auc": 0.846
+      "accuracy": 0.6803,
+      "precision": 0.6898,
+      "recall": 0.686,
+      "f1": 0.6879,
+      "roc_auc": 0.7445
     },
     "cv_roc_auc": {
-      "media": 0.8028,
-      "desvio": 0.0321
+      "media": 0.6439,
+      "desvio": 0.0334
     },
     "baseline_logreg_holdout": {
-      "accuracy": 0.7521,
-      "precision": 0.7856,
-      "recall": 0.7114,
-      "f1": 0.7467,
-      "roc_auc": 0.8306
+      "accuracy": 0.6673,
+      "precision": 0.6887,
+      "recall": 0.6425,
+      "f1": 0.6648,
+      "roc_auc": 0.7217
     }
   },
   "split_temporal": {
@@ -66,16 +71,16 @@
     "n_treino": 3732,
     "n_teste": 1631,
     "receita": {
-      "r2_log": 0.6158,
-      "mae_usd": 57167078.69,
-      "rmse_usd": 123175642.66
+      "r2_log": 0.5388,
+      "mae_usd": 65097267.98,
+      "rmse_usd": 145168078.97
     },
     "hit": {
-      "accuracy": 0.7032,
-      "precision": 0.7024,
-      "recall": 0.7342,
-      "f1": 0.7179,
-      "roc_auc": 0.7771
+      "accuracy": 0.6266,
+      "precision": 0.6969,
+      "recall": 0.4851,
+      "f1": 0.572,
+      "roc_auc": 0.6767
     }
   }
 }

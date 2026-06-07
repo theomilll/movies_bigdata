@@ -1,12 +1,13 @@
 # Apresentação AV2 — movies_bigdata
 
 Apresentação HTML (16:9, roda 100% no navegador, offline) para a entrega AV2 de
-Fundamentos de Big Data. Tema 14: **estimar a bilheteria e a chance de sucesso de
-qualquer filme**. O modelo (HistGradientBoosting) usa atributos do filme + sinais
-de engajamento; os slides expõem honestamente por que prever *antes* da estreia
-ainda é a fronteira — o sinal que o modelo mais usa (votos) só existe após a
-estreia. Lançamentos recentes ilustram esse limite (incl. os escolhidos pelo
-grupo: Backrooms, Obsessão e Dia D).
+Fundamentos de Big Data. Tema 14: **prever a bilheteria e a chance de sucesso de
+qualquer filme ANTES da estreia**. O modelo (HistGradientBoosting) usa só
+atributos pré-lançamento (orçamento, gênero, diretor, duração, franquia,
+keywords) — sinais pós-estreia (votos, popularidade, notas) são excluídos por
+vazamento, então ele prevê até filmes que ainda nem saíram. Lançamentos recentes
+ilustram onde ele acerta (mainstream, ex.: Dia D do Spielberg) e onde erra (os
+virais de baixo orçamento — Backrooms, Obsessão).
 
 ## Como abrir
 

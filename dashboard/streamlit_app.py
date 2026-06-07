@@ -164,6 +164,11 @@ with tab_panorama:
             ),
             use_container_width=True,
         )
+        st.caption(
+            "vote_count, popularity, vote_average e user_rating_avg correlacionam com a receita "
+            "nos dados, mas são sinais PÓS-estreia — por isso ficam de fora do modelo preditivo "
+            "(vazamento). A previsão usa só atributos pré-lançamento."
+        )
 
     st.subheader("Filmes com maior ROI")
     st.dataframe(
@@ -177,9 +182,9 @@ with tab_panorama:
 with tab_previsao:
     st.subheader("Prever bilheteria e chance de sucesso")
     st.caption(
-        "vote_count, popularidade e notas só existem após o lançamento; os campos de engajamento "
-        "vêm preenchidos com a mediana da base. O modelo estima a bilheteria com buzz pós-lançamento, "
-        "não é uma previsão pura pré-lançamento."
+        "Modelo pré-estreia: usa só o que se sabe ANTES do lançamento (orçamento, gênero, "
+        "diretor, duração, franquia, keywords). Votos, popularidade e notas ficam de fora por "
+        "serem sinais pós-estreia — assim dá para prever até filmes que ainda nem saíram."
     )
 
     genre_options = sorted(gold_df["primary_genre"].dropna().unique())
@@ -189,11 +194,6 @@ with tab_previsao:
 
     median_runtime = int(gold_df["runtime"].median())
     median_keywords = int(gold_df["keyword_count"].median())
-    median_vote_count = int(gold_df["vote_count"].median())
-    median_popularity = float(round(gold_df["popularity"].median(), 2))
-    median_vote_average = float(round(gold_df["vote_average"].median(), 1))
-    median_user_avg = float(round(gold_df["user_rating_avg"].median(), 2))
-    median_user_count = float(gold_df["user_rating_count"].median())
 
     c1, c2, c3 = st.columns(3)
     with c1:
@@ -205,26 +205,25 @@ with tab_previsao:
         in_year = st.number_input("Ano de lançamento", min_value=1900, max_value=2030, value=2020)
         in_keywords = st.number_input("Qtd. de palavras-chave", min_value=0, value=median_keywords)
     with c3:
+        in_director = st.text_input("Diretor", value="")
         in_collection = st.checkbox("Faz parte de coleção/franquia")
-        in_vote_count = st.number_input("Votos esperados (TMDB)", min_value=0, value=median_vote_count)
-        in_popularity = st.number_input("Popularidade esperada", min_value=0.0, value=median_popularity)
+        in_sequel = st.checkbox("É sequência")
+        in_novel = st.checkbox("Adaptação de livro")
 
     if st.button("Prever"):
         row = pd.DataFrame(
             [
                 {
-                    "budget": float(in_budget),
+                    "log_budget": float(np.log1p(in_budget)),
                     "runtime": float(in_runtime),
-                    "vote_average": median_vote_average,
-                    "vote_count": float(in_vote_count),
-                    "popularity": float(in_popularity),
-                    "user_rating_avg": median_user_avg,
-                    "user_rating_count": median_user_count,
-                    "keyword_count": float(in_keywords),
                     "release_year": float(in_year),
                     "has_collection": int(in_collection),
+                    "keyword_count": float(in_keywords),
+                    "is_sequel": int(in_sequel or in_collection),
+                    "based_on_novel": int(in_novel),
                     "primary_genre": in_genre,
                     "original_language": in_language,
+                    "director": in_director.strip() or "desconhecido",
                 }
             ]
         )[modelo.FEATURE_COLUMNS]

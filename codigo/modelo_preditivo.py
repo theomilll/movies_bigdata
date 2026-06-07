@@ -39,31 +39,56 @@ try:
     )
     from sklearn.model_selection import cross_val_score, train_test_split
     from sklearn.pipeline import Pipeline
-    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler, TargetEncoder
 except ModuleNotFoundError as exc:
     raise RuntimeError(f"{DEPENDENCY_INSTALL_HINT} (pacote faltando: scikit-learn/joblib)") from exc
 
 
+# ---------------------------------------------------------------------------
+# Modelo PRÉ-ESTREIA: estima bilheteria e chance de sucesso usando APENAS o que
+# se sabe antes do lançamento. Tudo que só existe depois da estreia (votos,
+# popularidade, notas) é tratado como VAZAMENTO e fica de fora — o objetivo do
+# Tema 14 é prever ANTES da estreia, então o modelo precisa funcionar sem esses
+# sinais (inclusive em filmes que ainda nem saíram).
+# ---------------------------------------------------------------------------
+
+# Numéricas conhecidas antes da estreia.
 NUMERIC_FEATURES = [
-    "budget",
+    "log_budget",
     "runtime",
-    "vote_average",
+    "release_year",
+    "has_collection",
+    "keyword_count",
+    "is_sequel",
+    "based_on_novel",
+]
+# Categóricas de baixa cardinalidade (one-hot).
+ONEHOT_FEATURES = ["primary_genre", "original_language"]
+# Alta cardinalidade -> target encoding com cross-fitting interno (sem vazamento).
+TARGET_FEATURES = ["director"]
+FEATURE_COLUMNS = NUMERIC_FEATURES + ONEHOT_FEATURES + TARGET_FEATURES
+
+# Colunas que NUNCA podem virar feature: o alvo em si e sinais pós-estreia.
+EXCLUDED_LEAKAGE = [
+    "revenue",
+    "profit",
+    "roi",
     "vote_count",
+    "vote_average",
     "popularity",
     "user_rating_avg",
     "user_rating_count",
-    "keyword_count",
-    "release_year",
-    "has_collection",
 ]
-CATEGORICAL_FEATURES = ["primary_genre", "original_language"]
-FEATURE_COLUMNS = NUMERIC_FEATURES + CATEGORICAL_FEATURES
-# Colunas que definem os alvos: nunca podem virar feature (evita data leakage).
-EXCLUDED_LEAKAGE = ["revenue", "profit", "roi"]
 
 HIT_MULTIPLIER = 2.0
 RANDOM_STATE = 42
 TEMPORAL_SPLIT_YEAR = 2010
+
+LEAKAGE_NOTE = (
+    "Modelo pré-estreia: usa apenas atributos conhecidos ANTES do lançamento "
+    "(orçamento, gênero, diretor, duração, franquia, idioma, keywords). Votos, "
+    "popularidade e notas foram EXCLUÍDOS por só existirem após a estreia (vazamento)."
+)
 
 
 def load_gold(data_root=None):
@@ -82,6 +107,19 @@ def load_gold(data_root=None):
     return pd.read_parquet(parquet_path), processed_dir
 
 
+def _keyword_flags(keywords_value):
+    """Deriva (is_sequel, based_on_novel) a partir da lista de keywords do filme."""
+    if isinstance(keywords_value, (list, tuple, np.ndarray)):
+        kws = [str(k).lower() for k in keywords_value]
+    elif isinstance(keywords_value, str):
+        kws = [k.strip().lower() for k in keywords_value.split(",")]
+    else:
+        kws = []
+    is_sequel = int(any(k in kws for k in ("sequel", "based on franchise")))
+    based_on_novel = int("based on novel" in kws)
+    return is_sequel, based_on_novel
+
+
 def build_model_table(gold_df):
     df = gold_df.copy()
     df = df[
@@ -94,20 +132,31 @@ def build_model_table(gold_df):
     y_revenue = np.log1p(df["revenue"].astype(float))
     y_hit = (df["revenue"] >= HIT_MULTIPLIER * df["budget"]).astype(int)
 
-    X = df[FEATURE_COLUMNS].copy()
-    for column in NUMERIC_FEATURES:
-        X[column] = pd.to_numeric(X[column], errors="coerce").astype(float)
-    for column in CATEGORICAL_FEATURES:
-        X[column] = X[column].astype("object")
+    if "keywords_list" in df.columns:
+        flags = df["keywords_list"].apply(_keyword_flags)
+    else:
+        flags = pd.Series([(0, 0)] * len(df), index=df.index)
+
+    X = pd.DataFrame(index=df.index)
+    X["log_budget"] = np.log1p(df["budget"].astype(float))
+    X["runtime"] = pd.to_numeric(df.get("runtime"), errors="coerce").astype(float)
+    X["release_year"] = pd.to_numeric(df.get("release_year"), errors="coerce").astype(float)
+    X["has_collection"] = pd.to_numeric(df.get("has_collection", 0), errors="coerce").fillna(0).astype(float)
+    X["keyword_count"] = pd.to_numeric(df.get("keyword_count", 0), errors="coerce").fillna(0).astype(float)
+    X["is_sequel"] = [f[0] for f in flags]
+    X["based_on_novel"] = [f[1] for f in flags]
+    X["primary_genre"] = df.get("primary_genre", "desconhecido").astype("object")
+    X["original_language"] = df.get("original_language", "desconhecido").astype("object")
+    X["director"] = df.get("director", pd.Series(index=df.index, dtype="object")).fillna("desconhecido").astype("object")
 
     return (
-        X.reset_index(drop=True),
+        X[FEATURE_COLUMNS].reset_index(drop=True),
         y_revenue.reset_index(drop=True),
         y_hit.reset_index(drop=True),
     )
 
 
-def build_preprocessor():
+def build_preprocessor(target_type):
     numeric = Pipeline(
         [("imputer", SimpleImputer(strategy="median")), ("scaler", StandardScaler())]
     )
@@ -117,20 +166,37 @@ def build_preprocessor():
             ("onehot", OneHotEncoder(handle_unknown="ignore", min_frequency=20, sparse_output=False)),
         ]
     )
+    director = TargetEncoder(target_type=target_type)
     return ColumnTransformer(
-        [("num", numeric, NUMERIC_FEATURES), ("cat", categorical, CATEGORICAL_FEATURES)]
+        [
+            ("num", numeric, NUMERIC_FEATURES),
+            ("cat", categorical, ONEHOT_FEATURES),
+            ("dir", director, TARGET_FEATURES),
+        ]
     )
+
+
+# Regularização leve: prever sucesso pré-estreia satura cedo; árvores rasas e
+# folhas grandes evitam decorar o treino (menos gap entre holdout e CV).
+_HGB_PARAMS = dict(
+    max_iter=300,
+    learning_rate=0.06,
+    max_leaf_nodes=15,
+    min_samples_leaf=40,
+    l2_regularization=1.0,
+    random_state=RANDOM_STATE,
+)
 
 
 def build_revenue_model():
     return Pipeline(
-        [("prep", build_preprocessor()), ("model", HistGradientBoostingRegressor(random_state=RANDOM_STATE))]
+        [("prep", build_preprocessor("continuous")), ("model", HistGradientBoostingRegressor(**_HGB_PARAMS))]
     )
 
 
 def build_hit_model():
     return Pipeline(
-        [("prep", build_preprocessor()), ("model", HistGradientBoostingClassifier(random_state=RANDOM_STATE))]
+        [("prep", build_preprocessor("binary")), ("model", HistGradientBoostingClassifier(**_HGB_PARAMS))]
     )
 
 
@@ -185,7 +251,7 @@ def save_importance_plot(model, X_eval, y_eval_log, charts_dir):
 
     fig, ax = plt.subplots(figsize=(10, 7))
     ax.barh(importance.index, importance.values, color="#2196F3")
-    ax.set_title("Importância das features (permutação) — modelo de receita")
+    ax.set_title("Importância das features (permutação) — modelo de receita pré-estreia")
     ax.set_xlabel("Queda média no R² ao embaralhar a feature")
     plt.tight_layout()
     output_path = charts_dir / "importancia_features.png"
@@ -232,9 +298,9 @@ def main(data_root=None):
         yh_test, hit_model.predict(X_test), hit_model.predict_proba(X_test)[:, 1]
     )
 
-    ridge = Pipeline([("prep", build_preprocessor()), ("model", Ridge())]).fit(X_train, yr_train)
+    ridge = Pipeline([("prep", build_preprocessor("continuous")), ("model", Ridge())]).fit(X_train, yr_train)
     logreg = Pipeline(
-        [("prep", build_preprocessor()), ("model", LogisticRegression(max_iter=1000))]
+        [("prep", build_preprocessor("binary")), ("model", LogisticRegression(max_iter=1000))]
     ).fit(X_train, yh_train)
     revenue_baseline = _regression_metrics(yr_test, ridge.predict(X_test))
     hit_baseline = _classification_metrics(
@@ -249,13 +315,11 @@ def main(data_root=None):
         "taxa_hits": round(float(y_hit.mean()), 4),
         "features": {
             "numericas": NUMERIC_FEATURES,
-            "categoricas": CATEGORICAL_FEATURES,
+            "categoricas": ONEHOT_FEATURES,
+            "target_encoded": TARGET_FEATURES,
             "excluidas_por_leakage": EXCLUDED_LEAKAGE,
         },
-        "aviso_leakage": (
-            "vote_count, popularity, vote_average e user_rating_* só existem após o lançamento; "
-            "o modelo estima a bilheteria com buzz pós-lançamento, não é previsão pura pré-lançamento."
-        ),
+        "aviso_leakage": LEAKAGE_NOTE,
         "modelo_receita": {
             "holdout": revenue_holdout,
             "cv_r2_log": {"media": round(float(revenue_cv.mean()), 4), "desvio": round(float(revenue_cv.std()), 4)},
@@ -271,11 +335,11 @@ def main(data_root=None):
 
     paths = save_artifacts(processed_dir, revenue_model, hit_model, metrics, X_test, yr_test)
 
-    print("\n=== Modelo de receita (HistGradientBoosting) ===")
+    print("\n=== Modelo de receita (HistGradientBoosting, pré-estreia) ===")
     print(f"  holdout : R2(log)={revenue_holdout['r2_log']}  MAE=US$ {revenue_holdout['mae_usd']:,.0f}")
     print(f"  CV 5x   : R2(log)={metrics['modelo_receita']['cv_r2_log']['media']}")
     print(f"  baseline: R2(log)={revenue_baseline['r2_log']} (Ridge)")
-    print("\n=== Modelo de hit/flop (HistGradientBoosting) ===")
+    print("\n=== Modelo de hit/flop (HistGradientBoosting, pré-estreia) ===")
     print(f"  holdout : acc={hit_holdout['accuracy']}  ROC-AUC={hit_holdout['roc_auc']}  F1={hit_holdout['f1']}")
     print(f"  CV 5x   : ROC-AUC={metrics['modelo_hit']['cv_roc_auc']['media']}")
     print(f"  baseline: ROC-AUC={hit_baseline['roc_auc']} (LogReg)")

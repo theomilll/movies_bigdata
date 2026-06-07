@@ -227,7 +227,7 @@ h2 .am{color:var(--amber);}
     <div class="body">
       <div class="t-kick reveal d1">Tema 14 · Prever o sucesso de um filme</div>
       <h1 class="t-h1"><span class="l1 reveal d2">O Próximo</span><span class="l2 reveal d3">Grande Sucesso</span></h1>
-      <p class="t-sub reveal d4">Um pipeline de Big Data que estima a bilheteria de <em>qualquer</em> filme a partir dos seus atributos e do buzz — e expõe por que prever <em>antes</em> da estreia ainda é a fronteira.</p>
+      <p class="t-sub reveal d4">Um pipeline de Big Data que estima a bilheteria de <em>qualquer</em> filme usando só o que se sabe <em>antes</em> da estreia — e mostra onde a previsão acerta e onde a viralização escapa.</p>
     </div>
     <div class="chrome-foot reveal d5" style="border:none;padding:0;">
       <div class="authors"><b>Theomilll · João Pedro · João Batista · Mathews Ivo · menex100</b><br>43.608 filmes · 5 fontes · modelo de predição (HistGradientBoosting)</div>
@@ -278,7 +278,7 @@ h2 .am{color:var(--amber);}
       <h2 class="reveal d1">O que <span class="am">construímos</span></h2>
       <ul class="bullets reveal d2" style="margin-top:40px;">
         <li>Um <b>pipeline de Big Data completo</b> — das fontes brutas ao destino analítico — sobre 43.608 filmes.</li>
-        <li>Um <b>modelo preditivo</b> que estima bilheteria e probabilidade de sucesso a partir dos atributos do filme e dos sinais de engajamento.</li>
+        <li>Um <b>modelo preditivo</b> que estima bilheteria e probabilidade de sucesso usando só o que se sabe antes da estreia.</li>
         <li>Uma <b>demonstração em lançamentos de 2026</b> — de terror a ficção científica — com back-test multigênero contra a bilheteria real.</li>
       </ul>
     </div>
@@ -498,7 +498,7 @@ h2 .am{color:var(--amber);}
     <div class="body">
       <div class="num reveal-blur d1">04</div>
       <h2 class="reveal d2">O modelo de<br>sucesso</h2>
-      <p class="lead reveal d3" style="margin-top:18px;">Estimar bilheteria e chance de sucesso a partir dos atributos do filme e dos sinais de engajamento (buzz)</p>
+      <p class="lead reveal d3" style="margin-top:18px;">Estimar bilheteria e chance de sucesso usando só o que se sabe antes da estreia</p>
     </div>
     <div class="chrome-foot"><span>codigo/modelo_preditivo.py</span><span>movies_bigdata</span></div>
   </div>
@@ -513,9 +513,9 @@ h2 .am{color:var(--amber);}
       <div class="cols narrow">
         <div>
           <h2 class="reveal d1" style="font-size:66px;">Honestidade <span class="am">primeiro</span></h2>
-          <p class="lead reveal d2" style="font-size:27px;margin-top:18px;">Separamos <em>alvo</em> de <em>sinal</em>: receita, lucro e ROI ficam de fora (seriam <b style="color:var(--blood-bright)">vazamento</b> direto). Os sinais de engajamento — votos, popularidade, notas — entram, mas <b class="am">avisamos</b>: só amadurecem <em>depois</em> da estreia.</p>
+          <p class="lead reveal d2" style="font-size:28px;margin-top:18px;">Excluímos tudo que só existe <em>depois</em> da estreia — votos, popularidade, notas. Usar isso seria <b style="color:var(--blood-bright)">vazamento</b> (espiar o futuro). O modelo prevê com o que se conhece <b>antes</b> — então funciona até em filmes que ainda nem saíram.</p>
           <ul class="bullets reveal d3" style="margin-top:22px;font-size:24px;">
-            <li style="font-size:24px;"><b>Entram:</b> orçamento, gênero, duração, franquia, idioma, keywords <b>+ engajamento</b> (votos, popularidade, notas).</li>
+            <li style="font-size:24px;"><b>Entram:</b> orçamento, gênero, <b>diretor</b>, duração, franquia, idioma, keywords, sequência/adaptação.</li>
             <li style="font-size:24px;"><b>Modelo:</b> Gradient Boosting (regressão de receita + classificação hit/flop).</li>
           </ul>
         </div>
@@ -530,7 +530,7 @@ h2 .am{color:var(--amber);}
         </div>
       </div>
     </div>
-    <div class="chrome-foot"><span>HistGradientBoosting · receita/lucro/ROI fora (vazamento direto)</span><span>movies_bigdata</span></div>
+    <div class="chrome-foot"><span>HistGradientBoosting · sem sinais pós-estreia (votos, notas, popularidade)</span><span>movies_bigdata</span></div>
   </div>
   <div class="grain"></div><div class="vignette"></div>
 </section>
@@ -540,7 +540,7 @@ h2 .am{color:var(--amber);}
   <div class="pad">
     <div class="chrome-top"><span>O modelo generaliza?</span><span class="acc">04 — O Modelo</span></div>
     <div class="body">
-      <h2 class="reveal d1" style="font-size:60px;">Bate o baseline — e <span class="am">sobrevive ao tempo</span></h2>
+      <h2 class="reveal d1" style="font-size:60px;">No nível do baseline, firme no <span class="am">tempo</span></h2>
       <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:26px;align-items:start;gap:54px;">
         <div class="reveal d2">
           <div class="kicker">Contra um modelo linear (mesmo teste)</div>
@@ -548,7 +548,7 @@ h2 .am{color:var(--amber);}
             <div class="stat" style="flex:1 1 44%;"><div class="n" id="bl-rr2">—</div><div class="c">R²(log) Ridge → <b class="am" id="bl-hr2">—</b> HGB</div></div>
             <div class="stat" style="flex:1 1 44%;"><div class="n" id="bl-rauc">—</div><div class="c">AUC LogReg → <b class="am" id="bl-hauc">—</b> HGB</div></div>
           </div>
-          <p class="lead" style="font-size:24px;margin-top:18px;">O Gradient Boosting <b>supera</b> a regressão linear — o ganho vem de capturar relações não-lineares entre orçamento, buzz e gênero.</p>
+          <p class="lead" style="font-size:24px;margin-top:18px;">Na receita, o HGB <b>empata</b> com a regressão linear — o orçamento já carrega quase todo o sinal. O ganho aparece na <b>classificação</b> hit/flop e no ajuste fino de gênero, diretor e franquia.</p>
         </div>
         <div class="reveal d3">
           <div class="kicker">Teste do futuro · treina &lt;<span id="tp-corte">2010</span>, prevê o resto</div>
@@ -574,13 +574,13 @@ h2 .am{color:var(--amber);}
       <div class="cols">
         <div>
           <div class="kicker reveal d1">Importância das variáveis (permutação)</div>
-          <h2 class="reveal d2" style="font-size:70px;margin-top:14px;">Orçamento e<br><span class="am">votos</span> empatam</h2>
-          <p class="lead reveal d3" style="font-size:28px;margin-top:22px;">Nº de votos disputa o topo com o orçamento — quase empatados. O detalhe incômodo: <b>votos só existem <em>depois</em> da estreia</b>. O modelo se apoia, em boa parte, em buzz pós-lançamento.</p>
+          <h2 class="reveal d2" style="font-size:74px;margin-top:14px;">O <span class="am">orçamento</span><br>domina tudo</h2>
+          <p class="lead reveal d3" style="font-size:30px;margin-top:22px;">Quanto se gasta é, de longe, o sinal pré-estreia mais forte. Franquia, keywords, diretor e gênero ajustam nas margens.</p>
         </div>
         <div class="chart-wrap reveal d3"><div id="chart-imp" class="chart" style="height:760px;"></div></div>
       </div>
     </div>
-    <div class="chrome-foot"><span>permutação · holdout · vermelho = sinal pós-estreia</span><span>movies_bigdata</span></div>
+    <div class="chrome-foot"><span>permutação · holdout · só features pré-estreia</span><span>movies_bigdata</span></div>
   </div>
   <div class="grain"></div><div class="vignette"></div>
 </section>
@@ -588,11 +588,11 @@ h2 .am{color:var(--amber);}
 <!-- ============ 18 · DIVIDER · DEMO ============ -->
 <section class="slide divider">
   <div class="pad">
-    <div class="chrome-top"><span>Demonstração</span><span class="acc">05 — A fronteira</span></div>
+    <div class="chrome-top"><span>Demonstração</span><span class="acc">05 — Em cartaz</span></div>
     <div class="body">
       <div class="num reveal-blur d1">05</div>
-      <h2 class="reveal d2">A fronteira<br>pré-estreia</h2>
-      <p class="lead reveal d3" style="margin-top:18px;">O que acontece com lançamentos recentes quando tiramos o buzz que o modelo mais usa</p>
+      <h2 class="reveal d2">Prevendo lançamentos<br>em cartaz</h2>
+      <p class="lead reveal d3" style="margin-top:18px;">Do blockbuster ao fenômeno de baixo orçamento — vários gêneros, todos antes da estreia</p>
     </div>
     <div class="chrome-foot"><span>apresentacao/gerar_dados_modelo.py</span><span>movies_bigdata</span></div>
   </div>
@@ -602,11 +602,11 @@ h2 .am{color:var(--amber);}
 <!-- ============ 19 · CARDS DE PREDIÇÃO ============ -->
 <section class="slide">
   <div class="pad">
-    <div class="chrome-top"><span>Previsão pré-estreia · buzz mediano</span><span class="acc">05 — A fronteira</span></div>
+    <div class="chrome-top"><span>Previsão pré-lançamento</span><span class="acc">05 — Em cartaz</span></div>
     <div class="body">
       <h2 class="reveal d1" style="font-size:62px;">Três lançamentos <span class="am">recentes</span></h2>
       <div class="pcards reveal d2" id="pcards" style="margin-top:30px;"></div>
-      <p class="takeaway reveal d4" style="margin-top:24px;">Sem o buzz (que o modelo mais usa), a previsão <b>antes</b> da estreia desaba: o modelo crava <b>"alto risco"</b> nos três — Backrooms, previsto <b style="color:var(--blood-bright)">US$ 0,9 mi</b>, fez US$ 155 mi. Ele aposta em fracasso justamente nos maiores sucessos.</p>
+      <p class="takeaway reveal d4" style="margin-top:24px;">Escolha do grupo (2 de terror + 1 sci-fi), mas o modelo vale para <b>qualquer gênero</b>. Ele acerta o porte do tentpole do Spielberg — e <b>subestima</b> os fenômenos virais de baixo orçamento, como Obsessão.</p>
     </div>
     <div class="chrome-foot"><span>Orçamentos: A24, Focus Features, Universal (Box Office Mojo, Variety)</span><span>movies_bigdata</span></div>
   </div>
@@ -616,19 +616,19 @@ h2 .am{color:var(--amber);}
 <!-- ============ 20 · PREVISTO vs REAL ============ -->
 <section class="slide">
   <div class="pad">
-    <div class="chrome-top"><span>Previsão pré-estreia · previsto vs real</span><span class="acc">05 — A fronteira</span></div>
+    <div class="chrome-top"><span>Back-test · previsto vs real</span><span class="acc">05 — Em cartaz</span></div>
     <div class="body">
       <div class="cols">
         <div>
-          <div class="kicker reveal d1">Pré-estreia (buzz mediano) · <span id="bt-n">13</span> lançamentos, <span id="bt-gen">7</span> gêneros</div>
-          <h2 class="reveal d2" style="font-size:54px;margin-top:14px;">Tire o buzz e o<br>modelo <span class="em">cega</span></h2>
-          <p class="lead reveal d3" style="font-size:25px;margin-top:16px;">Os mesmos três e mais dez lançamentos (13 ao todo). Com os votos preenchidos pela mediana, quase tudo despenca <b>abaixo da diagonal</b>: o modelo subestima de forma sistemática. Backrooms, Obsessão, Nosferatu — previstos em poucos milhões, arrecadaram centenas. O sinal que ele aprendeu a usar <b style="color:var(--blood-bright)">não existe antes da estreia</b>.</p>
-          <p class="takeaway reveal d4" style="margin-top:12px;">O <em>mesmo</em> modelo, no seu teste próprio (com buzz real), acerta <b><span id="bt-acc">76%</span> · AUC <span id="bt-auc2">0,80</span></b>. A queda aqui não é do modelo — é da <b>informação que falta</b> no pré-estreia.</p>
+          <div class="kicker reveal d1">Back-test · <span id="bt-n">13</span> lançamentos, <span id="bt-gen">7</span> gêneros</div>
+          <h2 class="reveal d2" style="font-size:54px;margin-top:14px;">Calibrado no meio,<br>cego nas <span class="em">caudas</span></h2>
+          <p class="lead reveal d3" style="font-size:25px;margin-top:16px;">No mainstream ele acerta o porte — Dune 2: previsto <span id="bt-dune">~US$ 751 mi</span> vs real US$ 715 mi. Mas <b>superestima os flops caros</b> (Furiosa, The Crow) e <b style="color:var(--blood-bright)">subestima as surpresas baratas</b> — Obsessão e Anora, os virais que nenhum dado pré-estreia anuncia.</p>
+          <p class="takeaway reveal d4" style="margin-top:12px;">Nesses <span id="bt-n2">13</span> extremos: <span id="bt-score">7/13</span> acertos de hit/flop · subestimação mediana <span id="bt-med">~6,3×</span>. Na validação geral (5-fold): <b><span id="bt-acc">68%</span> · AUC <span id="bt-auc2">0,64</span></b>.</p>
         </div>
         <div class="chart-wrap reveal d3"><div id="chart-backtest" class="chart" style="height:780px;"></div></div>
       </div>
     </div>
-    <div class="chrome-foot"><span>apresentacao/gerar_dados_modelo.py · buzz mediano</span><span>movies_bigdata</span></div>
+    <div class="chrome-foot"><span>apresentacao/gerar_dados_modelo.py · previsão pré-estreia</span><span>movies_bigdata</span></div>
   </div>
   <div class="grain"></div><div class="vignette"></div>
 </section>
@@ -636,11 +636,11 @@ h2 .am{color:var(--amber);}
 <!-- ============ 21 · A LIÇÃO ============ -->
 <section class="slide statement">
   <div class="pad">
-    <div class="chrome-top"><span>A lição</span><span class="acc">05 — A fronteira</span></div>
+    <div class="chrome-top"><span>A lição</span><span class="acc">05 — Em cartaz</span></div>
     <div class="body">
       <div class="kicker reveal d1">Obsessão · US$ 750 mil → US$ 171 mi · 228×</div>
-      <div class="huge reveal-blur d2" style="margin-top:22px;font-size:118px;">Pré-estreia, o modelo previu<br><span class="am" id="les-pred">US$ 0,6 mi.</span><br>A realidade: <span class="em">US$ 171 mi.</span></div>
-      <div class="sub reveal d4">O modelo se apoia em <b>votos e popularidade</b> — mas esses sinais só chegam <em>depois</em> da estreia. O que antecipa o sucesso explosivo de baixo orçamento, em <b>qualquer gênero</b>, é o <b style="color:var(--amber)">buzz antecipado</b>: visualizações de trailer e menções em redes sociais <em>antes</em> do lançamento. É esse sinal que falta — a fronteira que o Tema 14 aponta.</div>
+      <div class="huge reveal-blur d2" style="margin-top:22px;font-size:118px;">O modelo previu<br><span class="am" id="les-pred">US$ 1,4 mi.</span><br>A realidade: <span class="em">US$ 171 mi.</span></div>
+      <div class="sub reveal d4">O modelo enxerga orçamento, gênero e diretor — mas <b>não</b> enxerga o que faz um filme barato <em>viralizar</em>. Esse empurrão vem do <b style="color:var(--amber)">buzz antecipado</b>: visualizações de trailer e menções em redes sociais <em>antes</em> do lançamento, em <b>qualquer gênero</b>. É esse sinal que falta — a fronteira que o Tema 14 aponta.</div>
     </div>
     <div class="chrome-foot"><span>O que o modelo não consegue ver</span><span>movies_bigdata</span></div>
   </div>
@@ -656,8 +656,8 @@ h2 .am{color:var(--amber);}
       <div class="cols" style="grid-template-columns:1fr 1fr;margin-top:30px;align-items:start;">
         <ul class="bullets reveal d2" style="font-size:27px;">
           <li><b>Pipeline completo</b> entregue e testado (Bronze→Gold, 11 tabelas, 2/2 testes).</li>
-          <li><b>Análise:</b> orçamento e buzz preveem receita; ROI é imprevisível.</li>
-          <li><b>Modelo geral</b> (qualquer gênero) acerta o miolo (AUC <span id="c-auc">0,80</span>), mas depende de buzz pós-estreia.</li>
+          <li><b>Análise:</b> orçamento é o que mais prevê receita; ROI é imprevisível.</li>
+          <li><b>Modelo pré-estreia</b> (qualquer gênero) acerta o miolo (AUC <span id="c-auc">0,64</span>), mas erra as caudas virais.</li>
         </ul>
         <ul class="bullets reveal d3" style="font-size:27px;">
           <li><b>Limitação:</b> métricas valem só para filmes com bilheteria reportada (viés de sobrevivência).</li>
@@ -748,7 +748,7 @@ function baseLayout(extra){
 }
 const CFG={displayModeBar:false,responsive:false};
 const GENRE_PT={Action:'Ação',Adventure:'Aventura',Comedy:'Comédia',Drama:'Drama',Animation:'Animação',Fantasy:'Fantasia','Science Fiction':'Ficção Científica',Horror:'Terror',Thriller:'Suspense',Family:'Família',Crime:'Crime',Romance:'Romance',Mystery:'Mistério',War:'Guerra',History:'História',Music:'Música',Western:'Faroeste',Documentary:'Documentário'};
-const FEAT_PT={budget:'Orçamento',vote_count:'Nº de votos*',popularity:'Popularidade*',vote_average:'Nota TMDB*',user_rating_avg:'Nota usuários*',user_rating_count:'Nº de avaliações*',release_year:'Ano de estreia',keyword_count:'Nº de keywords',has_collection:'Franquia',runtime:'Duração',primary_genre:'Gênero',original_language:'Idioma'};
+const FEAT_PT={log_budget:'Orçamento',budget:'Orçamento',director:'Histórico do diretor',has_collection:'Franquia',keyword_count:'Nº de keywords',release_year:'Ano de estreia',is_sequel:'Sequência',based_on_novel:'Adaptação',runtime:'Duração',primary_genre:'Gênero',original_language:'Idioma'};
 const CORR_PT={vote_count:'Nº de votos*',budget:'Orçamento',popularity:'Popularidade*',runtime:'Duração',vote_average:'Nota TMDB*',user_rating_avg:'Nota usuários*'};
 
 /* ===== gráficos ===== */
@@ -792,12 +792,11 @@ function chartRoi(){
     hovertemplate:'%{y}<br>%{customdata[0]} · orç. US$ %{customdata[1]} mi<br>ROI %{x:.0f}×<extra></extra>'}],
     baseLayout({margin:{l:345,r:30,t:10,b:50},yaxis:{tickfont:{family:MONO,size:11,color:C.muted}},xaxis:{title:'ROI (× o orçamento) · vários gêneros',gridcolor:C.grid,tickfont:{family:MONO,size:13,color:C.muted}}}),CFG);
 }
-const POS_ESTREIA=new Set(['vote_count','popularity','vote_average','user_rating_avg','user_rating_count']);
 function chartImp(){
   const im=DADOS.modelo.importancias.slice().filter(d=>d.importancia>0.0005).sort((a,b)=>a.importancia-b.importancia);
   Plotly.newPlot('chart-imp',[{type:'bar',orientation:'h',
     y:im.map(d=>FEAT_PT[d.feature]||d.feature),x:im.map(d=>d.importancia),
-    marker:{color:im.map(d=>POS_ESTREIA.has(d.feature)?C.bloodBright:C.amber)},
+    marker:{color:im.map(d=>d.feature==='log_budget'||d.feature==='budget'?C.bloodBright:C.amber)},
     text:im.map(d=>(d.importancia*100).toFixed(0)+'%'),textposition:'auto',textfont:{family:MONO,color:'#0b0910',size:13},
     hovertemplate:'%{y}: %{x:.3f}<extra></extra>'}],
     baseLayout({margin:{l:230,r:30,t:10,b:50},xaxis:{title:'Importância relativa (permutação)',gridcolor:C.grid,tickfont:{family:MONO,size:13,color:C.muted}}}),CFG);

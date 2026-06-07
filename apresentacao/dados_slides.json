@@ -928,80 +928,76 @@
       "taxa_hit_base": 0.5131,
       "definicao_hit": "bilheteria >= 2x orçamento",
       "validacao": "holdout 80/20 + 5-fold CV + split temporal (treino <2010 / teste >=2010)",
-      "aviso_leakage": "vote_count, popularity, vote_average e user_rating_* só existem após o lançamento; o modelo estima a bilheteria com buzz pós-lançamento, não é previsão pura pré-lançamento.",
+      "aviso_leakage": "Modelo pré-estreia: usa apenas atributos conhecidos ANTES do lançamento (orçamento, gênero, diretor, duração, franquia, idioma, keywords). Votos, popularidade e notas foram EXCLUÍDOS por só existirem após a estreia (vazamento).",
       "features_usadas": [
-        "budget",
+        "log_budget",
         "runtime",
-        "vote_average",
-        "vote_count",
-        "popularity",
-        "user_rating_avg",
-        "user_rating_count",
-        "keyword_count",
         "release_year",
         "has_collection",
+        "keyword_count",
+        "is_sequel",
+        "based_on_novel",
         "primary_genre",
-        "original_language"
-      ],
-      "features_engajamento_pos_estreia": [
-        "vote_average",
-        "vote_count",
-        "popularity",
-        "user_rating_avg",
-        "user_rating_count"
+        "original_language",
+        "director"
       ],
       "features_excluidas_por_vazamento": [
         "revenue",
         "profit",
-        "roi"
+        "roi",
+        "vote_count",
+        "vote_average",
+        "popularity",
+        "user_rating_avg",
+        "user_rating_count"
       ],
       "regressao_log_receita": {
-        "r2": 0.6496,
-        "r2_std": 0.0479,
-        "mae_usd_milhoes": 38.5
+        "r2": 0.558,
+        "r2_std": 0.0254,
+        "mae_usd_milhoes": 49.4
       },
       "classificacao_hit": {
-        "roc_auc": 0.8028,
-        "roc_auc_std": 0.0321,
-        "acuracia": 0.7605
+        "roc_auc": 0.6439,
+        "roc_auc_std": 0.0334,
+        "acuracia": 0.6803
       },
       "receita": {
         "holdout": {
-          "r2_log": 0.7178,
-          "mae_milhoes": 38.5,
-          "rmse_milhoes": 84.8
+          "r2_log": 0.6264,
+          "mae_milhoes": 49.4,
+          "rmse_milhoes": 106.9
         },
         "cv": {
-          "r2_log": 0.6496,
-          "r2_log_std": 0.0479
+          "r2_log": 0.558,
+          "r2_log_std": 0.0254
         },
         "baseline_ridge": {
-          "r2_log": 0.3664
+          "r2_log": 0.6174
         },
         "temporal": {
-          "r2_log": 0.6158,
-          "mae_milhoes": 57.2
+          "r2_log": 0.5388,
+          "mae_milhoes": 65.1
         }
       },
       "hit": {
         "holdout": {
-          "acuracia": 0.7605,
-          "precisao": 0.7644,
-          "recall": 0.7713,
-          "f1": 0.7678,
-          "roc_auc": 0.846
+          "acuracia": 0.6803,
+          "precisao": 0.6898,
+          "recall": 0.686,
+          "f1": 0.6879,
+          "roc_auc": 0.7445
         },
         "cv": {
-          "roc_auc": 0.8028,
-          "roc_auc_std": 0.0321
+          "roc_auc": 0.6439,
+          "roc_auc_std": 0.0334
         },
         "baseline_logreg": {
-          "acuracia": 0.7521,
-          "roc_auc": 0.8306
+          "acuracia": 0.6673,
+          "roc_auc": 0.7217
         },
         "temporal": {
-          "acuracia": 0.7032,
-          "roc_auc": 0.7771
+          "acuracia": 0.6266,
+          "roc_auc": 0.6767
         }
       },
       "split_temporal": {
@@ -1012,52 +1008,44 @@
     },
     "importancias": [
       {
-        "feature": "vote_count",
-        "importancia": 0.45115679127489994
-      },
-      {
-        "feature": "budget",
-        "importancia": 0.4470220262893013
-      },
-      {
-        "feature": "release_year",
-        "importancia": 0.05587041650256075
-      },
-      {
-        "feature": "runtime",
-        "importancia": 0.016329643843258124
+        "feature": "log_budget",
+        "importancia": 0.8255784580196062
       },
       {
         "feature": "has_collection",
-        "importancia": 0.015646217508380335
-      },
-      {
-        "feature": "user_rating_count",
-        "importancia": 0.014588845828610442
-      },
-      {
-        "feature": "primary_genre",
-        "importancia": 0.01350646146002027
-      },
-      {
-        "feature": "original_language",
-        "importancia": 0.01010202573821325
-      },
-      {
-        "feature": "user_rating_avg",
-        "importancia": 0.004386863634070604
-      },
-      {
-        "feature": "vote_average",
-        "importancia": 0.002725452806831474
+        "importancia": 0.04732062690445484
       },
       {
         "feature": "keyword_count",
-        "importancia": 0.0017838641010782474
+        "importancia": 0.03988235337634274
       },
       {
-        "feature": "popularity",
-        "importancia": -0.008831546813641455
+        "feature": "director",
+        "importancia": 0.03535699898009599
+      },
+      {
+        "feature": "release_year",
+        "importancia": 0.029582146876382453
+      },
+      {
+        "feature": "runtime",
+        "importancia": 0.00994818946246152
+      },
+      {
+        "feature": "primary_genre",
+        "importancia": 0.008116166874358354
+      },
+      {
+        "feature": "original_language",
+        "importancia": 0.006011393052958636
+      },
+      {
+        "feature": "based_on_novel",
+        "importancia": 0.00012586932891685
+      },
+      {
+        "feature": "is_sequel",
+        "importancia": 1.9176241560070473e-05
       }
     ]
   },
@@ -1068,9 +1056,9 @@
       "diretor": "Kane Parsons",
       "ano": 2026,
       "budget_usd": 10000000.0,
-      "receita_prevista_usd": 918800.226672307,
-      "roi_previsto_x": 0.0918800226672307,
-      "prob_hit": 0.08687063781352221,
+      "receita_prevista_usd": 9965399.963448374,
+      "roi_previsto_x": 0.9965399963448374,
+      "prob_hit": 0.44147719084169923,
       "veredito": "ALTO RISCO",
       "destaque": true,
       "actual_box_office_usd": 155000000.0,
@@ -1084,9 +1072,9 @@
       "diretor": "Curry Barker",
       "ano": 2026,
       "budget_usd": 750000.0,
-      "receita_prevista_usd": 566134.088406075,
-      "roi_previsto_x": 0.7548454512081,
-      "prob_hit": 0.24382154844214576,
+      "receita_prevista_usd": 1409215.326895336,
+      "roi_previsto_x": 1.8789537691937812,
+      "prob_hit": 0.4901286452708986,
       "veredito": "ALTO RISCO",
       "destaque": true,
       "actual_box_office_usd": 171000000.0,
@@ -1100,10 +1088,10 @@
       "diretor": "Steven Spielberg",
       "ano": 2026,
       "budget_usd": 140000000.0,
-      "receita_prevista_usd": 7075845.690631421,
-      "roi_previsto_x": 0.05054175493308158,
-      "prob_hit": 0.04539477224988574,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 235075519.79083985,
+      "roi_previsto_x": 1.679110855648856,
+      "prob_hit": 0.5254086470285745,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": true,
       "actual_box_office_usd": null,
       "roi_real_x": null,
@@ -1116,9 +1104,9 @@
       "diretor": "Damien Leone",
       "ano": 2024,
       "budget_usd": 2000000.0,
-      "receita_prevista_usd": 3178307.9050569823,
-      "roi_previsto_x": 1.5891539525284912,
-      "prob_hit": 0.542964618770001,
+      "receita_prevista_usd": 10501009.898951856,
+      "roi_previsto_x": 5.250504949475928,
+      "prob_hit": 0.8369912769862958,
       "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 90322103.0,
@@ -1132,9 +1120,9 @@
       "diretor": "Coralie Fargeat",
       "ano": 2024,
       "budget_usd": 18000000.0,
-      "receita_prevista_usd": 3948919.581437879,
-      "roi_previsto_x": 0.21938442119099327,
-      "prob_hit": 0.15299129357962757,
+      "receita_prevista_usd": 19027921.067016505,
+      "roi_previsto_x": 1.0571067259453615,
+      "prob_hit": 0.31076452038939417,
       "veredito": "ALTO RISCO",
       "destaque": false,
       "actual_box_office_usd": 77316812.0,
@@ -1148,10 +1136,10 @@
       "diretor": "Parker Finn",
       "ano": 2024,
       "budget_usd": 28000000.0,
-      "receita_prevista_usd": 8391435.318711305,
-      "roi_previsto_x": 0.29969411852540373,
-      "prob_hit": 0.38887611300736974,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 115082084.98281181,
+      "roi_previsto_x": 4.11007446367185,
+      "prob_hit": 0.8708140531394789,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 138128854.0,
       "roi_real_x": 4.9331733571428575,
@@ -1164,10 +1152,10 @@
       "diretor": "Osgood Perkins",
       "ano": 2024,
       "budget_usd": 10000000.0,
-      "receita_prevista_usd": 994120.537352421,
-      "roi_previsto_x": 0.0994120537352421,
-      "prob_hit": 0.08396475873606665,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 8131905.007045599,
+      "roi_previsto_x": 0.8131905007045599,
+      "prob_hit": 0.5003081492282284,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 127961936.0,
       "roi_real_x": 12.7961936,
@@ -1180,10 +1168,10 @@
       "diretor": "Robert Eggers",
       "ano": 2024,
       "budget_usd": 50000000.0,
-      "receita_prevista_usd": 7428457.178365655,
-      "roi_previsto_x": 0.1485691435673131,
-      "prob_hit": 0.12070283989638586,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 90194633.24484785,
+      "roi_previsto_x": 1.8038926648969569,
+      "prob_hit": 0.5104866059872571,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 182113849.0,
       "roi_real_x": 3.64227698,
@@ -1196,10 +1184,10 @@
       "diretor": "Rupert Sanders",
       "ano": 2024,
       "budget_usd": 50000000.0,
-      "receita_prevista_usd": 4602951.877385899,
-      "roi_previsto_x": 0.09205903754771799,
-      "prob_hit": 0.1302456991629614,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 149129457.70420724,
+      "roi_previsto_x": 2.982589154084145,
+      "prob_hit": 0.9185493370647355,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 24100000.0,
       "roi_real_x": 0.482,
@@ -1212,10 +1200,10 @@
       "diretor": "Kelsey Mann",
       "ano": 2024,
       "budget_usd": 200000000.0,
-      "receita_prevista_usd": 5934436.268786034,
-      "roi_previsto_x": 0.029672181343930168,
-      "prob_hit": 0.1926627428217425,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 829221045.0981367,
+      "roi_previsto_x": 4.146105225490683,
+      "prob_hit": 0.8439475455738206,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 1698863816.0,
       "roi_real_x": 8.49431908,
@@ -1228,10 +1216,10 @@
       "diretor": "Denis Villeneuve",
       "ano": 2024,
       "budget_usd": 190000000.0,
-      "receita_prevista_usd": 9809959.383991072,
-      "roi_previsto_x": 0.05163136517890038,
-      "prob_hit": 0.17913509184560214,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 751424575.1336112,
+      "roi_previsto_x": 3.954866184913743,
+      "prob_hit": 0.9567660433413578,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 714844358.0,
       "roi_real_x": 3.7623387263157895,
@@ -1244,10 +1232,10 @@
       "diretor": "Jon M. Chu",
       "ano": 2024,
       "budget_usd": 150000000.0,
-      "receita_prevista_usd": 8878498.159327297,
-      "roi_previsto_x": 0.05918998772884864,
-      "prob_hit": 0.07593554641569673,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 332751278.15226424,
+      "roi_previsto_x": 2.218341854348428,
+      "prob_hit": 0.8390687951005064,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 765103982.0,
       "roi_real_x": 5.100693213333333,
@@ -1260,10 +1248,10 @@
       "diretor": "George Miller",
       "ano": 2024,
       "budget_usd": 168000000.0,
-      "receita_prevista_usd": 12997265.67627871,
-      "roi_previsto_x": 0.07736467664451613,
-      "prob_hit": 0.20641797833780162,
-      "veredito": "ALTO RISCO",
+      "receita_prevista_usd": 588972780.7543597,
+      "roi_previsto_x": 3.5057903616330934,
+      "prob_hit": 0.9576012274509474,
+      "veredito": "PROVÁVEL SUCESSO",
       "destaque": false,
       "actual_box_office_usd": 174375791.0,
       "roi_real_x": 1.0379511369047618,
@@ -1276,9 +1264,9 @@
       "diretor": "Sean Baker",
       "ano": 2024,
       "budget_usd": 6000000.0,
-      "receita_prevista_usd": 2859681.57465776,
-      "roi_previsto_x": 0.47661359577629336,
-      "prob_hit": 0.22519296686316617,
+      "receita_prevista_usd": 4523870.637960488,
+      "roi_previsto_x": 0.7539784396600814,
+      "prob_hit": 0.46344761575706045,
       "veredito": "ALTO RISCO",
       "destaque": false,
       "actual_box_office_usd": 59300000.0,
@@ -1289,9 +1277,8 @@
   ],
   "backtest_stats": {
     "n_filmes": 13,
-    "acertos_classificacao": 3,
+    "acertos_classificacao": 7,
     "n_sucessos_reais": 11,
-    "mediana_subestimacao_x": 28.4,
-    "buzz_preenchido_com": "mediana da base (sinais pós-estreia)"
+    "mediana_subestimacao_x": 6.3
   }
 }
